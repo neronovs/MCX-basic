@@ -1,9 +1,0 @@
-D:\OTC\OneDrive\Coding\Examples\MCX basic\WindowsFormsApplicationTest\WindowsFormsApplicationTest\bin\Debug\WindowsFormsApplicationTest.exe.config
-D:\OTC\OneDrive\Coding\Examples\MCX basic\WindowsFormsApplicationTest\WindowsFormsApplicationTest\bin\Debug\WindowsFormsApplicationTest.exe
-D:\OTC\OneDrive\Coding\Examples\MCX basic\WindowsFormsApplicationTest\WindowsFormsApplicationTest\bin\Debug\WindowsFormsApplicationTest.pdb
-D:\OTC\OneDrive\Coding\Examples\MCX basic\WindowsFormsApplicationTest\WindowsFormsApplicationTest\obj\Debug\WindowsFormsApplicationTest.csprojResolveAssemblyReference.cache
-D:\OTC\OneDrive\Coding\Examples\MCX basic\WindowsFormsApplicationTest\WindowsFormsApplicationTest\obj\Debug\WindowsFormsApplicationTest.Form1.resources
-D:\OTC\OneDrive\Coding\Examples\MCX basic\WindowsFormsApplicationTest\WindowsFormsApplicationTest\obj\Debug\WindowsFormsApplicationTest.Properties.Resources.resources
-D:\OTC\OneDrive\Coding\Examples\MCX basic\WindowsFormsApplicationTest\WindowsFormsApplicationTest\obj\Debug\WindowsFormsApplicationTest.csproj.GenerateResource.Cache
-D:\OTC\OneDrive\Coding\Examples\MCX basic\WindowsFormsApplicationTest\WindowsFormsApplicationTest\obj\Debug\WindowsFormsApplicationTest.exe
-D:\OTC\OneDrive\Coding\Examples\MCX basic\WindowsFormsApplicationTest\WindowsFormsApplicationTest\obj\Debug\WindowsFormsApplicationTest.pdb
