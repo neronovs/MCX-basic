@@ -1,0 +1,17 @@
+D:\OneDriveNod\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\bin\Debug\MCX_Basic.exe.config
+d:\OneDriveNod\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\bin\Debug\MCX_Basic.exe
+d:\OneDriveNod\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\bin\Debug\MCX_Basic.pdb
+d:\OneDriveNod\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\obj\Debug\MCX_Basic.csprojResolveAssemblyReference.cache
+d:\OneDriveNod\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\obj\Debug\MCX_Basic.MainForm.resources
+d:\OneDriveNod\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\obj\Debug\MCX_Basic.Properties.Resources.resources
+d:\OneDriveNod\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\obj\Debug\MCX_Basic.csproj.GenerateResource.Cache
+d:\OneDriveNod\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\obj\Debug\MCX_Basic.exe
+d:\OneDriveNod\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\obj\Debug\MCX_Basic.pdb
+D:\OneDriveNod\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\bin\Debug\mxparser.dll
+D:\OTC\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\bin\Debug\MCX_Basic.exe.config
+D:\OTC\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\obj\Debug\MCX_Basic.exe
+D:\OTC\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\obj\Debug\MCX_Basic.pdb
+D:\OTC\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\obj\Debug\MCX_Basic.csprojResolveAssemblyReference.cache
+D:\OTC\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\obj\Debug\MCX_Basic.MainForm.resources
+D:\OTC\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\obj\Debug\MCX_Basic.Properties.Resources.resources
+D:\OTC\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\obj\Debug\MCX_Basic.csproj.GenerateResource.Cache
