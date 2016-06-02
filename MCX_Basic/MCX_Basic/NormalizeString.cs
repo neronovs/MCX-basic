@@ -148,7 +148,7 @@ namespace MCX_Basic
                     {
                         foundFirst = NO;
                         NSRange range = new NSRange(indexFirst, i - indexFirst + 1);
-                        arr.Add(string_var.Substring(range.location, range.location + range.length));
+                        arr.Add(string_var.Substring(range.location, range.length));
                     }
                 }
             }
@@ -282,7 +282,7 @@ namespace MCX_Basic
                     {
                         foundFirst = NO;
                         NSRange range = new NSRange(indexFirst, i - indexFirst);
-                        arr.Add(string_var.Substring(range.location, range.location + range.length));
+                        arr.Add(string_var.Substring(range.location, range.length));
                     }
                 }
             }
@@ -316,7 +316,7 @@ namespace MCX_Basic
                         foundFirst = YES;
                         indexFirst = i;
                         NSRange range = new NSRange(index, i - index);
-                        arr.Add(string_var.Substring(range.location, range.location + range.length));
+                        arr.Add(string_var.Substring(range.location, range.length));
                     }
                     if (string_var.Substring(i, 1).Equals("\"") && foundFirst && indexFirst != i)
                     {
@@ -324,7 +324,7 @@ namespace MCX_Basic
                         index = i + 1;
                         haveText = YES;
                         NSRange range = new NSRange(indexFirst, i - indexFirst + 1);
-                        arr.Add(string_var.Substring(range.location, range.location + range.length));
+                        arr.Add(string_var.Substring(range.location, range.length));
                     }
                 }
                 if (!haveText)
@@ -333,7 +333,7 @@ namespace MCX_Basic
                 }
                 else {
                     NSRange range = new NSRange(index, string_var.Length - index);
-                    arr.Add(string_var.Substring(range.location, range.location + range.length));
+                    arr.Add(string_var.Substring(range.location, range.length));
                 }
             }
             else {
@@ -361,13 +361,13 @@ namespace MCX_Basic
                     {
                         foundFirst = NO;
                         NSRange range = new NSRange(indexFirst, i - indexFirst);
-                        arr.Add(string_var.Substring(range.location, range.location + range.length));
+                        arr.Add(string_var.Substring(range.location, range.length));
                     }
                     if (string_var.Substring(i, 1).Equals("+") || string_var.Substring(i, 1).Equals(","))
                     {
                         foundFirst = NO;
                         NSRange range = new NSRange(i + 1, string_var.Length - i - 1);
-                        String str = string_var.Substring(range.location, range.location + range.length);
+                        String str = string_var.Substring(range.location, range.length);
                         if (str.IndexOf(',') != NSNotFound) str = str.Split(',')[0];
                         arr.Add(str);
                     }
@@ -412,12 +412,12 @@ namespace MCX_Basic
                     {
                         NSRange range = new NSRange(arrIndex, i - arrIndex);
                         arrIndex = i + 1;
-                        arr.Add(string_var.Substring(range.location, range.location + range.length));
+                        arr.Add(string_var.Substring(range.location, range.length));
                     }
                     if (i == string_var.Length - 1)
                     {
                         NSRange range = new NSRange(arrIndex, i - arrIndex + 1);
-                        arr.Add(string_var.Substring(range.location, range.location + range.length));
+                        arr.Add(string_var.Substring(range.location, range.length));
                     }
                     ////Log.d(TAG, "±  -->'" + string_var.Substring(i, 1));
                 }
@@ -471,13 +471,13 @@ namespace MCX_Basic
                     {
                         NSRange range = new NSRange(arrIndex, i - arrIndex);
                         arrIndex = i + 1;
-                        arr.Add(string_var.Substring(range.location, range.location + range.length));
+                        arr.Add(string_var.Substring(range.location, range.length));
                         arr.Add(",");
                     }
                     if (string_var.Substring(i, 1).Equals("+") && !foundFirst)
                     {
                         NSRange range = new NSRange(arrIndex, i - arrIndex);
-                        String tmp = string_var.Substring(range.location, range.location + range.length);
+                        String tmp = string_var.Substring(range.location, range.length);
                         {
                             arrIndex = i + 1;
                             arr.Add(tmp);
@@ -487,7 +487,7 @@ namespace MCX_Basic
                     if (string_var.Substring(i, 1).Equals("-") && !foundFirst)
                     {
                         NSRange range = new NSRange(arrIndex, i - arrIndex);
-                        String tmp = string_var.Substring(range.location, range.location + range.length);
+                        String tmp = string_var.Substring(range.location, range.length);
                         {
                             arrIndex = i + 1;
                             arr.Add(tmp);
@@ -497,7 +497,7 @@ namespace MCX_Basic
                     if (string_var.Substring(i, 1).Equals("/") && !foundFirst)
                     {
                         NSRange range = new NSRange(arrIndex, i - arrIndex);
-                        String tmp = string_var.Substring(range.location, range.location + range.length);
+                        String tmp = string_var.Substring(range.location, range.length);
                         {
                             arrIndex = i + 1;
                             arr.Add(tmp);
@@ -507,7 +507,7 @@ namespace MCX_Basic
                     if (string_var.Substring(i, 1).Equals("*") && !foundFirst)
                     {
                         NSRange range = new NSRange(arrIndex, i - arrIndex);
-                        String tmp = string_var.Substring(range.location, range.location + range.length);
+                        String tmp = string_var.Substring(range.location, range.length);
                         {
                             arrIndex = i + 1;
                             arr.Add(tmp);
@@ -517,7 +517,7 @@ namespace MCX_Basic
                     if (string_var.Substring(i, 1).Equals("^") && !foundFirst)
                     {
                         NSRange range = new NSRange(arrIndex, i - arrIndex);
-                        String tmp = string_var.Substring(range.location, range.location + range.length);
+                        String tmp = string_var.Substring(range.location, range.length);
                         {
                             arrIndex = i + 1;
                             arr.Add(tmp);
@@ -527,7 +527,7 @@ namespace MCX_Basic
                     if (string_var.Substring(i, 1).Equals("(") && !foundFirst)
                     {
                         NSRange range = new NSRange(arrIndex, i - arrIndex);
-                        String tmp = string_var.Substring(range.location, range.location + range.length);
+                        String tmp = string_var.Substring(range.location, range.length);
                         {
                             arrIndex = i + 1;
                             arr.Add(tmp);
@@ -537,7 +537,7 @@ namespace MCX_Basic
                     if (string_var.Substring(i, 1).Equals(")") && !foundFirst)
                     {
                         NSRange range = new NSRange(arrIndex, i - arrIndex);
-                        String tmp = string_var.Substring(range.location, range.location + range.length);
+                        String tmp = string_var.Substring(range.location, range.length);
                         {
                             arrIndex = i + 1;
                             arr.Add(tmp);
@@ -547,7 +547,7 @@ namespace MCX_Basic
                     if (i == string_var.Length - 1)
                     {
                         NSRange range = new NSRange(arrIndex, i - arrIndex + 1);
-                        arr.Add(string_var.Substring(range.location, range.location + range.length));
+                        arr.Add(string_var.Substring(range.location, range.length));
                     }
                 }
             }
@@ -586,12 +586,12 @@ namespace MCX_Basic
                     {
                         NSRange range = new NSRange(arrIndex, i - arrIndex);
                         arrIndex = i + 1;
-                        arr.Add(string_val.Substring(range.location, range.location + range.length));
+                        arr.Add(string_val.Substring(range.location, range.length));
                     }
                     if (string_val.Substring(i, 1).Equals("+") && !foundFirst)
                     {
                         NSRange range = new NSRange(arrIndex, i - arrIndex);
-                        String tmp = string_val.Substring(range.location, range.location + range.length);
+                        String tmp = string_val.Substring(range.location, range.length);
                         {
                             arrIndex = i + 1;
                             arr.Add(tmp);
@@ -600,7 +600,7 @@ namespace MCX_Basic
                     if (i == string_val.Length - 1)
                     {
                         NSRange range = new NSRange(arrIndex, i - arrIndex + 1);
-                        arr.Add(string_val.Substring(range.location, range.location + range.length));
+                        arr.Add(string_val.Substring(range.location, range.length));
                     }
                 }
                 //  склеиваем если функция
@@ -640,7 +640,7 @@ namespace MCX_Basic
                     }
                     index = index + arr[i].ToString().Length + 1;
                     NSRange range = new NSRange(index - 1, 1);
-                    arrSign.Add(string_val.Substring(range.location, range.location + range.length));
+                    arrSign.Add(string_val.Substring(range.location, range.length));
                 }
                 bool adding = NO;
                 int indAdd = 0;

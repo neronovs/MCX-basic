@@ -114,7 +114,7 @@ namespace MCX_Basic
                 {
                     index = index + arrValue[i].ToString().Length + 1;
                     NSRange range = new NSRange(index - 1, 1);
-                    arrSign.Add(str.Substring(range.location, range.location + range.length));
+                    arrSign.Add(str.Substring(range.location, range.length));
                 }
                 ////Log.d(TAG, "± !returnMathResult for " + str);
                 for (int i = 0; i < arrValue.Count; i++)
@@ -144,7 +144,7 @@ namespace MCX_Basic
                             String prefix = "val("; // string_var prefix, not needle prefix!
                             String suffix = ")"; // string_var suffix, not needle suffix!
                             NSRange range = new NSRange(prefix.Length, arrValue[i].ToString().Length - prefix.Length - suffix.Length);
-                            String numStr = arrValue[i].ToString().Substring(range.location, range.location + range.length);
+                            String numStr = arrValue[i].ToString().Substring(range.location, range.length);
                             numStr = numStr.Replace("\"", "");
                             if (variables.variableIsPresent(numStr))
                                 numStr = variables.returnContainOfVariable(numStr);
@@ -174,7 +174,7 @@ namespace MCX_Basic
                                 prefix = "asc(";
                                 suffix = ")";
                                 range = new NSRange(prefix.Length, arrValue[i].ToString().Length - prefix.Length - suffix.Length);
-                                String nameString = arrValue[i].ToString().Substring(range.location, range.location + range.length);
+                                String nameString = arrValue[i].ToString().Substring(range.location, range.length);
                                 int index1 = variables.makeVariableIndex(nameString);
                                 if (index1 > 0 && nameString != null)
                                 {
@@ -187,7 +187,7 @@ namespace MCX_Basic
                                 }
                             }
                             else {
-                                String asciiString = arrValue[i].ToString().Substring(range.location, range.location + range.length);
+                                String asciiString = arrValue[i].ToString().Substring(range.location, range.length);
                                 asciiString = ((int)asciiString.ElementAt(0)).ToString();
                                 arrValue[i] = asciiString;
                             }
@@ -204,7 +204,7 @@ namespace MCX_Basic
                             String prefix = "abs("; // string_var prefix, not needle prefix!
                             String suffix = ")"; // string_var suffix, not needle suffix!
                             NSRange range = new NSRange(prefix.Length, arrValue[i].ToString().Length - prefix.Length - suffix.Length);
-                            String numStr = arrValue[i].ToString().Substring(range.location, range.location + range.length);
+                            String numStr = arrValue[i].ToString().Substring(range.location, range.length);
                             double pre = 0;
                             try
                             {
@@ -228,7 +228,7 @@ namespace MCX_Basic
                             String prefix = "fix("; // string_var prefix, not needle prefix!
                             String suffix = ")"; // string_var suffix, not needle suffix!
                             NSRange range = new NSRange(prefix.Length, arrValue[i].ToString().Length - prefix.Length - suffix.Length);
-                            String numStr = arrValue[i].ToString().Substring(range.location, range.location + range.length);
+                            String numStr = arrValue[i].ToString().Substring(range.location, range.length);
                             try
                             {
                                 arrValue[i] = (Math.Round(Double.Parse(numStr))).ToString();
@@ -250,7 +250,7 @@ namespace MCX_Basic
                             String prefix = "rnd("; // string_var prefix, not needle prefix!
                             String suffix = ")"; // string_var suffix, not needle suffix!
                             NSRange range = new NSRange(prefix.Length, arrValue[i].ToString().Length - prefix.Length - suffix.Length);
-                            String numStr = arrValue[i].ToString().Substring(range.location, range.location + range.length);
+                            String numStr = arrValue[i].ToString().Substring(range.location, range.length);
                             try
                             {
                                 Random r = new Random();
@@ -273,7 +273,7 @@ namespace MCX_Basic
                             String prefix = "instr("; // string_var prefix, not needle prefix!
                             String suffix = ")"; // string_var suffix, not needle suffix!
                             NSRange range = new NSRange(prefix.Length, originalString.Length - prefix.Length - suffix.Length);
-                            String normStr = originalString.Substring(range.location, range.location + range.length);
+                            String normStr = originalString.Substring(range.location, range.length);
                             normStr = normStr.Replace("+", ",");
                             String varNm = normStr.Replace(" ", "").Split(',')[0];
                             if (variables.variableIsPresent(varNm))
@@ -309,7 +309,7 @@ namespace MCX_Basic
                             String prefix = "len("; // string_var prefix, not needle prefix!
                             String suffix = ")"; // string_var suffix, not needle suffix!
                             NSRange range = new NSRange(prefix.Length, originalString.Length - prefix.Length - suffix.Length);
-                            String normStr = originalString.Substring(range.location, range.location + range.length);
+                            String normStr = originalString.Substring(range.location, range.length);
                             normStr = normStr.Replace("+", ",");
                             String varNm = normStr.Replace(" ", "").Split(',')[0];
                             if (variables.variableIsPresent(varNm))
@@ -411,7 +411,7 @@ namespace MCX_Basic
             {
                 index = index + arrValue[i].ToString().Length + 1;
                 NSRange range = new NSRange(index - 1, 1);
-                arrSign.Add(string_val.Substring(range.location, range.location + range.length));
+                arrSign.Add(string_val.Substring(range.location, range.length));
             }
             if (arrSign.Count > 1)
                 for (int i = 1; i < arrSign.Count; i++)
@@ -447,13 +447,14 @@ namespace MCX_Basic
                         adding = NO;
                     }
                 }
-            arrValue.RemoveAt(Convert.ToInt32(arrValueDelete));
-            arrSign.RemoveAt(Convert.ToInt32(arrSignDelete));
+            //deleting array from array
+            arrValue = arrValue.Except(arrValueDelete).ToList();
+            arrSign = arrSign.Except(arrValueDelete).ToList();
             String str = "";
             String old = "";
             if (arrValue.Count > 1)
             {
-                for (int i = 1; i < arrValue.Count; i++)
+                for (int i = 1; i < arrValue.Count(); i++)
                 {
                     if (arrValue[i].ToString().Length > 0)
                     {
