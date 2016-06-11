@@ -1,0 +1,18 @@
+1 a=2.357
+2 print "a=",a
+10 print "atn of 1 is ",atn(atn(1))
+11 print "tan of 1 is ",tan(5-a)
+20 print "cos of 2 is ",cos(2*a+2)
+30 print "sin of 3 is ",sin(a)
+40 print "asc of 4 is ",asc("4")
+50 print "abs of -5.4*a is ",abs(-5.4*a)
+60 print "fix of -6.64+a is ",fix(-6.64+a)
+70 print "exp of 7 is ",exp(7/a*2)+tan(23)
+80 print "int of 8.1/a is ",int(8.1/a)
+90 print "cint of 9.91+3-a/34 is ",cint(9.91+3-a/34)
+100 print "instr  of 'i like MCX BASIC!!!' (MCX) is ", instr("i like MCX BASIC!!!","MCX")
+110 print "len of 'i like MCX BASIC!!!' is ", len("i like MCX BASIC!!!")
+120 print "log of 12 is ",log(12+a-0.19)
+130 print "sqr of 100 is ",sqr(100*a+2.3)
+140 print "rnd of 300 is ",rnd(a*8)
+150 print "val of '23.345' is ",val("23.345")

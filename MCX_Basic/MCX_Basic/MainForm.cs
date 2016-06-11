@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 
 namespace MCX_Basic
 {
     public partial class MainForm : Form
     {
-        private static String TAG;// = MainActivity.class.getSimpleName();
-        //private String commandWindow;
-        private static int NSNotFound = -1;
-        private static bool NO = false;
-        private static bool YES = true;
+        private readonly int NSNotFound = -1;
+        private readonly bool NO = false;
+        private readonly bool YES = true;
+        private readonly String TAG = MethodBase.GetCurrentMethod().DeclaringType.Name + ": ";
         String currectLine = ""; //text in the current cursor line
 
         RunCommand runCommand = new RunCommand();
@@ -28,14 +28,13 @@ namespace MCX_Basic
         //    Variables variables = new Variables();
         //    StringFunc stringFunc = new StringFunc();
 
-        int position;
+        //int position;
         bool inputMode;
         int inputCount;
         bool nextCommand;
-        int keyOffset;
+        //int keyOffset;
         int textIndex;
 
-        //CGSize screenSize;
         Timer handler = new Timer();
 
         public MainForm()
@@ -130,23 +129,12 @@ private TextWatcher inputTextWatcher = new TextWatcher()
 {
 }*/
 
-
-        public void beforeTextChanged(String s, int start, int count, int after)
-        {
-        }
-
-        /* public void addStringToCommandWindow(String string_val)
-         {
-             //            commandWindow.Text += string_val;
-             commandWindow.AppendText(string_val);
-         }*/
-
         public void onTextChanged(String s, int start, int before, int count)
         {
-            Debug.WriteLine(TAG, "± onTextChanged 1..." + count);
+            Debug.WriteLine(TAG + "± onTextChanged 1..." + count);
             if (count > 0)// && GlobalVars.getInstance().scanKeyOn)
             {
-                Debug.WriteLine(TAG, "± onTextChanged 2..." + s.Substring(start, 1));
+                Debug.WriteLine(TAG + "± onTextChanged 2..." + s.Substring(start, 1));
                 if (s.ToCharArray().ElementAt(start) == 10)
                 {
                     //GlobalVars.getInstance().lineNumber = getCurrentCursorLine(commandWindow.Text);
@@ -158,6 +146,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
                     catch (IOException e)
                     {
                         //e.printStackTrace();
+                        Debug.WriteLine(e.StackTrace);
                     }
                 }
             }
@@ -165,38 +154,40 @@ private TextWatcher inputTextWatcher = new TextWatcher()
 
         public void beepPlay()
         {
-            Debug.WriteLine(TAG, "± Beep play begin ...");
+            Debug.WriteLine(TAG + "± Beep play begin ...");
             //MediaPlayer mp = MediaPlayer.create(this, getResources().getIdentifier("beep", "raw", getPackageName()));
             //mp.start();
         }
 
         public int getCurrentCursorLine(TextBox editText) //Returns the current Y cursor position
         {
-            int selectionStart = editText.SelectionStart;
+            /*int selectionStart = editText.SelectionStart;
             //Layout layout = editText.getLayout();
 
             if (!(selectionStart == -1))
             {
-                //return layout.getLineForOffset(selectionStart);
-                getCurrentCursorLine(editText);
+                return editText.GetLineFromCharIndex(editText.GetFirstCharIndexOfCurrentLine());
             }
-            return -1;
+            return -1;*/
+
+            return editText.GetLineFromCharIndex(editText.GetFirstCharIndexOfCurrentLine());
         }
 
         public bool onEnterPress(String text) //throws IOException
         {
             //commandWindow.setSelection(commandWindow.Text.Length);
             commandWindow.Select(commandWindow.Text.Length, 0);
-            //        Debug.WriteLine(TAG, "± onEnterPress index="+(GlobalVars.getInstance().GlobalVars.getInstance().lineNumber - 1)+" total lines="+commandWindow.Text.ToString().Split('\n").Length);
-            if (GlobalVars.getInstance().lineNumber - 1 >= commandWindow.Text.ToString().Split('\n').Length)
-                GlobalVars.getInstance().lineNumber--;
+            //        Debug.WriteLine(TAG + "± onEnterPress index="+(GlobalVars.getInstance().GlobalVars.getInstance().lineNumber - 1)+" total lines="+commandWindow.Text.ToString().Split('\r\n").Length);
+            /*if (GlobalVars.getInstance().lineNumber - 1 >= commandWindow.Text.ToString().Split('\n').Length)
+                GlobalVars.getInstance().lineNumber--;*/
+            GlobalVars.getInstance().lineNumber = commandWindow.Text.ToString().Split('\n').Length;
             String textLine = commandWindow.Text.ToString().Split('\n')[GlobalVars.getInstance().lineNumber - 1];
-            GlobalVars.getInstance().Command = textLine;
-            bool shouldChangeText = true;
-            GlobalVars.getInstance().KeyScan = text;
+            GlobalVars.getInstance().Command = (textLine);
+            bool shouldChangeText = YES;
+            GlobalVars.getInstance().KeyScan = (text);
             textIndex = commandWindow.Text.ToString().Length;
-            String[]
-            lines = commandWindow.Text.ToString().Split('\n');
+            String[] lines = commandWindow.Text.ToString().Split('\n');
+
             if (inputMode)
             {
                 if (!string.IsNullOrEmpty(GlobalVars.getInstance().input))
@@ -207,11 +198,11 @@ private TextWatcher inputTextWatcher = new TextWatcher()
                         GlobalVars.getInstance().listOfStrings.Add("t");
                         extrAdd = 1;
                     }
-                    Debug.WriteLine(TAG, "± input mode ='" + GlobalVars.getInstance().input + "' listofstring0='" + GlobalVars.getInstance().listOfStrings[0].ToString() + "'");
+                    Debug.WriteLine(TAG + "± input mode ='" + GlobalVars.getInstance().input + "' listofstring0='" + GlobalVars.getInstance().listOfStrings[0].ToString() + "'");
                     String[] arr = GlobalVars.getInstance().input.Substring(1).Split(',');
                     String entered;
                     int indexInput = GlobalVars.getInstance().listOfStrings[0].ToString().Length + extrAdd;
-                    Debug.WriteLine(TAG, "± input-- '" + lines[lines.Length - 1] + "' indexed-'" + GlobalVars.getInstance().listOfStrings[0].ToString());
+                    Debug.WriteLine(TAG + "± input-- '" + lines[lines.Length - 1] + "' indexed-'" + GlobalVars.getInstance().listOfStrings[0].ToString());
                     entered = lines[lines.Length - 1].Substring(indexInput);
                     String str = arr[inputCount] + "=" + entered;
                     if (arr[inputCount].Substring(arr[inputCount].Length - 1).Equals("$"))
@@ -238,13 +229,15 @@ private TextWatcher inputTextWatcher = new TextWatcher()
                     nextCommand = YES;
                 }
             }
+            // NOT inputMode
             else {
                 if (!GlobalVars.getInstance().Command.Equals(""))
                 {
+                    Debug.WriteLine(TAG + "!!!isOkSet: " + GlobalVars.getInstance().isOkSet);
                     if (GlobalVars.getInstance().isOkSet) returnCR();
                     if (!GlobalVars.getInstance().autoSet)
                     {
-                        // Debug.WriteLine(TAG, "± autoSet=" + GlobalVars.getInstance().autoSet);
+                        Debug.WriteLine(TAG + "± autoSet=" + GlobalVars.getInstance().autoSet);
                         if (runCommand.set(GlobalVars.getInstance().Command))
                         {
                             //[commandWindow resignFirstResponder];
@@ -259,7 +252,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
                         }
                     }
                     else {
-                        // Debug.WriteLine(TAG, "± !!!!!autoSet=" + GlobalVars.getInstance().autoSet);
+                        Debug.WriteLine(TAG + "± !!!!!autoSet=" + GlobalVars.getInstance().autoSet);
                         runCommand.autoProgramSet(GlobalVars.getInstance().command);
                         for (int i = 0; i < GlobalVars.getInstance().listOfStrings.Count(); i++)
                         {
@@ -279,7 +272,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
         public void reset()
         {
             GlobalVars.getInstance().Error = "";
-            Debug.WriteLine(TAG, "± reset");
+            Debug.WriteLine(TAG + "± reset");
             //commandWindow = (EditText)findViewById(R.id.CommandWindow);
             commandWindow.Text = (null);
             commandWindow.BackColor = (detectColor(4));
@@ -287,18 +280,18 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             version();
             printOk();
             //print runCommand.set("a=2");
-            //runCommand.set("a(1)=199");
-            runCommand.set("print a,\"---\",7");
+            //runCommand.set("print abs(1)");
+            //runCommand.set("print a,\"---\",7");
             inputMode = false;
             inputCount = 0;
-            keyOffset = 0;
+            //keyOffset = 0;
             //commandWindow.setSelection(commandWindow.Text.Length);
             commandWindow.Select(commandWindow.Text.Length, 0);
         }
 
         public Color detectColor(int colorNumber)
         {
-            // Log.d(TAG, "± Color # " + colorNumber);
+            Debug.WriteLine(TAG + "± Color # " + colorNumber);
             Color result = Color.White;
             if (colorNumber == 1) result = Color.Black;
             if (colorNumber == 2) result = System.Drawing.ColorTranslator.FromHtml("#00E100");
@@ -319,7 +312,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             {
 
                 GlobalVars.getInstance().Error = ("Incorrect color");
-                //Log.d(TAG, "± Incorrect color\n");
+                Debug.WriteLine(TAG + "± Incorrect color\r\n");
             }
             return result;
         }
@@ -378,7 +371,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             NSRange searchRange = NSMakeRange(textIndex, string.length - textIndex);
             NSLog( @ "searchRange = %@", NSStringFromRange(searchRange));
             int counter = textIndex;
-            NSArray * lines =[[string substringWithRange:searchRange]componentsSeparatedByString:@ "\n"];
+            NSArray * lines =[[string substringWithRange:searchRange]componentsSeparatedByString:@ "\r\n"];
             for (int i = 0; i <[lines count];
             i++){
 
@@ -445,7 +438,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             GlobalVars.getInstance().isOkSet = NO;
             if (GlobalVars.getInstance().run)
             {
-                GlobalVars.getInstance().error = GlobalVars.getInstance().error + " at line " + GlobalVars.getInstance().runnedLine + "\n";
+                GlobalVars.getInstance().error = GlobalVars.getInstance().error + " at line " + GlobalVars.getInstance().runnedLine + "\r\n";
             }
             stopRunning();
             addStringToCommandWindow(GlobalVars.getInstance().error);
@@ -461,7 +454,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             GlobalVars.getInstance().isOkSet = YES;
             inputMode = NO;
             //GlobalVars.getInstance().scanKeyOn = NO;
-            Debug.WriteLine(TAG, "Program is OVER!!!!! " + GlobalVars.getInstance().error);
+            Debug.WriteLine(TAG + "Program is OVER!!!!! " + GlobalVars.getInstance().error);
         }
 
         public void version()
@@ -486,7 +479,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             if (lines.Length > 2)
                 if (GlobalVars.getInstance().IsOkSet && !GlobalVars.getInstance().Run)
                 {
-                    addStringToCommandWindow("Ok\n");
+                    addStringToCommandWindow("Ok\r\n");
                 }
             GlobalVars.getInstance().IsOkSet = (true);
         }
@@ -500,14 +493,14 @@ private TextWatcher inputTextWatcher = new TextWatcher()
 
         public void returnCR()
         {
-            addStringToCommandWindow("Ok\n");
+            addStringToCommandWindow("Ok\r\n");
         }
 
         private void commandWindow_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                List<String> listOfTextBox = new List<String>(commandWindow.Lines); //takes all lines in the List massive
+                /*List<String> listOfTextBox = new List<String>(commandWindow.Lines); //takes all lines in the List massive
                 int firstCharIndexInCurrentLine = commandWindow.GetFirstCharIndexOfCurrentLine();
                 int nextLineNumber = commandWindow.GetLineFromCharIndex(firstCharIndexInCurrentLine) + 1;
                 int currentLineNumber = commandWindow.GetLineFromCharIndex(firstCharIndexInCurrentLine);
@@ -515,18 +508,17 @@ private TextWatcher inputTextWatcher = new TextWatcher()
                 int lastCharInCurrentLine = firstCharIndexInNextLine - 1;
                 if (lastCharInCurrentLine > 0) e.SuppressKeyPress = true; //rejects of Enter movement
                 if (lastCharInCurrentLine <= 0) lastCharInCurrentLine = commandWindow.Text.Length; else lastCharInCurrentLine = firstCharIndexInNextLine - 1;
+                currectLine = listOfTextBox[currentLineNumber];*/
 
-                currectLine = listOfTextBox[currentLineNumber];
-                if (runCommand.set(currectLine))
+                GlobalVars.getInstance().lineNumber = getCurrentCursorLine(commandWindow);
+                onEnterPress("\n");//send symbol of "Enter" - "\n"
+
+                /*if (runCommand.set(currectLine))
                 {
                     for (int i = 0; i < GlobalVars.getInstance().listOfStrings.Count(); i++)
                         addStringToCommandWindow(GlobalVars.getInstance().listOfStrings[i]);
-                }
-                /*Debug.Print("______________________________");
-                Debug.Print("current line num: {0}, next line num: {1}, first char of next line: {2}, Last char of current line: {3}", nextLineNumber - 1, nextLineNumber, firstCharIndexInNextLine, lastCharInCurrentLine);
-                if (firstCharIndexInNextLine > 0)
-                Debug.Print("First symbol of next line is: {0}", textBoxMain.Text.Substring(firstCharIndexInNextLine,1));
-                Debug.Print("Current line is: {0}", currectLine);*/
+                }*/
+
             }
         }
 
@@ -539,7 +531,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             }
             catch //(NumberFormatException e)
             {
-                Debug.WriteLine(TAG, "± Background color=" + color + "Wrong number format in string$!");
+                Debug.WriteLine(TAG + "± Background color=" + color + "Wrong number format in string$!");
             }
             commandWindow.ForeColor = (detectColor(col));
         }
@@ -553,7 +545,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             }
             catch //(NumberFormatException e)
             {
-                Debug.WriteLine(TAG, "± color=" + color + "Wrong number format in string$!");
+                Debug.WriteLine(TAG + "± color=" + color + "Wrong number format in string$!");
             }
             commandWindow.BackColor = (detectColor(col));
         }
@@ -570,7 +562,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
                 {
                     commandRun = normaStr.removeSpaceInBegin(commandRun);
                 }
-                Debug.WriteLine(TAG, "± " + GlobalVars.getInstance().runIndex + " Command '" + commandRun + "'");
+                Debug.WriteLine(TAG + "± " + GlobalVars.getInstance().runIndex + " Command '" + commandRun + "'");
                 if (!commandRun.Equals(""))
                 {
                     if (runCommand.set(commandRun))
@@ -596,7 +588,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
                 {
                     runProgram();
                 }
-                catch (IOException e)
+                catch //(IOException e)
                 {
                     //e.printStackTrace();
                 }
@@ -609,7 +601,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
                     NSURL* fn=fileToURL:GlobalVars.getInstance().fileName];
                     NSLog(@"shareCommand for '%@'",GlobalVars.getInstance().fileName);
                     NSString *texttoshare = @"MCX Basic file. Sent by share command.";
-                    //    String listToShare = [GlobalVars.getInstance().listOfProgram componentsJoinedByString: @"\n"];
+                    //    String listToShare = [GlobalVars.getInstance().listOfProgram componentsJoinedByString: @"\r\n"];
                     NSArray *activityItems = @[texttoshare,fn];
                     UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
                     NSLog(@"share step 2");
@@ -634,12 +626,12 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             commandRun = commandRun.Split(' ')[0];
             for (int i = 0; i < GlobalVars.getInstance().listOfAll.Count(); i++)
             {
-                //Debug.WriteLine(TAG, "± listOfAll" + GlobalVars.getInstance().listOfAll[i]);
+                //Debug.WriteLine(TAG + "± listOfAll" + GlobalVars.getInstance().listOfAll[i]);
                 NSRange range = new NSRange(commandRun.IndexOf(GlobalVars.getInstance().listOfAll[i].ToString()), commandRun.Length);
                 if (range.location != NSNotFound && range.location == 0)
                 {
                     commandRun = GlobalVars.getInstance().listOfAll[i].ToString();
-                    Debug.WriteLine(TAG, "± Command found! '%@'" + commandRun);
+                    Debug.WriteLine(TAG + "± Command found! '%@'" + commandRun);
                 }
             }
             if (commandRun.ToLower().Equals("cls"))
@@ -658,8 +650,8 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             GlobalVars.getInstance().setFileName(fileName);
             reset();
             String arrayText = readFileAsString(fileName);
-            Debug.WriteLine(TAG, "± readFileAsString " + arrayText);
-            GlobalVars.getInstance().listOfProgram = new ArrayList<String>(Arrays.asList(arrayText.Split("\n")));
+            Debug.WriteLine(TAG + "± readFileAsString " + arrayText);
+            GlobalVars.getInstance().listOfProgram = new ArrayList<String>(Arrays.asList(arrayText.Split("\r\n")));
                                     GlobalVars.getInstance().programCounter = Integer.parseInt(runCommand.returnBaseCommand(GlobalVars.getInstance().listOfProgram.get(GlobalVars.getInstance().listOfProgram.size() - 1).ToString()) + GlobalVars.getInstance().autoStep);
 
                                 }
@@ -686,7 +678,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             {
                 if (GlobalVars.getInstance().listOfProgram.Count() > 0)
                 {
-                    Debug.WriteLine(TAG, "± start running program");
+                    Debug.WriteLine(TAG + "± start running program");
                     nextCommand = YES;
                     GlobalVars.getInstance().runIndex = 0;
                     GlobalVars.getInstance().run = YES;
@@ -700,7 +692,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             }
             else if (commandRun.ToLower().Equals("if") && string.IsNullOrEmpty(GlobalVars.getInstance().error))
             {
-                Debug.WriteLine(TAG, "± if in progress on ViewController. " + GlobalVars.getInstance().commandIf);
+                Debug.WriteLine(TAG + "± if in progress on ViewController. " + GlobalVars.getInstance().commandIf);
                 if (!string.IsNullOrEmpty(GlobalVars.getInstance().commandIf))
                 {
                     if (runCommand.set(GlobalVars.getInstance().commandIf))
@@ -730,12 +722,12 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             else {
                 syntaxError();
             }
-            Debug.WriteLine(TAG, "± commandRun=" + commandRun);
+            Debug.WriteLine(TAG + "± commandRun=" + commandRun);
         }
 
         private void commandWindow_TextChanged(object sender, EventArgs e)
         {
-
+            
         }
 
 

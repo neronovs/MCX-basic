@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -10,10 +12,10 @@ namespace MCX_Basic
 {
     class Variables
     {
-        private static int NSNotFound = -1;
-        private static bool NO = false;
-        private static bool YES = true;
-        private static String TAG;// = MainActivity.class.getSimpleName();
+        private readonly int NSNotFound = -1;
+        private readonly bool NO = false;
+        private readonly bool YES = true;
+        private readonly String TAG = MethodBase.GetCurrentMethod().DeclaringType.Name + ": ";
 
         DigitalFunc digitalFunc;
         NormalizeString normaStr = new NormalizeString();
@@ -117,7 +119,7 @@ namespace MCX_Basic
             NSRange rangeSecond = new NSRange(name.IndexOf(")"), 1);
             ArraySet array = new ArraySet();
             String string_var = name;
-            ////Log.d(TAG, "± ========resultFromString NAME - "+ name);
+            Debug.WriteLine(TAG + "± ========resultFromString NAME - "+ name);
 
             if (!normaStr.insideText(name, rangeFirst.location) && !normaStr.insideText(name, rangeSecond.location))
                 while (rangeFirst.location != NSNotFound)
@@ -140,7 +142,7 @@ namespace MCX_Basic
                     rangeFirst = new NSRange(name.IndexOf("("), 1);
                     rangeSecond = new NSRange(name.IndexOf(")"), 1);
                 }
-            ////Log.d(TAG, "± ========resultFromString result - "+ result);
+            Debug.WriteLine(TAG + "± ========resultFromString result - "+ result);
             return result;
         }
 
@@ -178,20 +180,20 @@ namespace MCX_Basic
                 if (index != NSNotFound && index == 0)
                 {
                     result = YES;
-                    //Log.d(TAG, "± forbidden var found!! " + string_var);
+                    Debug.WriteLine(TAG + "± forbidden var found!! " + string_var);
                 }
             }
             if (result)
             {
-                GlobalVars.getInstance().error = "Vrong variable name\n";
+                GlobalVars.getInstance().error = "Vrong variable name\r\n";
             }
             return result;
         }
 
         public VariableSet addDateToVariable(String variable)
         {
-            Calendar c;// = Calendar.GlobalVars.getInstance();
-            String format = "yyyy-MM-dd";
+            //Calendar c;// = Calendar.GlobalVars.getInstance();
+            //String format = "yyyy-MM-dd";
             /*
             // US culture
             var usCulture = new CultureInfo("en-US");
@@ -203,13 +205,13 @@ namespace MCX_Basic
             var str = gmt1Date.ToString("ddd, dd MMM yyyy HH:mm:ss z", usCulture);
             */
             //SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
-            var sdf = new DateTime();
+            //var sdf = new DateTime();
 
             VariableSet result = new VariableSet();
             //result.var = sdf.format(c.getTime());
             result.name = variable;
             result.stringType = YES;
-            //Log.d(TAG, "± addDateToVariable " + result);
+            Debug.WriteLine(TAG + "± addDateToVariable " + result);
             return result;
         }
 
@@ -223,7 +225,7 @@ namespace MCX_Basic
             result.var = sdf.format(c.getTime());
             result.name = variable;
             result.stringType = YES;
-            //Log.d(TAG, "± addTimeToVariable " + result);*/
+            Debug.WriteLine(TAG + "± addTimeToVariable " + result);*/
             return result;
         }
 
@@ -238,8 +240,8 @@ namespace MCX_Basic
             {
                 if (!normaStr.isPairedQuotes(afterEqual))
                 {
-                    //Log.d(TAG, "± Miss \" in string_var variable " + result + afterEqual);
-                    GlobalVars.getInstance().error = "Miss \" in string_var variable\n";
+                    Debug.WriteLine(TAG + "± Miss \" in string_var variable " + result + afterEqual);
+                    GlobalVars.getInstance().error = "Miss \" in string_var variable\r\n";
                 }
             }
             int l = 0;
@@ -247,13 +249,13 @@ namespace MCX_Basic
             if (!result.Contains("$") && afterEqual.Contains("\"") && !afterEqual.Substring(0, l).Equals("=asc")
                     && !afterEqual.Substring(0, l).Equals("=ins") && !afterEqual.Substring(0, l).Equals("=val"))
             {
-                GlobalVars.getInstance().error = "Type mismatch\n";
+                GlobalVars.getInstance().error = "Type mismatch\r\n";
             }
             String set = "(?:[^a-zA-Z]+$)";
             if (Regex.IsMatch(result, set))
             {
                 result = "";
-                GlobalVars.getInstance().error = "Variable contains illegal characters\n";
+                GlobalVars.getInstance().error = "Variable contains illegal characters\r\n";
             }
             return result;
         }
@@ -276,8 +278,8 @@ namespace MCX_Basic
             }
             else {
                 GlobalVars.getInstance().command = "";
-                GlobalVars.getInstance().error = "Syntax error\n";
-                //Log.d(TAG, "± date let empty, error-" + GlobalVars.getInstance().error);
+                GlobalVars.getInstance().error = "Syntax error\r\n";
+                Debug.WriteLine(TAG + "± date let empty, error-" + GlobalVars.getInstance().error);
                 GlobalVars.getInstance().isOkSet = NO;
             }
             return result;
@@ -301,8 +303,8 @@ namespace MCX_Basic
             }
             else {
                 GlobalVars.getInstance().command = "";
-                GlobalVars.getInstance().error = "Syntax error\n";
-                //Log.d(TAG, "± time let empty, error-" + GlobalVars.getInstance().error);
+                GlobalVars.getInstance().error = "Syntax error\r\n";
+                Debug.WriteLine(TAG + "± time let empty, error-" + GlobalVars.getInstance().error);
                 GlobalVars.getInstance().isOkSet = NO;
             }
             return result;
@@ -335,7 +337,7 @@ namespace MCX_Basic
                         }
                         catch //(NumberFormatException e)
                         {
-                            //Log.d(TAG, "± indexS=" + indexS + "Wrong number format in returnContainOfArray!");
+                            Debug.WriteLine(TAG + "± indexS=" + indexS + "Wrong number format in returnContainOfArray!");
                         }
                         String result = "";
                         while (rangeFirst.location != NSNotFound)
@@ -355,7 +357,7 @@ namespace MCX_Basic
                                             if (name.Contains("$") && String.IsNullOrEmpty(result)) result = " ";
                                         }
                                         else {
-                                            GlobalVars.getInstance().error = "Subscript out of range\n";
+                                            GlobalVars.getInstance().error = "Subscript out of range\r\n";
                                             result = "error";
                                         }
                                     }
@@ -373,7 +375,7 @@ namespace MCX_Basic
                                 }
                                 catch //(NumberFormatException e)
                                 {
-                                    //Log.d(TAG, "± indexS=" + indexS + "Wrong number format in returnContainOfArray!");
+                                    Debug.WriteLine(TAG + "± indexS=" + indexS + "Wrong number format in returnContainOfArray!");
                                 }
                             }
                         }

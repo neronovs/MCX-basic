@@ -13,50 +13,56 @@ namespace MCX_Basic
 {
     public class RunCommand
     {
-        private static String TAG;// = MainActivity.class.getSimpleName();
-        private static int NSNotFound = -1;
-        private static bool NO = false;
-        private static bool YES = true;
-        private static DigitalFunc digitalFunc = new DigitalFunc();
-        private static NormalizeString normaStr = new NormalizeString();
-        private static Variables variables = new Variables();
-        private static StringFunc stringFunc = new StringFunc();
+        private readonly int NSNotFound = -1;
+        private readonly bool NO = false;
+        private readonly bool YES = true;
+        private readonly String TAG = MethodBase.GetCurrentMethod().DeclaringType.Name + ": ";
+        private DigitalFunc digitalFunc = new DigitalFunc();
+        private NormalizeString normaStr = new NormalizeString();
+        private Variables variables = new Variables();
+        private StringFunc stringFunc = new StringFunc();
 
         public bool set(String string_val)
         {
-            Debug.WriteLine("->" + string_val);
+            Debug.WriteLine(TAG + string_val);
+            //if (string_val.Length <= 0) return false;
             string_val = normaStr.lowcaseWithText(string_val);
             bool result = false;
             if (string_val.Substring(0, 1).Equals(" "))
                 string_val = normaStr.removeSpaceInBegin(string_val).ToLower();
             String separator = "\"";
             String base_val = returnBaseCommand(string_val);
-            //Log.d(TAG, "± RunCommand..." + string_val);
-            GlobalVars.getInstance().Error="";
+            Debug.WriteLine(TAG + string_val);
+            GlobalVars.getInstance().Error = "";
             GlobalVars.getInstance().listOfStrings.Clear();
 
             if (base_val.ToLower().Equals("ver"))
             {
+                //App version
+                string versionApp = Assembly.GetEntryAssembly().GetName().Version.ToString();
+                //File version
+                string versionFile = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
                 Debug.WriteLine("Ver..." + GlobalVars.version1);
-                //Log.d(TAG, "± " + GlobalVars.version1 + BuildConfig.VERSION_NAME + "\n");
-                GlobalVars.getInstance().listOfStrings.Add(GlobalVars.version1 + Assembly.GetAssembly(typeof(String)).GetName().Version + "\n");
-                GlobalVars.getInstance().listOfStrings.Add(GlobalVars.version2);
-                GlobalVars.getInstance().listOfStrings.Add("\n");
-                GlobalVars.getInstance().listOfStrings.Add(GlobalVars.version3);
-                //foreach (string element in GlobalVars.getInstance().listOfStrings) Debug.WriteLine(element);
+                Debug.WriteLine(TAG + "± " + GlobalVars.version1 + versionApp + "\r\n");
+
+
+                GlobalVars.getInstance().listOfStrings.Add(GlobalVars.version1 + versionApp + "\r\n");
+                GlobalVars.getInstance().listOfStrings.Add(GlobalVars.version2 + "\r\n");
+                GlobalVars.getInstance().listOfStrings.Add(GlobalVars.version3 + "\r\n");
+                foreach (string element in GlobalVars.getInstance().listOfStrings) Debug.WriteLine(element);
                 result = true;
             }
             else if (base_val.ToLower().Equals("auto"))
             {
-                //Log.d(TAG, "± autoSet = YES");
-                GlobalVars.getInstance().AutoSet=(true);
-                GlobalVars.getInstance().IsOkSet=(false);
+                Debug.WriteLine(TAG + "± autoSet = YES");
+                GlobalVars.getInstance().AutoSet = (true);
+                GlobalVars.getInstance().IsOkSet = (false);
                 GlobalVars.getInstance().listOfStrings.Add((GlobalVars.getInstance().ProgramCounter.ToString()) + " ");
                 result = true;
             }
             else if (base_val.ToLower().Equals("list"))
             {
-                GlobalVars.getInstance().IsOkSet=(true);
+                GlobalVars.getInstance().IsOkSet = (true);
                 String listNumber;
                 String currentLineNumber;
                 if (string_val.Length > 4)
@@ -81,13 +87,13 @@ namespace MCX_Basic
                                     currentLineNumber = currentLineNumber.Split(' ')[0];
                                     if (currentLineNumber.ToLower().Equals(listNumber))
                                     {
-                                        GlobalVars.getInstance().listOfStrings.Add((GlobalVars.getInstance().ListOfProgram[i].ToString() + "\n").ToString());
+                                        GlobalVars.getInstance().listOfStrings.Add((GlobalVars.getInstance().ListOfProgram[i].ToString() + "\r\n").ToString());
                                     }
                                 }
                                 result = true;
                             }
                             else {
-                                GlobalVars.getInstance().error = "Syntax error\n";
+                                GlobalVars.getInstance().error = "Syntax error\r\n";
                             }
                         }
                     }
@@ -101,30 +107,30 @@ namespace MCX_Basic
                                 currentLineNumber = currentLineNumber.Split(' ')[0];
                                 if (currentLineNumber.ToLower().Equals(listNumber))
                                 {
-                                    GlobalVars.getInstance().listOfStrings.Add((GlobalVars.getInstance().ListOfProgram[i].ToString() + "\n").ToString());
+                                    GlobalVars.getInstance().listOfStrings.Add((GlobalVars.getInstance().ListOfProgram[i].ToString() + "\r\n").ToString());
                                 }
                             }
                             result = true;
                         }
                         else {
-                            GlobalVars.getInstance().error = "Syntax error\n";
+                            GlobalVars.getInstance().error = "Syntax error\r\n";
                         }
                     }
                 if (String.IsNullOrEmpty(string_val))
                     for (int i = 0; i < GlobalVars.getInstance().ListOfProgram.Count; i++)
                     {
-                        GlobalVars.getInstance().listOfStrings.Add((GlobalVars.getInstance().ListOfProgram[i].ToString() + "\n").ToString());
+                        GlobalVars.getInstance().listOfStrings.Add((GlobalVars.getInstance().ListOfProgram[i].ToString() + "\r\n").ToString());
                     }
                 result = true;
             }
             else if (base_val.ToLower().Equals("help"))
             {
-                //Log.d(TAG, "± help");
+                Debug.WriteLine(TAG + "± help");
                 for (int i = 0; i < GlobalVars.getInstance().ListOfCommands.Count; i++)
                 {
-                    GlobalVars.getInstance().listOfStrings.Add((GlobalVars.getInstance().ListOfCommands[i].ToString() + "\n").ToString());
+                    GlobalVars.getInstance().listOfStrings.Add((GlobalVars.getInstance().ListOfCommands[i].ToString() + "\r\n").ToString());
                 }
-                GlobalVars.getInstance().listOfStrings.Add(("\n").ToString());
+                GlobalVars.getInstance().listOfStrings.Add(("\r\n").ToString());
                 result = true;
             }
             else if (base_val.ToLower().Equals("Clear"))
@@ -138,14 +144,14 @@ namespace MCX_Basic
             }
             else if (base_val.ToLower().Equals("end"))
             {
-                //Log.d(TAG, "± end");
+                Debug.WriteLine(TAG + "± end");
                 GlobalVars.getInstance().run = false;
                 GlobalVars.getInstance().isOkSet = true;
                 result = true;
             }
             else if (base_val.ToLower().Equals("beep"))
             {
-                //Log.d(TAG, "± Beep begin ...");
+                Debug.WriteLine(TAG + "± Beep begin ...");
                 result = NO;
             }
             else if (base_val.ToLower().Equals("color"))
@@ -167,7 +173,7 @@ namespace MCX_Basic
             {
                 if (string_val.Length > base_val.Length + 1)
                 {
-                    //Log.d(TAG, "± READING ... '" + string + "'");
+                    Debug.WriteLine(TAG + "± READING ... '" + string_val + "'");
                     if (GlobalVars.getInstance().dataReadIndex < GlobalVars.getInstance().data.Count)
                     {
                         if (string_val.Contains(","))
@@ -178,15 +184,15 @@ namespace MCX_Basic
                                 String stmp = arr[i];
                                 if (stmp.Contains(separator))
                                 {
-                                    GlobalVars.getInstance().error = "Syntax error\n";
+                                    GlobalVars.getInstance().error = "Syntax error\r\n";
                                 }
                                 else if (digitalFunc.isOnlyDigits(stmp))
                                 { // если только цифры
-                                    GlobalVars.getInstance().error = "Syntax error\n";
+                                    GlobalVars.getInstance().error = "Syntax error\r\n";
                                 }
                                 else if (GlobalVars.getInstance().dataReadIndex >= GlobalVars.getInstance().data.Count)
                                 { // Out of DATA
-                                    GlobalVars.getInstance().error = "Out of DATA\n";
+                                    GlobalVars.getInstance().error = "Out of DATA\r\n";
                                 }
                                 else {
                                     String dataValue = GlobalVars.getInstance().data[GlobalVars.getInstance().dataReadIndex].ToString();
@@ -215,14 +221,14 @@ namespace MCX_Basic
                         }
                         else {
                             String stmp = string_val.Substring(5);
-                            //Log.d(TAG, "± READ to ... variable " + stmp);
+                            Debug.WriteLine(TAG + "± READ to ... variable " + stmp);
                             if (stmp.Contains(separator))
                             {
-                                GlobalVars.getInstance().error = "Syntax error\n";
+                                GlobalVars.getInstance().error = "Syntax error\r\n";
                             }
                             else if (digitalFunc.isOnlyDigits(stmp))
                             { // если только цифры
-                                GlobalVars.getInstance().error = "Syntax error\n";
+                                GlobalVars.getInstance().error = "Syntax error\r\n";
                             }
                             else {
                                 String dataValue = GlobalVars.getInstance().data[GlobalVars.getInstance().dataReadIndex].ToString();
@@ -251,11 +257,11 @@ namespace MCX_Basic
                         if (String.IsNullOrEmpty(GlobalVars.getInstance().error)) result = YES;
                     }
                     else {
-                        GlobalVars.getInstance().error = "Out of DATA\n";
+                        GlobalVars.getInstance().error = "Out of DATA\r\n";
                     }
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\n";
+                    GlobalVars.getInstance().error = "Missing operand\r\n";
                 }
             }
             #endregion 
@@ -280,7 +286,7 @@ namespace MCX_Basic
                         }
                         catch //(NumberFormatException e)
                         {
-                            //Log.d(TAG, "± Wrong number format in delete(RunCommand)!");
+                            Debug.WriteLine(TAG + "± Wrong number format in delete(RunCommand)!");
                         }
                         for (int li = begin; li <= end; li++)
                         {
@@ -300,7 +306,7 @@ namespace MCX_Basic
                                 result = YES;
                             }
                             else {
-                                GlobalVars.getInstance().error = "Syntax error\n";
+                                GlobalVars.getInstance().error = "Syntax error\r\n";
                             }
                         }
                     }
@@ -323,12 +329,12 @@ namespace MCX_Basic
                             result = YES;
                         }
                         else {
-                            GlobalVars.getInstance().error = "Syntax error\n";
+                            GlobalVars.getInstance().error = "Syntax error\r\n";
                         }
                     }
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\n";
+                    GlobalVars.getInstance().error = "Missing operand\r\n";
                 }
             }
             else if (base_val.ToLower().Equals("restore"))
@@ -350,14 +356,14 @@ namespace MCX_Basic
                         }
                         catch //(NumberFormatException e)
                         {
-                            //Log.d(TAG, "± Wrong number format in restore!");
+                            Debug.WriteLine(TAG + "± Wrong number format in restore!");
                         }
                         result = YES;
                     }
                     else {
-                        GlobalVars.getInstance().error = "Syntax error\n";
+                        GlobalVars.getInstance().error = "Syntax error\r\n";
                     }
-                    //Log.d(TAG, "restore GlobalVars.getInstance().dataReadIndex=" + GlobalVars.getInstance().dataReadIndex);
+                    Debug.WriteLine(TAG + "restore GlobalVars.getInstance().dataReadIndex=" + GlobalVars.getInstance().dataReadIndex);
                 }
             }
             else if (base_val.ToLower().Equals("renum"))
@@ -375,12 +381,12 @@ namespace MCX_Basic
                     String thenValue;
                     String elseValue = "";
                     NSRange rangeThen = new NSRange(ifValue.IndexOf("then"), 4);
-                    //Log.d(TAG, "± !!! IF operator contain [=<>] "+ifValue.Substring(0, rangeThen.location)+" "+ifValue.Substring(0, rangeThen.location).matches(".*[=<>]+.*"));
+                    //Debug.WriteLine(TAG + "± !!! IF operator contain [=<>] " + ifValue.Substring(0, rangeThen.location) + " " + ifValue.Substring(0, rangeThen.location).Contains(".*[=<>]+.*"));
                     if (rangeThen.location == NSNotFound || Regex.IsMatch(ifValue.Substring(0, rangeThen.location), (".*[=<>]+.*")) == false)
                     //ifValue.Substring(0, rangeThen.location).matches(".*[=<>]+.*"))
                     {
-                        //Log.d(TAG, "± Syntax error in IF operator");
-                        GlobalVars.getInstance().error = "Syntax error in IF operator\n";
+                        Debug.WriteLine(TAG + "± Syntax error in IF operator");
+                        GlobalVars.getInstance().error = "Syntax error in IF operator\r\n";
                     }
                     else {
                         ifValue = normaStr.removeSpaceInBeginAndEnd(ifValue.Substring(0, rangeThen.location));
@@ -405,7 +411,7 @@ namespace MCX_Basic
                     }
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\n";
+                    GlobalVars.getInstance().error = "Missing operand\r\n";
                 }
             }
 
@@ -420,8 +426,8 @@ namespace MCX_Basic
                     NSRange rangeTo = new NSRange(forValue.IndexOf("to"), 2);
                     if (rangeTo.location == NSNotFound)
                     {
-                        //Log.d(TAG, "± for without to");
-                        GlobalVars.getInstance().error = "Syntax error - FOR without TO\n";
+                        Debug.WriteLine(TAG + "± for without to");
+                        GlobalVars.getInstance().error = "Syntax error - FOR without TO\r\n";
                     }
                     else {
                         forValue = forValue.Substring(0, rangeTo.location).Replace(" ", "");
@@ -430,7 +436,7 @@ namespace MCX_Basic
                     NSRange rangeStep = new NSRange(string_val.IndexOf("step"), 4);
                     if (rangeStep.location == NSNotFound)
                     {
-                        //Log.d(TAG, "± for without step ");
+                        Debug.WriteLine(TAG + "± for without step ");
                         toValue = string_val.Substring(rangeTo.location + 2);
                         toValue = toValue.Replace(" ", "");
                         stepValue = "1";
@@ -439,12 +445,12 @@ namespace MCX_Basic
                         stepValue = string_val.Substring(rangeStep.location + 4).Replace(" ", "");
                         toValue = string_val.Substring(rangeTo.location + 2, rangeStep.location).Replace(" ", "");
                     }
-                    //Log.d(TAG, "± !!!! forValue='" + forValue + "' toValue='" + toValue + "' stepValue='" + stepValue + "'");
+                    Debug.WriteLine(TAG + "± !!!! forValue='" + forValue + "' toValue='" + toValue + "' stepValue='" + stepValue + "'");
                     String tmpFor = resultFromString(variables.returnVarValue(forValue));
                     String tmpTo = resultFromString(variables.returnVarValue(toValue));
                     String tmpStep = resultFromString(variables.returnVarValue(stepValue));
-                    //Log.d(TAG, "±     forValue=" + forValue + " toValue=" + toValue + " stepValue=" + stepValue);
-                    //Log.d(TAG, "± TMP forValue=" + tmpFor + " toValue=" + tmpTo + " stepValue=" + tmpStep);
+                    Debug.WriteLine(TAG + "±     forValue=" + forValue + " toValue=" + toValue + " stepValue=" + stepValue);
+                    Debug.WriteLine(TAG + "± TMP forValue=" + tmpFor + " toValue=" + tmpTo + " stepValue=" + tmpStep);
                     String varName = variables.returnVarName(forValue);
                     forSet.forLine = GlobalVars.getInstance().runnedLine;
                     forSet.forName = varName;
@@ -467,12 +473,12 @@ namespace MCX_Basic
                     else {
                         GlobalVars.getInstance().error = "Syntax error";
                         GlobalVars.getInstance().command = "";
-                        //Log.d(TAG, "± let empty");
+                        Debug.WriteLine(TAG + "± let empty");
                     }
                     result = YES;
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\n";
+                    GlobalVars.getInstance().error = "Missing operand\r\n";
                 }
             }
             else if (base_val.ToLower().Equals("next"))
@@ -485,14 +491,14 @@ namespace MCX_Basic
                     int forI = 0, ff = 0;
                     try
                     {
-                        //Log.d(TAG, "± NEXT try int variables.returnContainOfVariable(forSet.forName)=" + variables.returnContainOfVariable(forSet.forName));
-                        //Log.d(TAG, "± NEXT try int forSet.forStep=" + forSet.forStep);
+                        Debug.WriteLine(TAG + "± NEXT try int variables.returnContainOfVariable(forSet.forName)=" + variables.returnContainOfVariable(forSet.forName));
+                        Debug.WriteLine(TAG + "± NEXT try int forSet.forStep=" + forSet.forStep);
                         forI = (int)(float.Parse(variables.returnContainOfVariable(forSet.forName)) + float.Parse(forSet.forStep));
                         ff = (int)float.Parse(forSet.forTo);
                     }
                     catch //(NumberFormatException e)
                     {
-                        //Log.d(TAG, "± Wrong number format in NEXT operator!");
+                        Debug.WriteLine(TAG + "± Wrong number format in NEXT operator!");
                     }
                     if (forI > ff)
                     {
@@ -505,7 +511,7 @@ namespace MCX_Basic
                     result = YES;
                 }
                 else {
-                    GlobalVars.getInstance().error = "NEXT without FOR\n";
+                    GlobalVars.getInstance().error = "NEXT without FOR\r\n";
                 }
             }
             else if (base_val.ToLower().Equals("goto"))
@@ -518,12 +524,12 @@ namespace MCX_Basic
                     if (GlobalVars.getInstance().runIndex < -1)
                     {
                         GlobalVars.getInstance().runIndex = 0;
-                        GlobalVars.getInstance().error = "Undefined line number\n";
+                        GlobalVars.getInstance().error = "Undefined line number\r\n";
                         result = NO;
                     }
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\n";
+                    GlobalVars.getInstance().error = "Missing operand\r\n";
                 }
             }
             else if (base_val.ToLower().Equals("gosub"))
@@ -537,12 +543,12 @@ namespace MCX_Basic
                     if (GlobalVars.getInstance().runIndex < -1)
                     {
                         GlobalVars.getInstance().runIndex = 0;
-                        GlobalVars.getInstance().error = "Undefined line number\n";
+                        GlobalVars.getInstance().error = "Undefined line number\r\n";
                         result = NO;
                     }
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\n";
+                    GlobalVars.getInstance().error = "Missing operand\r\n";
                 }
             }
             else if (base_val.ToLower().Equals("return"))
@@ -551,12 +557,12 @@ namespace MCX_Basic
                 {
                     string_val = GlobalVars.getInstance().gosubArray[GlobalVars.getInstance().gosubArray.Count - 1].ToString();
                     GlobalVars.getInstance().gosubArray.RemoveAt(GlobalVars.getInstance().gosubArray.Count - 1);
-                    //Log.d(TAG, "± return - " + string_val);
+                    Debug.WriteLine(TAG + "± return - " + string_val);
                     GlobalVars.getInstance().runIndex = returnIndexFromLine(string_val) + 1;
                     result = YES;
                 }
                 else {
-                    GlobalVars.getInstance().error = "RETURN without GOSUB\n";
+                    GlobalVars.getInstance().error = "RETURN without GOSUB\r\n";
                 }
             }
             else if (base_val.ToLower().Equals("rem"))
@@ -571,7 +577,7 @@ namespace MCX_Basic
                     result = initDim(clearString);
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\n";
+                    GlobalVars.getInstance().error = "Missing operand\r\n";
                 }
             }
             else if (base_val.ToLower().Equals("date"))
@@ -582,7 +588,7 @@ namespace MCX_Basic
                     result = variables.getDateToVariable(clearString);
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\n";
+                    GlobalVars.getInstance().error = "Missing operand\r\n";
                 }
             }
             else if (base_val.ToLower().Equals("time"))
@@ -593,7 +599,7 @@ namespace MCX_Basic
                     result = variables.getTimeToVariable(clearString);
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\n";
+                    GlobalVars.getInstance().error = "Missing operand\r\n";
                 }
             }
             else if (base_val.ToLower().Equals("print"))
@@ -603,7 +609,7 @@ namespace MCX_Basic
                     result = print(string_val);
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\n";
+                    GlobalVars.getInstance().error = "Missing operand\r\n";
                 }
             }
             else if (base_val.ToLower().Equals("varl"))
@@ -611,7 +617,7 @@ namespace MCX_Basic
                 for (int i = 0; i < GlobalVars.getInstance().variables.Count; i++)
                 {
                     VariableSet varSet = GlobalVars.getInstance().variables[i];
-                    GlobalVars.getInstance().listOfStrings.Add(varSet.name + " = " + varSet.var + "\n");
+                    GlobalVars.getInstance().listOfStrings.Add(varSet.name + " = " + varSet.var + "\r\n");
                 }
                 result = YES;
             }
@@ -619,11 +625,11 @@ namespace MCX_Basic
             {
                 if (string_val.Length > base_val.Length + 1)
                 {
-                    GlobalVars.getInstance().listOfStrings.Add(GlobalVars.getInstance().lineNumber + "\n");
+                    GlobalVars.getInstance().listOfStrings.Add(GlobalVars.getInstance().lineNumber + "\r\n");
                     result = YES;
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\n";
+                    GlobalVars.getInstance().error = "Missing operand\r\n";
                 }
             }
             else if (base_val.ToLower().Equals("pos"))
@@ -634,7 +640,7 @@ namespace MCX_Basic
                     result = YES;
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\n";
+                    GlobalVars.getInstance().error = "Missing operand\r\n";
                 }
             }
             else if (base_val.ToLower().Equals("let"))
@@ -645,7 +651,7 @@ namespace MCX_Basic
                     result = let(clearString);
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\n";
+                    GlobalVars.getInstance().error = "Missing operand\r\n";
                 }
             }
             else if (base_val.ToLower().Equals("run"))
@@ -677,12 +683,12 @@ namespace MCX_Basic
                 return file.getPath().compareTo(file2.getPath());
         }
     });*/
-            for (int i = 0; i<fileList.Count; i++)
-                if (fileList[i].ToString().Contains(".bas"))
-                    GlobalVars.getInstance().listOfStrings.Add(fileList[i].ToString().Substring(fileList[i].ToString().LastIndexOf("/") + 1) + "\n");
-            //Log.d(TAG, "± files-"+GlobalVars.getInstance().listOfStrings);
-            result = YES;
-        }
+                for (int i = 0; i < fileList.Count; i++)
+                    if (fileList[i].ToString().Contains(".bas"))
+                        GlobalVars.getInstance().listOfStrings.Add(fileList[i].ToString().Substring(fileList[i].ToString().LastIndexOf("/") + 1) + "\r\n");
+                Debug.WriteLine(TAG + "± files-" + GlobalVars.getInstance().listOfStrings);
+                result = YES;
+            }
             else if (base_val.ToLower().Equals("share"))
             {
                 /*
@@ -697,7 +703,7 @@ namespace MCX_Basic
                         List<String> paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                         NSString *documentsDirectory = [paths[0]; // Get documents directory
                         NSError *error;
-                        String arrayText = GlobalVars.getInstance().listOfProgram componentsJoinedByString: "\n"];
+                        String arrayText = GlobalVars.getInstance().listOfProgram componentsJoinedByString: "\r\n"];
                         fn= documentsDirectory stringByAppendingPathComponent:string_val];
                         bool succeed = [arrayText writeToFile(documentsDirectory stringByAppendingPathComponent:string_val]
                         atomically:YES encoding:NSUTF8StringEncoding error:&error];
@@ -710,7 +716,7 @@ namespace MCX_Basic
                         }
                         result=NO;
                     } else {
-                        GlobalVars.getInstance().error = "Missing operand\n";
+                        GlobalVars.getInstance().error = "Missing operand\r\n";
                     } */
             }
             else if (base_val.ToLower().Equals("save"))
@@ -721,7 +727,7 @@ namespace MCX_Basic
                     result = YES;
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\n";
+                    GlobalVars.getInstance().error = "Missing operand\r\n";
                 }
             }
             else if (base_val.ToLower().Equals("csave"))
@@ -745,12 +751,12 @@ namespace MCX_Basic
             }
             else if (!digitalFunc.isOnlyDigits(base_val) && variables.isArrayPresent(string_val))
             { // let dim array
-              //Log.d(TAG, "± let to dim '" + string_val + "'");
+                Debug.WriteLine(TAG + "± let to dim '" + string_val + "'");
                 result = setDim(string_val);
             }
             else if (!digitalFunc.isOnlyDigits(base_val) && !String.IsNullOrEmpty(base_val))
             { // let var without LET operator
-              //Log.d(TAG, "± let to variable (no let)");
+                Debug.WriteLine(TAG + "± let to variable (no let)");
                 NSRange range = new NSRange(string_val.IndexOf("="), 1);
                 if (range.location != NSNotFound)
                 {
@@ -768,21 +774,21 @@ namespace MCX_Basic
             }
             else if (digitalFunc.isOnlyDigits(base_val) && !base_val.ToLower().Equals(""))
             { // manual program string_val set
-              //Log.d(TAG, "± manual program string_val set at line '" + base_val + "'");
+                Debug.WriteLine(TAG + "± manual program string_val set at line '" + base_val + "'");
                 GlobalVars.getInstance().variables.Clear();
                 programString(string_val, base_val);
                 GlobalVars.getInstance().isOkSet = NO;
             }
             else {
-                //Log.d(TAG, "± command error");
-                GlobalVars.getInstance().Command="";
+                Debug.WriteLine(TAG + "± command error");
+                GlobalVars.getInstance().Command = "";
                 if (!base_val.Equals(""))
                 {
-                    //Log.d(TAG, "± Syntax error");
-                    GlobalVars.getInstance().Error="Syntax error\n";
+                    Debug.WriteLine(TAG + "± Syntax error");
+                    GlobalVars.getInstance().Error = "Syntax error\r\n";
                 }
             }
-            //Log.d(TAG, "± runCommand set over!");
+            Debug.WriteLine(TAG + "± runCommand set over!");
             return result;
         }
 
@@ -799,7 +805,7 @@ namespace MCX_Basic
             GlobalVars.getInstance().listOfStrings.Clear();
             GlobalVars.getInstance().listOfStrings.Add(GlobalVars.getInstance().programCounter + " ");
             GlobalVars.getInstance().autoSet = NO;
-            //Log.d(TAG, "± autoProgramStop");
+            Debug.WriteLine(TAG + "± autoProgramStop");
         }
 
 
@@ -812,12 +818,12 @@ namespace MCX_Basic
         {
         if (!((var Substring(1].Equals(separator] || !((var.Substring (var length]-1].Equals(separator]) {
         result=YES;
-        GlobalVars.getInstance().error="Type mismatch\n";
+        GlobalVars.getInstance().error="Type mismatch\r\n";
         }
         }else{
         if  (var rangeOfCharacterFromSet:numberSet].location != NSNotFound) {
         result=YES;
-        GlobalVars.getInstance().error="Type mismatch\n";
+        GlobalVars.getInstance().error="Type mismatch\r\n";
         }
         }
         return result;
@@ -827,7 +833,7 @@ namespace MCX_Basic
 
         public bool setDim(String string_val)
         {
-            //Log.d(TAG, "± set dim..." + string_val);
+            Debug.WriteLine(TAG + "± set dim..." + string_val);
             bool result = YES;
             if (string_val.Contains("="))
             {
@@ -845,9 +851,9 @@ namespace MCX_Basic
                 }
                 catch //(NumberFormatException e)
                 {
-                    //Log.d(TAG, "± Wrong number format in setDim!");
+                    Debug.WriteLine(TAG + "± Wrong number format in setDim!");
                 }
-                //Log.d(TAG, "± set dim index='" + string_val.Substring(rangeFirst.location + 1, rangeSecond.location) + "' name='" + name + "'");
+                Debug.WriteLine(TAG + "± set dim index='" + string_val.Substring(rangeFirst.location + 1, rangeSecond.location) + "' name='" + name + "'");
                 rangeFirst = new NSRange(string_val.IndexOf("="), 1);
                 String value = string_val.Substring(rangeFirst.location + 1);
                 //если переменная строковая добавим кавычки но при этом содержимое не содержит кавычки
@@ -858,7 +864,7 @@ namespace MCX_Basic
                 {
                     if (name.Contains("$"))
                     {
-                        //Log.d(TAG, "± dim variable is string_val " + value);
+                        Debug.WriteLine(TAG + "± dim variable is string_val " + value);
                         if (value.Equals("")) value = "\"\"";
                         if (normaStr.isText(value))
                         {
@@ -869,11 +875,11 @@ namespace MCX_Basic
                         }
                     }
                     else {
-                        //Log.d(TAG, "± dim variable is digits " + value);
+                        Debug.WriteLine(TAG + "± dim variable is digits " + value);
                         if (String.IsNullOrEmpty(value) || variables.variableIsString(value))
                         {
                             value = "";
-                            GlobalVars.getInstance().error = "Type mismatch\n";
+                            GlobalVars.getInstance().error = "Type mismatch\r\n";
                             result = NO;
                         }
                         value = (digitalFunc.returnMathResult(value)).ToString();
@@ -885,37 +891,37 @@ namespace MCX_Basic
                         if (str.Equals(name))
                         {
                             arrayDim.value[index] = value;
-                    GlobalVars.getInstance().array[i] = arrayDim;
+                            GlobalVars.getInstance().array[i] = arrayDim;
+                        }
+                        Debug.WriteLine(TAG + "± dim name='" + name + "' index='" + index + "' value='" + value + "' error='" + GlobalVars.getInstance().error + "' dim='" + arrayDim.value + "'");
+                    }
                 }
-                //Log.d(TAG, "± dim name='" + name + "' index='" + index + "' value='" + value + "' error='" + GlobalVars.getInstance().error + "' dim='" + arrayDim.value + "'");
-            }
-        }
                 else {
                     result = NO;
-                    GlobalVars.getInstance().error = "Syntax error\n";
+                    GlobalVars.getInstance().error = "Syntax error\r\n";
                 }
             }
             else {
                 result = NO;
-                GlobalVars.getInstance().error = "Syntax error\n";
+                GlobalVars.getInstance().error = "Syntax error\r\n";
             }
             return result;
         }
 
-    public void loadGlobal()
+        public void loadGlobal()
         {
             /*
         NSString *filePath = GlobalVars.getInstance().fileName;
-        //    //Log.d(TAG, "± load global for - ",filePath);
+        //    Debug.WriteLine(TAG + "± load global for - ",filePath);
         if (filePath) {
         reset];
         NSString *arrayText = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
         if (arrayText) {
-        GlobalVars.getInstance().listOfProgram = [NSMutableArray arrayWithArray(arrayText componentsSeparatedByString: "\n"));
+        GlobalVars.getInstance().listOfProgram = [NSMutableArray arrayWithArray(arrayText componentsSeparatedByString: "\r\n"));
         GlobalVars.getInstance().programCounter = ((self returnBaseCommand:GlobalVars.getInstance().listOfProgram lastObject))intValue] + GlobalVars.getInstance().autoStep;
         }
         } else {
-        GlobalVars.getInstance().error = "File not found\n";
+        GlobalVars.getInstance().error = "File not found\r\n";
         }
         */
         }
@@ -923,9 +929,9 @@ namespace MCX_Basic
         public void csave(String string_val)
         {
             /*
-        //Log.d(TAG, "± saving-''",string_val);
+        Debug.WriteLine(TAG + "± saving-''",string_val);
         NSError *error;
-        String arrayText = GlobalVars.getInstance().listOfProgram componentsJoinedByString: "\n"];
+        String arrayText = GlobalVars.getInstance().listOfProgram componentsJoinedByString: "\r\n"];
         bool succeed = [arrayText writeToFile:string_val atomically:YES encoding:NSUTF8StringEncoding error:&error];
         if (!succeed){
         GlobalVars.getInstance().error = "Bad file name";
@@ -946,13 +952,13 @@ namespace MCX_Basic
         List<String> paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths[0];
         NSString *filePath = [documentsDirectory stringByAppendingPathComponent:string_val];
-        //Log.d(TAG, "± kill for - ",filePath);
+        Debug.WriteLine(TAG + "± kill for - ",filePath);
 
         NSFileManager *fileManager = [NSFileManager defaultManager];
         NSError *error;
         bool success = [fileManager removeItemAtPath:filePath error:&error];
         if (!success) {
-        GlobalVars.getInstance().error = "File not found\n";
+        GlobalVars.getInstance().error = "File not found\r\n";
         result=NO;
         }
         */
@@ -989,7 +995,7 @@ namespace MCX_Basic
                 }
                 catch //(NumberFormatException e)
                 {
-                    //Log.d(TAG, "± Wrong number format in programString!");
+                    Debug.WriteLine(TAG + "± Wrong number format in programString!");
                 }
             }
             if (string_val.Length > number.Length + 1)
@@ -1005,7 +1011,7 @@ namespace MCX_Basic
                 GlobalVars.getInstance().listOfStrings.Add(GlobalVars.getInstance().programCounter + " ");
             }
             else {
-                GlobalVars.getInstance().error = "Undefined line number\n";
+                GlobalVars.getInstance().error = "Undefined line number\r\n";
             }
         }
 
@@ -1036,7 +1042,7 @@ namespace MCX_Basic
 
         public void save(String string_val)
         {
-            //Log.d(TAG, "± saving-" + string_val);
+            Debug.WriteLine(TAG + "± saving-" + string_val);
             string_val = normaStr.removeSpaceInBegin(string_val);
             string_val = string_val.Replace("\"", "");
             string_val = string_val.Replace(".bas", "");
@@ -1044,7 +1050,7 @@ namespace MCX_Basic
             String documentsDirectory = GlobalVars.getInstance().currentFolder; // Get documents directory
             String arrayText = "";
             for (int i = 0; i < GlobalVars.getInstance().listOfProgram.Count; i++)
-                arrayText = arrayText + GlobalVars.getInstance().listOfProgram[i].ToString() + "\n";
+                arrayText = arrayText + GlobalVars.getInstance().listOfProgram[i].ToString() + "\r\n";
             try
             {
 
@@ -1052,7 +1058,7 @@ namespace MCX_Basic
                 //if (!f.isDirectory())
                 if (!Directory.Exists(GlobalVars.getInstance().currentFolder))
                 {
-                    //Log.d(TAG, "± Make dir " + GlobalVars.getInstance().currentFolder);
+                    Debug.WriteLine(TAG + "± Make dir " + GlobalVars.getInstance().currentFolder);
                     f.Create();
                 }
 
@@ -1065,9 +1071,9 @@ namespace MCX_Basic
             }
             catch //(Throwable t)
             {
-                //Log.d(TAG, "± Exception: " + t.ToString());
+                //Debug.WriteLine(TAG + "± Exception: " + t.ToString());
             }
-            //Log.d(TAG, "± saved - '" + GlobalVars.getInstance().fileName + "'");
+            Debug.WriteLine(TAG + "± saved - '" + GlobalVars.getInstance().fileName + "'");
         }
 
         public void scanData()
@@ -1075,68 +1081,68 @@ namespace MCX_Basic
             GlobalVars.getInstance().dataReadIndex = 0;
             GlobalVars.getInstance().data.Clear();
             GlobalVars.getInstance().dataIndex.Clear();
-            //    //Log.d(TAG, "± SCANNING...");
+            //    Debug.WriteLine(TAG + "± SCANNING...");
             String separator = "\"";
             for (int n = 0; n < GlobalVars.getInstance().listOfProgram.Count; n++)
             {
                 String currentLine = GlobalVars.getInstance().listOfProgram[n].ToString();
-            if (String.IsNullOrEmpty(currentLine))
-            {
-                GlobalVars.getInstance().listOfProgram.RemoveAt(n);
-                //Log.d(TAG, "± REMOVING..." + n + " " + currentLine);
-            }
-        }
-    for (int n = 0; n < GlobalVars.getInstance().listOfProgram.Count; n++)
-    {
-        String currentLine = GlobalVars.getInstance().listOfProgram[n].ToString();
-        //Log.d(TAG, "± SCANNING..." + n + " " + currentLine);
-        String untilSpace = currentLine.Split(' ')[0];
-        GlobalVars.getInstance().runnedLine = untilSpace;
-        int indexforAfterSpace = untilSpace.Length;
-        String string_val = currentLine.Substring(indexforAfterSpace + 1);
-        String base_val = returnBaseCommand(string_val);
-        if (base_val.ToLower().Equals("data"))
-        {
-            if (string_val.Length > base_val.Length + 1)
-            {
-                if (string_val.Contains(","))
+                if (String.IsNullOrEmpty(currentLine))
                 {
-                    String[] arr = string_val.Substring(5).Split(',');
-                    for (int i = 0; i<arr.Length; i++)
+                    GlobalVars.getInstance().listOfProgram.RemoveAt(n);
+                    Debug.WriteLine(TAG + "± REMOVING..." + n + " " + currentLine);
+                }
+            }
+            for (int n = 0; n < GlobalVars.getInstance().listOfProgram.Count; n++)
+            {
+                String currentLine = GlobalVars.getInstance().listOfProgram[n].ToString();
+                Debug.WriteLine(TAG + "± SCANNING..." + n + " " + currentLine);
+                String untilSpace = currentLine.Split(' ')[0];
+                GlobalVars.getInstance().runnedLine = untilSpace;
+                int indexforAfterSpace = untilSpace.Length;
+                String string_val = currentLine.Substring(indexforAfterSpace + 1);
+                String base_val = returnBaseCommand(string_val);
+                if (base_val.ToLower().Equals("data"))
+                {
+                    if (string_val.Length > base_val.Length + 1)
                     {
-                        String stmp = arr[i];
-        GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в индекс номер строки data
-                        if (stmp.Contains(separator))
+                        if (string_val.Contains(","))
                         {
-                            stmp = stmp.Split(Convert.ToChar(separator))[1];
-                            GlobalVars.getInstance().data.Add(stmp);
+                            String[] arr = string_val.Substring(5).Split(',');
+                            for (int i = 0; i < arr.Length; i++)
+                            {
+                                String stmp = arr[i];
+                                GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в индекс номер строки data
+                                if (stmp.Contains(separator))
+                                {
+                                    stmp = stmp.Split(Convert.ToChar(separator))[1];
+                                    GlobalVars.getInstance().data.Add(stmp);
+                                }
+                                else {
+                                    GlobalVars.getInstance().data.Add(stmp);
+                                }
+                                Debug.WriteLine(TAG + "± SET DATA ''" + stmp);
+                            }
                         }
                         else {
-                            GlobalVars.getInstance().data.Add(stmp);
+                            String stmp = string_val.Substring(5);
+                            GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в индекс номер строки data
+                            if (stmp.Contains(separator))
+                            {
+                                GlobalVars.getInstance().data.Add(stmp.Split(Convert.ToChar(separator))[1]);
+                            }
+                            else {
+                                GlobalVars.getInstance().data.Add(stmp);
+                            }
+                            Debug.WriteLine(TAG + "± SET DATA ''" + stmp);
                         }
-                        //Log.d(TAG, "± SET DATA ''" + stmp);
-                    }
-                }
-                else {
-                    String stmp = string_val.Substring(5);
-GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в индекс номер строки data
-                    if (stmp.Contains(separator))
-                    {
-                        GlobalVars.getInstance().data.Add(stmp.Split(Convert.ToChar(separator))[1]);
                     }
                     else {
-                        GlobalVars.getInstance().data.Add(stmp);
+                        GlobalVars.getInstance().error = "Missing operand\r\n";
                     }
-                    //Log.d(TAG, "± SET DATA ''" + stmp);
                 }
             }
-            else {
-                GlobalVars.getInstance().error = "Missing operand\n";
-            }
+            Debug.WriteLine(TAG + "± SCANNING OVER " + GlobalVars.getInstance().dataIndex);
         }
-    }
-    //Log.d(TAG, "± SCANNING OVER " + GlobalVars.getInstance().dataIndex);
-}
 
         public bool let(String string_val)
         {
@@ -1153,37 +1159,38 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                         if (index == GlobalVars.getInstance().variables.Count)
                         {
                             GlobalVars.getInstance().variables.Add(addVariable(value, varName));
-                            //Log.d(TAG, "± let new var - " + varName + " value=" + value);
-                            //Log.d(TAG, "± let new var - " + GlobalVars.getInstance().variables[index).getName().ToString() + " value=" + GlobalVars.getInstance().variables[index).getVar().ToString());
+                            Debug.WriteLine(TAG + "± let new var - " + varName + " value=" + value);
+                            Debug.WriteLine(TAG + "± let new var - " + GlobalVars.getInstance().variables[index].getName().ToString() + " value=" + GlobalVars.getInstance().variables[index].getVar().ToString());
                         }
                         else {
                             GlobalVars.getInstance().variables[index] = addVariable(value, varName);
-                            //Log.d(TAG, "± let exist var - " + varName + " value=" + value);
+                            Debug.WriteLine(TAG + "± let exist var - " + varName + " value=" + value);
                         }
                         if (String.IsNullOrEmpty(GlobalVars.getInstance().error)) result = YES;
                     }
                     else {
                         GlobalVars.getInstance().command = "";
-                        GlobalVars.getInstance().error = "Forbidden variable\n";
+                        GlobalVars.getInstance().error = "Forbidden variable\r\n";
                         result = NO;
-                        //Log.d(TAG, "± let empty Forbidden variable");
+                        Debug.WriteLine(TAG + "± let empty Forbidden variable");
                     }
                 }
             }
             else {
-                GlobalVars.getInstance().error = "Syntax error\n";
-                //Log.d(TAG, "± let Syntax error");
+                GlobalVars.getInstance().error = "Syntax error\r\n";
+                Debug.WriteLine(TAG + "± let Syntax error");
             }
             // for (int i = 0; i < GlobalVars.getInstance().variables.Count; i++)
-            //Log.d(TAG, "± let varName - " + GlobalVars.getInstance().variables[i].getName()
-            //        + " value=" + GlobalVars.getInstance().variables[i].getVar() + " is String type=" + GlobalVars.getInstance().variables[i].getStringType());
+            /*Debug.WriteLine(TAG + "± let varName - " + GlobalVars.getInstance().variables[i].getName()
+                    + " value=" + GlobalVars.getInstance().variables[i].getVar() + " is String type=" + GlobalVars.getInstance().variables[i].getStringType());
+            */
             return result;
         }
 
         public bool print(String string_val)
         {
-            //Log.d(TAG, "± PRINT init ......''" + string_val);
-            String cr = "\n";
+            Debug.WriteLine(TAG + "± PRINT init ......''" + string_val);
+            String cr = "\r\n";
             if (string_val.Substring(string_val.Length - 1).Equals(";"))
             {
                 cr = "";
@@ -1200,14 +1207,14 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
             printResult = string_val + cr;
             GlobalVars.getInstance().listOfStrings.Add(printResult);
             if (String.IsNullOrEmpty(GlobalVars.getInstance().error)) result = YES;
-            //Log.d(TAG, "± PRINT result '" + printResult + "' error-" + GlobalVars.getInstance().error);
+            Debug.WriteLine(TAG + "± PRINT result '" + printResult + "' error-" + GlobalVars.getInstance().error);
             return result;
         }
 
         public bool initDim(String string_val)
         {
             bool result = YES;
-            //Log.d(TAG, "± initDim... " + string_val);
+            Debug.WriteLine(TAG + "± initDim... " + string_val);
             List<String> arr = new List<String>((string_val.Split(',')).ToList());
             for (int i = 0; i < arr.Count; i++)
             {
@@ -1230,31 +1237,31 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                         }
                         catch //(NumberFormatException e)
                         {
-                            //Log.d(TAG, "± Wrong number format in initDim!");
+                            Debug.WriteLine(TAG + "± Wrong number format in initDim!");
                         }
                         variables.initArrayNameWithSize(name, tmp);
-                        //Log.d(TAG, "± dim name - '" + name + "' size = " + size);
+                        Debug.WriteLine(TAG + "± dim name - '" + name + "' size = " + size);
                     }
                     else {
                         GlobalVars.getInstance().command = "";
-                        GlobalVars.getInstance().error = "Wrong dim variable name\n";
+                        GlobalVars.getInstance().error = "Wrong dim variable name\r\n";
                         result = NO;
                     }
                 }
                 else {
                     GlobalVars.getInstance().command = "";
-                    GlobalVars.getInstance().error = "Wrong dim variable name\n";
+                    GlobalVars.getInstance().error = "Wrong dim variable name\r\n";
                     result = NO;
                 }
                 String testValue = name.Replace(" ", "");
                 if (testValue.Equals(""))
                 {
                     GlobalVars.getInstance().command = "";
-                    GlobalVars.getInstance().error = "Wrong dim variable name\n";
+                    GlobalVars.getInstance().error = "Wrong dim variable name\r\n";
                     result = NO;
                 }
             }
-            //Log.d(TAG, "± initDim result - '" + result+"'");
+            Debug.WriteLine(TAG + "± initDim result - '" + result + "'");
             return result;
         }
 
@@ -1267,23 +1274,23 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                 if (currentLine.Equals(line))
                 {
                     result = i - 1;
-                    //Log.d(TAG, "± returnIndexFromLine currentLine=" + currentLine + "   String line=" + line + " result=" + result);
+                    Debug.WriteLine(TAG + "± returnIndexFromLine currentLine=" + currentLine + "   String line=" + line + " result=" + result);
                 }
             }
-            //Log.d(TAG, "± returnIndexFromLine - " + result);
+            Debug.WriteLine(TAG + "± returnIndexFromLine - " + result);
             return result;
         }
 
         public VariableSet addVariable(String var, String name)
         {
             bool strType = NO;
-            //    //Log.d(TAG, "± addVariable+ is string_val ",var);
+            //    Debug.WriteLine(TAG + "± addVariable+ is string_val ",var);
             var = normaStr.removeSpaceInBeginAndEnd(var);
             if (var.Equals("+")) var = "\"+\"";
             String value = var;
             if (name.Contains("$"))
             {
-                //Log.d(TAG, "± addVariable+variable is string_val " + var);
+                Debug.WriteLine(TAG + "± addVariable+variable is string_val " + var);
                 if (String.IsNullOrEmpty(var)) var = "\"\"";
                 strType = YES;
                 if (normaStr.isText(value))
@@ -1295,11 +1302,11 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                 }
             }
             else {
-                //Log.d(TAG, "± variable is digits " + var);
+                Debug.WriteLine(TAG + "± variable is digits " + var);
                 if (String.IsNullOrEmpty(var) || variables.variableIsString(var))
                 {
                     value = "0";
-                    GlobalVars.getInstance().error = "Type mismatch\n";
+                    GlobalVars.getInstance().error = "Type mismatch\r\n";
                 }
                 value = (digitalFunc.returnMathResult(value)).ToString();
             }
@@ -1346,7 +1353,7 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
             String ifSecond;
             NSRange rangeThen;
 
-            //Log.d(TAG, "± IF operator '=' "+ifValue);
+            Debug.WriteLine(TAG + "± IF operator '=' " + ifValue);
 
             if (ifValue.Contains("=>"))
             {
@@ -1371,8 +1378,8 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                     }
                 }
                 else {
-                    //Log.d(TAG, "± Syntax error in IF operator");
-                    GlobalVars.getInstance().error = "Type mismatch in IF operator\n";
+                    Debug.WriteLine(TAG + "± Syntax error in IF operator");
+                    GlobalVars.getInstance().error = "Type mismatch in IF operator\r\n";
                 }
             }
             else if (ifValue.Contains("<>"))
@@ -1474,8 +1481,8 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                     }
                 }
                 else {
-                    //Log.d(TAG, "± Syntax error in IF operator");
-                    GlobalVars.getInstance().error = "Type mismatch in IF operator\n";
+                    Debug.WriteLine(TAG + "± Syntax error in IF operator");
+                    GlobalVars.getInstance().error = "Type mismatch in IF operator\r\n";
                 }
             }
             else if (ifValue.Contains("=<"))
@@ -1501,8 +1508,8 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                     }
                 }
                 else {
-                    //Log.d(TAG, "± Syntax error in IF operator");
-                    GlobalVars.getInstance().error = "Type mismatch in IF operator\n";
+                    Debug.WriteLine(TAG + "± Syntax error in IF operator");
+                    GlobalVars.getInstance().error = "Type mismatch in IF operator\r\n";
                 }
             }
             else if (ifValue.Contains("<="))
@@ -1528,8 +1535,8 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                     }
                 }
                 else {
-                    //Log.d(TAG, "± Syntax error in IF operator");
-                    GlobalVars.getInstance().error = "Type mismatch in IF operator\n";
+                    Debug.WriteLine(TAG + "± Syntax error in IF operator");
+                    GlobalVars.getInstance().error = "Type mismatch in IF operator\r\n";
                 }
             }
             else if (ifValue.Contains("<"))
@@ -1555,8 +1562,8 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                     }
                 }
                 else {
-                    //Log.d(TAG, "± Syntax error in IF operator");
-                    GlobalVars.getInstance().error = "Type mismatch in IF operator\n";
+                    Debug.WriteLine(TAG + "± Syntax error in IF operator");
+                    GlobalVars.getInstance().error = "Type mismatch in IF operator\r\n";
                 }
             }
             else if (ifValue.Contains(">"))
@@ -1582,8 +1589,8 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                     }
                 }
                 else {
-                    //Log.d(TAG, "± Syntax error in IF operator");
-                    GlobalVars.getInstance().error = "Type mismatch in IF operator\n";
+                    Debug.WriteLine(TAG + "± Syntax error in IF operator");
+                    GlobalVars.getInstance().error = "Type mismatch in IF operator\r\n";
                 }
             }
             else if (ifValue.Contains("="))
@@ -1602,7 +1609,7 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                         ifSecond = variables.returnContainOfVariable(ifSecond);
                     if (float.Parse(ifFirst) == float.Parse(ifSecond))
                     {
-                        //Log.d(TAG, "± (digit)IF " + ifFirst + " == " + ifSecond);
+                        Debug.WriteLine(TAG + "± (digit)IF " + ifFirst + " == " + ifSecond);
                         result = YES;
                     }
                     else {
@@ -1616,7 +1623,7 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                         ifFirst = "\"" + variables.returnContainOfVariable(ifFirst) + "\"";
                     if (variables.variableIsPresent(ifSecond))
                         ifSecond = "\"" + variables.returnContainOfVariable(ifSecond) + "\"";
-                    //Log.d(TAG, "± (digit)IF " + ifFirst + " EQUAL " + ifSecond);
+                    Debug.WriteLine(TAG + "± (digit)IF " + ifFirst + " EQUAL " + ifSecond);
                     if (ifFirst.Equals(ifSecond))
                     {
                         result = YES;
@@ -1627,8 +1634,8 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                 }
             }
             else {
-                //Log.d(TAG, "± Syntax error in IF operator for all!");
-                GlobalVars.getInstance().error = "Syntax error in IF operator\n";
+                Debug.WriteLine(TAG + "± Syntax error in IF operator for all!");
+                GlobalVars.getInstance().error = "Syntax error in IF operator\r\n";
             }
             return result;
         }
@@ -1650,7 +1657,7 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
 
         /*public bool setDim(String string_val)
         {
-            //Log.d(TAG, "± set dim..." + string_val);
+            Debug.WriteLine(TAG + "± set dim..." + string_val);
             bool result = YES;
             if (string_val.Contains("="))
             {
@@ -1668,9 +1675,9 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                 }
                 catch //(NumberFormatException e)
                 {
-                    //Log.d(TAG, "± Wrong number format in setDim!");
+                    Debug.WriteLine(TAG + "± Wrong number format in setDim!");
                 }
-                //Log.d(TAG, "± set dim index='" + string_val.Substring(rangeFirst.location + 1, rangeSecond.location) + "' name='" + name + "'");
+                Debug.WriteLine(TAG + "± set dim index='" + string_val.Substring(rangeFirst.location + 1, rangeSecond.location) + "' name='" + name + "'");
                 rangeFirst = new NSRange(string_val.IndexOf("="), 1);
                 String value = string_val.Substring(rangeFirst.location + 1);
                 //если переменная строковая добавим кавычки но при этом содержимое не содержит кавычки
@@ -1681,7 +1688,7 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                 {
                     if (name.Contains("$"))
                     {
-                        //Log.d(TAG, "± dim variable is string_val " + value);
+                        Debug.WriteLine(TAG + "± dim variable is string_val " + value);
                         if (value.Equals("")) value = "\"\"";
                         if (normaStr.isText(value))
                         {
@@ -1692,11 +1699,11 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                         }
                     }
                     else {
-                        //Log.d(TAG, "± dim variable is digits " + value);
+                        Debug.WriteLine(TAG + "± dim variable is digits " + value);
                         if (String.IsNullOrEmpty(value) || variables.variableIsString(value))
                         {
                             value = "";
-                            GlobalVars.getInstance().error = "Type mismatch\n";
+                            GlobalVars.getInstance().error = "Type mismatch\r\n";
                             result = NO;
                         }
                         value = (digitalFunc.returnMathResult(value)).ToString();
@@ -1711,17 +1718,17 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                             arrayDim.value[index] = value;
                     GlobalVars.getInstance().array[i] = arrayDim;
                 }
-                //Log.d(TAG, "± dim name='" + name + "' index='" + index + "' value='" + value + "' error='" + GlobalVars.getInstance().error + "' dim='" + arrayDim.value + "'");
+                Debug.WriteLine(TAG + "± dim name='" + name + "' index='" + index + "' value='" + value + "' error='" + GlobalVars.getInstance().error + "' dim='" + arrayDim.value + "'");
             }
         }
         else {
             result = NO;
-            GlobalVars.getInstance().error = "Syntax error\n";
+            GlobalVars.getInstance().error = "Syntax error\r\n";
         }
 }
     else {
         result = NO;
-        GlobalVars.getInstance().error = "Syntax error\n";
+        GlobalVars.getInstance().error = "Syntax error\r\n";
     }
     return result;
 }*/
@@ -1742,7 +1749,7 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
         public String input(String string_val)
         {
             String result = "";
-            //Log.d(TAG, "± input -'" + string_val + "'");
+            Debug.WriteLine(TAG + "± input -'" + string_val + "'");
 
             GlobalVars.getInstance().scanKeyOn = NO;
             string_val = string_val.Replace(";", ",");
@@ -1765,8 +1772,8 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                 strings = YES;
             if (String.IsNullOrEmpty(string_val))
             {
-                GlobalVars.getInstance().error = "Syntax error\n";
-                //Log.d(TAG, "± input Syntax error");
+                GlobalVars.getInstance().error = "Syntax error\r\n";
+                Debug.WriteLine(TAG + "± input Syntax error");
                 GlobalVars.getInstance().isOkSet = NO;
             }
             else if (strings && !stringsVariable && !digits && !digitsVariable && string_val.Contains(","))
@@ -1777,10 +1784,10 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                 until = until.Replace(separator, "");
                 GlobalVars.getInstance().listOfStrings.Add(until);
                 variables.forbiddenVariable(result.Substring(1));
-                //Log.d(TAG, "± input string_val result - " + result);
+                Debug.WriteLine(TAG + "± input string_val result - " + result);
             }
             else {
-                //Log.d(TAG, "± input Str-'" + string_val + "'");
+                Debug.WriteLine(TAG + "± input Str-'" + string_val + "'");
                 string_val = string_val.Replace(" ", "");
                 if (string_val.Contains(",") && !Regex.IsMatch(string_val.Substring(0, 1), alphaSet))
                 {
@@ -1793,7 +1800,7 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                 else {
                     result = "," + string_val;
                 }
-                //Log.d(TAG, "± input result -'" + result + "'");
+                Debug.WriteLine(TAG + "± input result -'" + result + "'");
             }
             return result;
 
@@ -1810,15 +1817,15 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
             //строковые функции
 
             String result = "";
-            //Log.d(TAG, "± ========resultFromString begin-'" + string_val + "'");
+            Debug.WriteLine(TAG + "± ========resultFromString begin-'" + string_val + "'");
             //очищаем от пробелов
             string_val = normaStr.removeSpacesWithText(string_val);
             //заменяем ; на ,
             string_val = normaStr.replaceCharWithCharInText(';', ',', string_val);
-            //Log.d(TAG, "± ========resultFromString replaceChar:';' withChar:',' ---- '" + string_val + "'");
+            Debug.WriteLine(TAG + "± ========resultFromString replaceChar:';' withChar:',' ---- '" + string_val + "'");
             List<String> arr = new List<String>(normaStr.stringSeparateAllToArray(string_val)); //делим строку на компоненты
-                                                                                                        //Log.d(TAG, "± ========stringSeparateAllToArray " + arr);
-                                                                                                        //Находим все переменные и подменяем на значения
+            Debug.WriteLine(TAG + "± ========stringSeparateAllToArray " + arr);
+            //Находим все переменные и подменяем на значения
             for (int i = 0; i < arr.Count; i++)
             {
                 if (variables.variableIsPresent(arr[i].ToString()))
@@ -1827,250 +1834,257 @@ GlobalVars.getInstance().dataIndex.Add(untilSpace); //записываем в и
                     if (variables.variableIsString(arr[i].ToString()) && !normaStr.isText(tmp))
                         tmp = "\"" + tmp + "\"";//если переменная строковая добавим кавычки но при этом содержимое не содержит кавычки
                     arr[i] = tmp;
-        }
-    }
-    string_val = "";
-    for (int i = 0; i<arr.Count; i++)
-    {
-        string_val = string_val + arr[i].ToString(); //склеиваем строку из массива
-}
-arr.Clear();
-    //Log.d(TAG, "± ========resultFromString after Replace vars - '" + string_val + "'");
-    //Находим массивы и подменяем
-    String forDim = "";
-bool addMode = NO;
-List<String> arrTemp = new List<String>(normaStr.stringSeparateAllToArray(string_val)); //делим строку на компоненты
-    if (arrTemp.Count > 3)
-    {
-        for (int i = 1; i<arrTemp.Count; i++)
-        {
-            bool addArr = YES;
-String curr = arrTemp[i].ToString();
-String prev = arrTemp[i - 1].ToString();
-            if (addMode)
-            {
-                addArr = NO;
-                if (!curr.Equals(")"))
-                {
-                    forDim = forDim + curr;
-                }
-                else {
-                    forDim = forDim + curr;
-                    addMode = NO;
-                    if (variables.isArrayPresent(forDim))
-                    {
-                        String tmp = variables.returnContainOfArray(forDim);
-forDim = tmp;
-                    }
-                    if (arr.Count == 0)
-                    {
-                        arr.Add(forDim);
-                    }
-                    else {
-                        arr[arr.Count - 1] = forDim;
-                    }
                 }
             }
-            if (curr.Equals("("))
+            string_val = "";
+            for (int i = 0; i < arr.Count; i++)
             {
-                if (!digitalFunc.mathFunction(prev) && !stringFunc.stringFunction(prev))
+                string_val = string_val + arr[i].ToString(); //склеиваем строку из массива
+            }
+            arr.Clear();
+            Debug.WriteLine(TAG + "± ========resultFromString after Replace vars - '" + string_val + "'");
+            //Находим массивы и подменяем
+            String forDim = "";
+            bool addMode = NO;
+            List<String> arrTemp = new List<String>(normaStr.stringSeparateAllToArray(string_val)); //делим строку на компоненты
+            if (arrTemp.Count > 3)
+            {
+                for (int i = 1; i < arrTemp.Count; i++)
                 {
-                    forDim = prev + curr;
-                    addMode = YES;
-                }
-                else {
-                    if (i == 1) arr.Add(prev);
-                    arr.Add(curr);
+                    bool addArr = YES;
+                    String curr = arrTemp[i].ToString();
+                    String prev = arrTemp[i - 1].ToString();
+                    if (addMode)
+                    {
+                        addArr = NO;
+                        if (!curr.Equals(")"))
+                        {
+                            forDim = forDim + curr;
+                        }
+                        else {
+                            forDim = forDim + curr;
+                            addMode = NO;
+                            if (variables.isArrayPresent(forDim))
+                            {
+                                String tmp = variables.returnContainOfArray(forDim);
+                                forDim = tmp;
+                            }
+                            if (arr.Count == 0)
+                            {
+                                arr.Add(forDim);
+                            }
+                            else {
+                                arr[arr.Count - 1] = forDim;
+                            }
+                        }
+                    }
+                    if (curr.Equals("("))
+                    {
+                        if (!digitalFunc.mathFunction(prev) && !stringFunc.stringFunction(prev))
+                        {
+                            forDim = prev + curr;
+                            addMode = YES;
+                        }
+                        else {
+                            if (i == 1) arr.Add(prev);
+                            arr.Add(curr);
+                        }
+                    }
+                    else {
+                        if (addArr)
+                        {
+                            if (i == 1) arr.Add(prev);
+                            arr.Add(curr);
+                        }
+                    }
                 }
             }
             else {
-                if (addArr)
-                {
-                    if (i == 1) arr.Add(prev);
-                    arr.Add(curr);
-                }
+                arr = new List<String>(arrTemp);
             }
-        }
-    }
-    else {
-        arr = new List<String>(arrTemp);
-    }
-    string_val = "";
-    for (int i = 0; i<arr.Count; i++)
-    {
-        string_val = string_val + arr[i].ToString(); //склеиваем строку из массива
-    }
-    arr.Clear();
-    arrTemp.Clear();
-    //Log.d(TAG, "± ========resultFromString after Replace dims - '" + string_val + "'");
-    //склеиваем все строки стоящие рядом
-    String fStr = "";
-String tStr = "";
-bool firstEl = NO;
-bool secondEl = NO;
-int index = 0;
-arr = new List<String>(normaStr.stringSeparateAllToArray(string_val)); //делим строку на компоненты
-                                                                    //    //Log.d(TAG, "± resultFromString arr-''",arr);
-    if (arr.Count > 3 && !string_val.Contains("instr"))
-    {
-        string_val = "";
-        for (int i = 0; i<arr.Count; i++)
-        {
-            arrTemp.Add(arr[i]);
-            if (normaStr.isText(arr[i].ToString()) && !firstEl && !secondEl)
-            { //находим первый элемент текст но еще нет второго и задает индекс первого
-                fStr = arr[i].ToString().Replace("\"", "");
-firstEl = YES;
-                index = i;
-            }
-            if (arr[i].ToString().Equals(",") && firstEl && !secondEl && i == index + 1)
-            {//находим 2 элемент запятую и уже есть первый
-                secondEl = YES;
-            }
-            if (arr[i].ToString().Equals("+") && firstEl && !secondEl && i == index + 1)
-            {//находим 2 элемент + и уже есть первый
-                secondEl = YES;
-            }
-            if (i == index + 1 && !secondEl)// если индекс первого эл-та предидущий но нет второго то все сбрасываем
+            string_val = "";
+            for (int i = 0; i < arr.Count; i++)
             {
-                firstEl = NO;
-                fStr = "";
-                tStr = "";
+                string_val = string_val + arr[i].ToString(); //склеиваем строку из массива
             }
-            if (i == index + 2 && secondEl && !normaStr.isText(arr[i].ToString()))// если индекс первого эл-та -2 но третий эл-т не текст то все сбрасываем
+            arr.Clear();
+            arrTemp.Clear();
+            Debug.WriteLine(TAG + "± ========resultFromString after Replace dims - '" + string_val + "'");
+            //склеиваем все строки стоящие рядом
+            String fStr = "";
+            String tStr = "";
+            bool firstEl = NO;
+            bool secondEl = NO;
+            int index = 0;
+            arr = new List<String>(normaStr.stringSeparateAllToArray(string_val)); //делим строку на компоненты
+                                                                                   //    Debug.WriteLine(TAG + "± resultFromString arr-''",arr);
+            if (arr.Count > 3 && !string_val.Contains("instr"))
             {
-                firstEl = NO;
-                secondEl = NO;
-                fStr = "";
-                tStr = "";
-            }
-            if (normaStr.isText(arr[i].ToString()) && firstEl && secondEl)
-            { //находим третий элемент текст имея первый и второй
-                tStr = arr[i].ToString().Replace("\"", "");
-firstEl = YES;
-                secondEl = NO;
-                index = i;
-                if (arrTemp.Count > 2)
+                string_val = "";
+                for (int i = 0; i < arr.Count; i++)
                 {
-                    arrTemp.RemoveAt(arrTemp.Count - 1);
-                    arrTemp.RemoveAt(arrTemp.Count - 1);
-                    arrTemp.RemoveAt(arrTemp.Count - 1);
-                }
-                fStr = "\"" + fStr + tStr + "\"";
-                arrTemp.Add(fStr);
-                fStr = fStr.Replace("\"", "");
-            }
-        }
-    }
-    for (int i = 0; i<arrTemp.Count; i++)
-    {
-        string_val = string_val + arrTemp[i].ToString(); //склеиваем строку из массива
-    }
-    arr.Clear();
-    arrTemp.Clear();
-    //Log.d(TAG, "± ========resultFromString after strings-'" + string_val + "'");
-    //Находим все мат функции и внутри них анализируем на наличие арифметики затем рассчитываем и подменяем
-    String forMFunc = "";
-int addCount = 0;
-bool first = NO;
-addMode = NO;
-    arrTemp = new List<String>(normaStr.stringSeparateAllToArray(string_val)); //делим строку на компоненты
-    if (arrTemp.Count > 3)
-    {
-        for (int i = 1; i<arrTemp.Count; i++)
-        {
-            String curr = arrTemp[i].ToString();
-String prev = arrTemp[i - 1].ToString();
-            if (curr.Equals("(") && digitalFunc.mathFunction(prev) && !addMode)
-            { //определяем когда началась мат функция
-                addCount++;
-                addMode = YES;
-                first = YES;
-                forMFunc = prev + curr;
-            }
-            if (curr.Equals("(") && stringFunc.stringFunction(prev) && !addMode)
-            { //определяем когда началась строковая функция
-                addCount++;
-                addMode = YES;
-                first = YES;
-                forMFunc = prev + curr;
-            }
-            if (addMode)
-            { // режим наращивания функции
-                if (!first)
-                {
-                    forMFunc = forMFunc + curr;
-                    if (curr.Equals("("))
-                    {
-                        addCount++;
+                    arrTemp.Add(arr[i]);
+                    if (normaStr.isText(arr[i].ToString()) && !firstEl && !secondEl)
+                    { //находим первый элемент текст но еще нет второго и задает индекс первого
+                        fStr = arr[i].ToString().Replace("\"", "");
+                        firstEl = YES;
+                        index = i;
                     }
-                    if (curr.Equals(")"))
-                    {
-                        addCount--;
+                    if (arr[i].ToString().Equals(",") && firstEl && !secondEl && i == index + 1)
+                    {//находим 2 элемент запятую и уже есть первый
+                        secondEl = YES;
                     }
-                    if (addCount == 0)
+                    if (arr[i].ToString().Equals("+") && firstEl && !secondEl && i == index + 1)
+                    {//находим 2 элемент + и уже есть первый
+                        secondEl = YES;
+                    }
+                    if (i == index + 1 && !secondEl)// если индекс первого эл-та предидущий но нет второго то все сбрасываем
                     {
-                        if (forMFunc.Length > 3)
-                            if (forMFunc.Substring(0, 4).Equals("abs(") || forMFunc.Substring(0, 4).Equals("fix("))
-                            {
-                                String temp = digitalFunc.mathFunctionInMixedString(forMFunc.Substring(4, forMFunc.Length - 1));
-forMFunc = forMFunc.Substring(0, 4) + temp + ")";
-                            }
-                        arr.Add(forMFunc);
-                        forMFunc = "";
-                        addMode = NO;
+                        firstEl = NO;
+                        fStr = "";
+                        tStr = "";
+                    }
+                    if (i == index + 2 && secondEl && !normaStr.isText(arr[i].ToString()))// если индекс первого эл-та -2 но третий эл-т не текст то все сбрасываем
+                    {
+                        firstEl = NO;
+                        secondEl = NO;
+                        fStr = "";
+                        tStr = "";
+                    }
+                    if (normaStr.isText(arr[i].ToString()) && firstEl && secondEl)
+                    { //находим третий элемент текст имея первый и второй
+                        tStr = arr[i].ToString().Replace("\"", "");
+                        firstEl = YES;
+                        secondEl = NO;
+                        index = i;
+                        if (arrTemp.Count > 2)
+                        {
+                            arrTemp.RemoveAt(arrTemp.Count - 1);
+                            arrTemp.RemoveAt(arrTemp.Count - 1);
+                            arrTemp.RemoveAt(arrTemp.Count - 1);
+                        }
+                        fStr = "\"" + fStr + tStr + "\"";
+                        arrTemp.Add(fStr);
+                        fStr = fStr.Replace("\"", "");
                     }
                 }
-                first = NO;
             }
-            else { // режим просто добавления без мат функции
-                if (i == 1) arr.Add(prev);
-                if (!digitalFunc.mathFunction(curr) && !stringFunc.stringFunction(curr))
-                    arr.Add(curr);
+            for (int i = 0; i < arrTemp.Count; i++)
+            {
+                string_val = string_val + arrTemp[i].ToString(); //склеиваем строку из массива
             }
-        }
-    }
-    else {
-        arr = new List<String>(arrTemp);
-    }
-    string_val = "";
-    for (int i = 0; i<arr.Count; i++)
-    {
-        String tmp = arr[i].ToString();
-        if (digitalFunc.mathFunction(tmp))
-        {
-            tmp = digitalFunc.mathFunctionInMixedString(tmp);
-            tmp = (digitalFunc.returnMathResult(tmp)).ToString();
-        }
-        if (stringFunc.stringFunction(tmp))
-            tmp = stringFunc.returnStringResult(tmp); // проверяем на строковые функции и возвращаем результаты
-        string_val = string_val + tmp; //склеиваем строку из массива
-    }
-    arr.Clear();
-    //Log.d(TAG, "± ========resultFromString after mathematics & string_val func's-'" + string_val + "'");
+            arr.Clear();
+            arrTemp.Clear();
+            Debug.WriteLine(TAG + "± ========resultFromString after strings-'" + string_val + "'");
 
-    //вычисляем каждый компонент математики
-    if (string_val.Length > 0)
-        string_val = digitalFunc.mathFunctionInMixedString(string_val); //1. mathFunctionInMixedString
-                                                                //Log.d(TAG, "± ========resultFromString mathFunctionInMixedString-'" + string_val + "'");
-                                                                //избавляемся от запятых и с плюсов, склеиваем строку из компонентов
-    arr = new List<String>(normaStr.stringSeparateAllToArray(string_val)); //делим строку на компоненты
-    bool quotes = NO;
-    for (int i = 0; i<arr.Count; i++)
-    {
-        if (normaStr.isText(arr[i].ToString())) quotes = YES;
-        if (!arr[i].ToString().Equals(","))
-            if (!arr[i].ToString().Equals("+"))
-                result = result + arr[i].ToString(); //склеиваем строку из массива
-    }
-    if (quotes)
-    {
-        result = result.Replace("\"", "");
-        result = "\"" + result + "\"";
-    }
-    //Log.d(TAG, "± ========resultFromString FINAL RESULT-'" + result + "'");
-    return result;
-}
+            //Находим все мат функции и внутри них анализируем на наличие арифметики затем рассчитываем и подменяем
+            String forMFunc = "";
+            int addCount = 0;
+            bool first = NO;
+            addMode = NO;
+            arrTemp = new List<String>(normaStr.stringSeparateAllToArray(string_val)); //делим строку на компоненты
+
+            if (arrTemp.Count > 3)
+            {
+                for (int i = 1; i < arrTemp.Count; i++)
+                {
+                    String curr = arrTemp[i].ToString();
+                    String prev = arrTemp[i - 1].ToString();
+                    if (curr.Equals("(") && digitalFunc.mathFunction(prev) && !addMode)
+                    { //определяем когда началась мат функция
+                        addCount++;
+                        addMode = YES;
+                        first = YES;
+                        forMFunc = prev + curr;
+                    }
+                    if (curr.Equals("(") && stringFunc.stringFunction(prev) && !addMode)
+                    { //определяем когда началась строковая функция
+                        addCount++;
+                        addMode = YES;
+                        first = YES;
+                        forMFunc = prev + curr;
+                    }
+
+                    if (addMode)
+                    { // режим наращивания функции
+                        if (!first)
+                        {
+                            forMFunc = forMFunc + curr;
+                            if (curr.Equals("("))
+                            {
+                                addCount++;
+                            }
+                            if (curr.Equals(")"))
+                            {
+                                addCount--;
+                            }
+                            if (addCount == 0)
+                            {
+                                if (forMFunc.Length > 3)
+                                    if (forMFunc.Substring(0, 4).Equals("abs(") || forMFunc.Substring(0, 4).Equals("fix("))
+                                    {
+                                        String temp = digitalFunc.mathFunctionInMixedString(forMFunc.Substring(4, forMFunc.Length - 5));
+                                        forMFunc = forMFunc.Substring(0, 4) + temp + ")";
+                                    }
+                                arr.Add(forMFunc);
+                                forMFunc = "";
+                                addMode = NO;
+                            }
+                        }
+                        first = NO;
+                    }
+                    else { // режим просто добавления без мат функции
+
+                        if (i == 1) arr.Add(prev);
+                        if (!digitalFunc.mathFunction(curr) && !stringFunc.stringFunction(curr))
+                            arr.Add(curr);
+                    }
+                }
+            }
+
+            else {
+                Debug.WriteLine(TAG + "± ========!!else++++++++++++" + string_val + "'");
+                arr = new List<String>(arrTemp);
+            }
+            string_val = "";
+
+            for (int i = 0; i < arr.Count; i++)
+            {
+                String tmp = arr[i].ToString();
+                if (digitalFunc.mathFunction(tmp))
+                {
+                    tmp = digitalFunc.mathFunctionInMixedString(tmp);
+                    tmp = (digitalFunc.returnMathResult(tmp)).ToString();
+                }
+                if (stringFunc.stringFunction(tmp))
+                    tmp = stringFunc.returnStringResult(tmp); // проверяем на строковые функции и возвращаем результаты
+                string_val = string_val + tmp; //склеиваем строку из массива
+            }
+            arr.Clear();
+            Debug.WriteLine(TAG + "± ========resultFromString after mathematics & string_val func's-'" + string_val + "'");
+
+            //вычисляем каждый компонент математики
+            if (string_val.Length > 0)
+                string_val = digitalFunc.mathFunctionInMixedString(string_val); //1. mathFunctionInMixedString
+            Debug.WriteLine(TAG + "± ========resultFromString mathFunctionInMixedString-'" + string_val + "'");
+            //избавляемся от запятых и с плюсов, склеиваем строку из компонентов
+            arr = new List<String>(normaStr.stringSeparateAllToArray(string_val)); //делим строку на компоненты
+            bool quotes = NO;
+            for (int i = 0; i < arr.Count; i++)
+            {
+                if (normaStr.isText(arr[i].ToString())) quotes = YES;
+                if (!arr[i].ToString().Equals(","))
+                    if (!arr[i].ToString().Equals("+"))
+                        result = result + arr[i].ToString(); //склеиваем строку из массива
+            }
+            if (quotes)
+            {
+                result = result.Replace("\"", "");
+                result = "\"" + result + "\"";
+            }
+            Debug.WriteLine(TAG + "± ========resultFromString FINAL RESULT-'" + result + "'");
+            return result;
+        }
 
         public void renumGotoGosub()
         {
@@ -2087,133 +2101,133 @@ forMFunc = forMFunc.Substring(0, 4) + temp + ")";
                     replaceString = GlobalVars.getInstance().listOfProgram[i].ToString();
                     replaceString = c * 10 + " " + replaceString.Substring(number.Length + 1, replaceString.Length);
                     GlobalVars.getInstance().listOfProgram[i] = replaceString;
-                c++;
+                    c++;
+                }
+                for (int i = 0; i < GlobalVars.getInstance().listOfProgram.Count; i++)
+                {
+                    replaceString = GlobalVars.getInstance().listOfProgram[i].ToString();
+                    Debug.WriteLine(TAG + "± before number=" + i + " replaceString='" + replaceString + "'");
+                    NSRange range = new NSRange(replaceString.IndexOf(gotoGosub), gotoGosub.Length);
+                    String[] tempArr = replaceString.Split(Convert.ToChar(gotoGosub));
+                    c = 0;
+                    int locat = (int)(range.location + range.length + 1);
+                    bool found = NO;
+                    int index = 0;
+                    for (int cc = 1; cc < tempArr.Length; cc++)
+                        if (range.location != NSNotFound && !normaStr.insideText(replaceString, locat))
+                        {
+                            index = replaceString.Length;
+                            for (int t = locat; t < replaceString.Length; t++)
+                                if (replaceString.ElementAt(t) == ' ' && !found)
+                                {
+                                    Debug.WriteLine(TAG + "± '" + replaceString.ElementAt(t) + "'");
+                                    index = t;
+                                    found = YES;
+                                }
+                            String first = GlobalVars.getInstance().listOfProgram[i].ToString().Substring(0, locat);
+                            String whatRepl = replaceString.Substring(locat, index);
+                            String second = GlobalVars.getInstance().listOfProgram[i].ToString().Substring(index);
+                            int renIndex = returnIndexOf(oldList, whatRepl);
+                            String withRepl = GlobalVars.getInstance().listOfProgram[renIndex].ToString().Split(' ')[0];
+                            String repStr = first + withRepl + second;
+                            GlobalVars.getInstance().listOfProgram[i] = repStr;
+                            replaceString = repStr;
+                            range = new NSRange(replaceString.Substring(locat).IndexOf(gotoGosub) + locat, gotoGosub.Length);
+                            locat = range.location + range.length + 1;
+                            found = NO;
+                            index = 0;
+                            first = "";
+                            second = "";
+                            whatRepl = "";
+                            withRepl = "";
+                        }
+                }
+
+                gotoGosub = "gosub";
+                for (int i = 0; i < GlobalVars.getInstance().listOfProgram.Count; i++)
+                {
+                    replaceString = GlobalVars.getInstance().listOfProgram[i].ToString();
+                    NSRange range = new NSRange(replaceString.IndexOf(gotoGosub), gotoGosub.Length);
+                    String[] tempArr = replaceString.Split(Convert.ToChar(gotoGosub));
+                    c = 0;
+                    int locat = (int)(range.location + range.length + 1);
+                    bool found = NO;
+                    int index = 0;
+                    for (int cc = 1; cc < tempArr.Length; cc++)
+                        if (range.location != NSNotFound && !normaStr.insideText(replaceString, locat))
+                        {
+                            index = (int)replaceString.Length;
+                            for (int t = locat; t < replaceString.Length; t++)
+                                if (replaceString.ElementAt(t) == ' ' && !found)
+                                {
+                                    Debug.WriteLine(TAG + "± '" + replaceString.ElementAt(t) + "'");
+                                    index = t;
+                                    found = YES;
+                                }
+                            String first = GlobalVars.getInstance().listOfProgram[i].ToString().Substring(0, locat);
+                            String whatRepl = replaceString.Substring(locat, index);
+                            String second = GlobalVars.getInstance().listOfProgram[i].ToString().Substring(index);
+                            int renIndex = returnIndexOf(oldList, whatRepl);
+                            String withRepl = GlobalVars.getInstance().listOfProgram[renIndex].ToString().Split(' ')[0];
+                            String repStr = first + withRepl + second;
+                            GlobalVars.getInstance().listOfProgram[i] = repStr;
+                            if (!String.IsNullOrEmpty(whatRepl)) GlobalVars.getInstance().listOfProgram[i] = repStr;
+                            replaceString = repStr;
+                            range = new NSRange(replaceString.Substring(locat).IndexOf(gotoGosub) + locat, gotoGosub.Length);
+                            range.location = range.location + locat;
+                            locat = (int)(range.location + range.length + 1);
+                            found = NO;
+                            index = 0;
+                            first = "";
+                            second = "";
+                            whatRepl = "";
+                            withRepl = "";
+                        }
+                }
+                gotoGosub = "restore";
+                for (int i = 0; i < GlobalVars.getInstance().listOfProgram.Count; i++)
+                {
+                    replaceString = GlobalVars.getInstance().listOfProgram[i].ToString();
+                    NSRange range = new NSRange(replaceString.IndexOf(gotoGosub), gotoGosub.Length);
+                    String[] tempArr = replaceString.Split(Convert.ToChar(gotoGosub));
+                    c = 0;
+                    int locat = (int)(range.location + range.length + 1);
+                    bool found = NO;
+                    int index = 0;
+                    for (int cc = 1; cc < tempArr.Length; cc++)
+                        if (range.location != NSNotFound && !normaStr.insideText(replaceString, locat))
+                        {
+                            index = (int)replaceString.Length;
+                            for (int t = locat; t < replaceString.Length; t++)
+                                if (replaceString.ElementAt(t) == ' ' && !found)
+                                {
+                                    Debug.WriteLine(TAG + "± '" + replaceString.ElementAt(t) + "'");
+                                    index = t;
+                                    found = YES;
+                                }
+                            String first = GlobalVars.getInstance().listOfProgram[i].ToString().Substring(0, locat);
+                            String whatRepl = replaceString.Substring(locat, index);
+                            String second = GlobalVars.getInstance().listOfProgram[i].ToString().Substring(index);
+                            int renIndex = returnIndexOf(oldList, whatRepl);
+                            String withRepl = GlobalVars.getInstance().listOfProgram[renIndex].ToString().Split(' ')[0];
+                            String repStr = first + withRepl + second;
+                            GlobalVars.getInstance().listOfProgram[i] = repStr;
+
+                            if (!String.IsNullOrEmpty(whatRepl)) GlobalVars.getInstance().listOfProgram[i] = repStr;
+                            replaceString = repStr;
+                            range = new NSRange(replaceString.Substring(locat).IndexOf(gotoGosub) + locat, gotoGosub.Length);
+                            range.location = range.location + locat;
+                            locat = (int)(range.location + range.length + 1);
+                            found = NO;
+                            index = 0;
+                            first = "";
+                            second = "";
+                            whatRepl = "";
+                            withRepl = "";
+                        }
+                }
             }
-            for (int i = 0; i < GlobalVars.getInstance().listOfProgram.Count; i++)
-            {
-                replaceString = GlobalVars.getInstance().listOfProgram[i].ToString();
-                //Log.d(TAG, "± before number=" + i + " replaceString='" + replaceString + "'");
-                NSRange range = new NSRange(replaceString.IndexOf(gotoGosub), gotoGosub.Length);
-                String[] tempArr = replaceString.Split(Convert.ToChar(gotoGosub));
-                c = 0;
-                int locat = (int)(range.location + range.length + 1);
-                bool found = NO;
-                int index = 0;
-                for (int cc = 1; cc < tempArr.Length; cc++)
-                    if (range.location != NSNotFound && !normaStr.insideText(replaceString, locat))
-                    {
-                        index = replaceString.Length;
-                        for (int t = locat; t < replaceString.Length; t++)
-                            if (replaceString.ElementAt(t) == ' ' && !found)
-                            {
-                                //Log.d(TAG, "± '" + replaceString.ElementAt(t) + "'");
-                                index = t;
-                                found = YES;
-                            }
-                        String first = GlobalVars.getInstance().listOfProgram[i].ToString().Substring(0, locat);
-                        String whatRepl = replaceString.Substring(locat, index);
-                        String second = GlobalVars.getInstance().listOfProgram[i].ToString().Substring(index);
-                        int renIndex = returnIndexOf(oldList, whatRepl);
-                        String withRepl = GlobalVars.getInstance().listOfProgram[renIndex].ToString().Split(' ')[0];
-            String repStr = first + withRepl + second;
-            GlobalVars.getInstance().listOfProgram[i] = repStr;
-            replaceString = repStr;
-            range = new NSRange(replaceString.Substring(locat).IndexOf(gotoGosub) + locat, gotoGosub.Length);
-            locat = range.location + range.length + 1;
-            found = NO;
-            index = 0;
-            first = "";
-            second = "";
-            whatRepl = "";
-            withRepl = "";
         }
-    }
-
-    gotoGosub = "gosub";
-        for (int i = 0; i<GlobalVars.getInstance().listOfProgram.Count; i++)
-        {
-            replaceString = GlobalVars.getInstance().listOfProgram[i].ToString();
-    NSRange range = new NSRange(replaceString.IndexOf(gotoGosub), gotoGosub.Length);
-    String[] tempArr = replaceString.Split(Convert.ToChar(gotoGosub));
-    c = 0;
-            int locat = (int)(range.location + range.length + 1);
-    bool found = NO;
-    int index = 0;
-            for (int cc = 1; cc<tempArr.Length; cc++)
-                if (range.location != NSNotFound && !normaStr.insideText(replaceString, locat))
-                {
-                    index = (int)replaceString.Length;
-                    for (int t = locat; t<replaceString.Length; t++)
-                        if (replaceString.ElementAt(t) == ' ' && !found)
-                        {
-                            //Log.d(TAG, "± '" + replaceString.ElementAt(t) + "'");
-                            index = t;
-                            found = YES;
-                        }
-String first = GlobalVars.getInstance().listOfProgram[i].ToString().Substring(0, locat);
-String whatRepl = replaceString.Substring(locat, index);
-String second = GlobalVars.getInstance().listOfProgram[i].ToString().Substring(index);
-int renIndex = returnIndexOf(oldList, whatRepl);
-String withRepl = GlobalVars.getInstance().listOfProgram[renIndex].ToString().Split(' ')[0];
-                    String repStr = first + withRepl + second;
-GlobalVars.getInstance().listOfProgram[i] = repStr;
-                    if (!String.IsNullOrEmpty(whatRepl)) GlobalVars.getInstance().listOfProgram[i] = repStr;
-                    replaceString = repStr;
-                    range = new NSRange(replaceString.Substring(locat).IndexOf(gotoGosub) + locat, gotoGosub.Length);
-                    range.location = range.location + locat;
-                    locat = (int)(range.location + range.length + 1);
-                    found = NO;
-                    index = 0;
-                    first = "";
-                    second = "";
-                    whatRepl = "";
-                    withRepl = "";
-                }
-        }
-        gotoGosub = "restore";
-        for (int i = 0; i<GlobalVars.getInstance().listOfProgram.Count; i++)
-        {
-            replaceString = GlobalVars.getInstance().listOfProgram[i].ToString();
-NSRange range = new NSRange(replaceString.IndexOf(gotoGosub), gotoGosub.Length);
-String[] tempArr = replaceString.Split(Convert.ToChar(gotoGosub));
-c = 0;
-            int locat = (int)(range.location + range.length + 1);
-bool found = NO;
-int index = 0;
-            for (int cc = 1; cc<tempArr.Length; cc++)
-                if (range.location != NSNotFound && !normaStr.insideText(replaceString, locat))
-                {
-                    index = (int)replaceString.Length;
-                    for (int t = locat; t<replaceString.Length; t++)
-                        if (replaceString.ElementAt(t) == ' ' && !found)
-                        {
-                            //Log.d(TAG, "± '" + replaceString.ElementAt(t) + "'");
-                            index = t;
-                            found = YES;
-                        }
-                    String first = GlobalVars.getInstance().listOfProgram[i].ToString().Substring(0, locat);
-String whatRepl = replaceString.Substring(locat, index);
-String second = GlobalVars.getInstance().listOfProgram[i].ToString().Substring(index);
-int renIndex = returnIndexOf(oldList, whatRepl);
-String withRepl = GlobalVars.getInstance().listOfProgram[renIndex].ToString().Split(' ')[0];
-                    String repStr = first + withRepl + second;
-GlobalVars.getInstance().listOfProgram[i] = repStr;
-
-                    if (!String.IsNullOrEmpty(whatRepl)) GlobalVars.getInstance().listOfProgram[i] = repStr;
-                    replaceString = repStr;
-                    range = new NSRange(replaceString.Substring(locat).IndexOf(gotoGosub) + locat, gotoGosub.Length);
-                    range.location = range.location + locat;
-                    locat = (int)(range.location + range.length + 1);
-                    found = NO;
-                    index = 0;
-                    first = "";
-                    second = "";
-                    whatRepl = "";
-                    withRepl = "";
-                }
-        }
-    }
-}
 
 
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace MCX_Basic
 {
@@ -14,12 +15,12 @@ namespace MCX_Basic
         private static RunCommand runCommand = new RunCommand();
         private static Variables variables = new Variables();
 
-        private static String TAG;// = MainActivity.class.getSimpleName();
-        private static int NSNotFound = -1;
-        private static bool NO = false;
-    private static bool YES = true;
+        private readonly int NSNotFound = -1;
+        private readonly bool NO = false;
+        private readonly bool YES = true;
+        private readonly String TAG = MethodBase.GetCurrentMethod().DeclaringType.Name + ": ";
 
-    public bool stringFunction(String string_val)
+        public bool stringFunction(String string_val)
         {
             bool result = NO;
             for (int i = 0; i < GlobalVars.getInstance().listStrFunc.Count; i++)
@@ -161,7 +162,7 @@ namespace MCX_Basic
                 if (digitalFunc.isMath(tmpStr))
                 {
                     tmpStr = (digitalFunc.returnMathResult(tmpStr)).ToString();
-                    //Log.d(TAG, "± str=" + str + "tmpStr=" + tmpStr);
+                    Debug.WriteLine(TAG + "± str=" + str + "tmpStr=" + tmpStr);
                 }
                 else {
                     tmpStr = "";
@@ -192,7 +193,7 @@ namespace MCX_Basic
                     }
                     catch //(NumberFormatException e)
                     {
-                        //Log.d(TAG, "± str=" + str + "Wrong number format in string_val$!");
+                        Debug.WriteLine(TAG + "± str=" + str + "Wrong number format in string_val$!");
                     }
                     for (int i = 0; i < arr0; i++)
                     {
@@ -200,7 +201,7 @@ namespace MCX_Basic
                     }
                 }
                 else {
-                    GlobalVars.getInstance().error = "Syntax error at - " + str + "\n";
+                    GlobalVars.getInstance().error = "Syntax error at - " + str + "\r\n";
                 }
             }
             else if (funcString.Equals("hex$"))
@@ -224,7 +225,7 @@ namespace MCX_Basic
                     }
                     catch //(NumberFormatException e)
                     {
-                        //Log.d(TAG, "± str=" + str + "Wrong number format in hex$!");
+                        Debug.WriteLine(TAG + "± str=" + str + "Wrong number format in hex$!");
                     }
                 }
                 result = (num).ToString();
@@ -254,11 +255,11 @@ namespace MCX_Basic
                     }
                     catch //(NumberFormatException e)
                     {
-                        //Log.d(TAG, "± str=" + str + "Wrong number format in left$!");
+                        Debug.WriteLine(TAG + "± str=" + str + "Wrong number format in left$!");
                     }
                     if (arr[0].ToString().Length < ind || arr[0].ToString().Length < 1)
                     {
-                        //Log.d(TAG, "string_val was not extracted");
+                        Debug.WriteLine(TAG + "string_val was not extracted");
                         result = "";
                     }
                     else {
@@ -266,7 +267,7 @@ namespace MCX_Basic
                     }
                 }
                 else {
-                    GlobalVars.getInstance().error = "Syntax error at - " + str + "\n";
+                    GlobalVars.getInstance().error = "Syntax error at - " + str + "\r\n";
                 }
             }
             else if (funcString.Equals("righ"))
@@ -294,11 +295,11 @@ namespace MCX_Basic
                     }
                     catch //(NumberFormatException e)
                     {
-                        //Log.d(TAG, "± str=" + str + "Wrong number format in left$!");
+                        Debug.WriteLine(TAG + "± str=" + str + "Wrong number format in left$!");
                     }
                     if (arr[0].ToString().Length < ind || arr[0].ToString().Length < 1)
                     {
-                        //Log.d(TAG, "string_val was not extracted");
+                        Debug.WriteLine(TAG + "string_val was not extracted");
                         result = "";
                     }
                     else {
@@ -306,7 +307,7 @@ namespace MCX_Basic
                     }
                 }
                 else {
-                    GlobalVars.getInstance().error = "Syntax error at - " + str + "\n";
+                    GlobalVars.getInstance().error = "Syntax error at - " + str + "\r\n";
                 }
             }
             else if (funcString.Equals("mid$"))
@@ -337,7 +338,7 @@ namespace MCX_Basic
                             }
                             catch //(NumberFormatException e)
                             {
-                                //Log.d(TAG, "± str=" + str + "Wrong number format in left$!");
+                                Debug.WriteLine(TAG + "± str=" + str + "Wrong number format in left$!");
                             }
                             range = new NSRange(ind1 - 1, ind2);
                         }
@@ -349,14 +350,14 @@ namespace MCX_Basic
                             }
                             catch //(NumberFormatException e)
                             {
-                                //Log.d(TAG, "± str=" + str + "Wrong number format in left$!");
+                                Debug.WriteLine(TAG + "± str=" + str + "Wrong number format in left$!");
                             }
                             range = new NSRange(ind1 - 1, arr[0].ToString().Length - ind1 + 1);
                         }
                     }
                     if (arr[0].ToString().Length < ind1 || arr[0].ToString().Length < 1)
                     {
-                        //Log.d(TAG, "string_val was not extracted");
+                        Debug.WriteLine(TAG + "string_val was not extracted");
                         result = "";
                     }
                     else {
@@ -364,7 +365,7 @@ namespace MCX_Basic
                     }
                 }
                 else {
-                    GlobalVars.getInstance().error = "Syntax error at - " + str + "\n";
+                    GlobalVars.getInstance().error = "Syntax error at - " + str + "\r\n";
                 }
             }
             else if (funcString.Equals("oct$"))
@@ -388,12 +389,12 @@ namespace MCX_Basic
                     }
                     catch //(NumberFormatException e)
                     {
-                        //Log.d(TAG, "± str=" + str + "Wrong number format in hex$!");
+                        Debug.WriteLine(TAG + "± str=" + str + "Wrong number format in hex$!");
                     }
                 }
                 result = (num).ToString();
             }
-            //Log.d(TAG, "± STRINGFUNC " + str + "='" + result + "'");
+            Debug.WriteLine(TAG + "± STRINGFUNC " + str + "='" + result + "'");
             return result;
         }
 
@@ -413,7 +414,7 @@ namespace MCX_Basic
                     int index = arr[0].ToString().Length;
                     for (int i = 1; i < arr.Count; i++)
                     {
-                        if (normaStr.insideText(str, index)) ;
+                        if (normaStr.insideText(str, index))
                         {
                             arr[i - 1] = arr[i - 1].ToString() + result.Substring(arr[i - 1].ToString().Length, arr[i - 1].ToString().Length + 1) + arr[i].ToString();
                             arr.RemoveAt(i);
@@ -439,8 +440,8 @@ namespace MCX_Basic
                                 }
                                 else {
                                     tempStr = "";
-                                    GlobalVars.getInstance().error = "Variable not excist\n";
-                                    //Log.d(TAG, "± Variable not excist");
+                                    GlobalVars.getInstance().error = "Variable not excist\r\n";
+                                    Debug.WriteLine(TAG + "± Variable not excist");
                                 }
                             }
                         }

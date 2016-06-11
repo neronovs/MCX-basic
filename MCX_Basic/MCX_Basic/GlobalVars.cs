@@ -9,8 +9,8 @@ namespace MCX_Basic
     class GlobalVars
     {
         public static String version1 = "MCX Basic version ";
-        public static String version2 = "Copyright 2015-16 by Neronov Aleksey\n";
-        public static String version3 = "Type 'help' for list of command\n";
+        public static String version2 = "Copyright 2015-16 by Neronov Aleksey";
+        public static String version3 = "Type 'help' for list of command\r\n";
 
         public String error;
         public String runnedLine;

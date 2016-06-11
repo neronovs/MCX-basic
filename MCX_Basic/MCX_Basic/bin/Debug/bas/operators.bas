@@ -1,0 +1,10 @@
+10 print "Left"
+20 print "cos"
+30 print "cls"
+40 print "input"
+50 print "inkey$"
+60 print "val"
+70 print "sin"
+80 print "asc"
+90 print "for abs("+"tan"
+100 print "cos"+cos(9)

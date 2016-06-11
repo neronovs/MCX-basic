@@ -6,16 +6,18 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Reflection;
+//using org.mariuszgromada.math.mxparser;
+using System.Diagnostics;
 using org.mariuszgromada.math.mxparser;
 
 namespace MCX_Basic
 {
-    class DigitalFunc
+    public class DigitalFunc
     {
-        private static int NSNotFound = -1;
-        private static bool NO = false;
-        private static bool YES = true;
-        private static String TAG;// = MainActivity.class.getSimpleName();
+        private readonly int NSNotFound = -1;
+        private readonly bool NO = false;
+        private readonly bool YES = true;
+        private readonly String TAG = MethodBase.GetCurrentMethod().DeclaringType.Name + ": ";
         NormalizeString normaStr = new NormalizeString();
         Variables variables = new Variables();
 
@@ -83,7 +85,7 @@ namespace MCX_Basic
 
         public double returnMathResult(String str)
         {
-            ////Log.d(TAG, "± returnMathResult for " + str);
+            Debug.WriteLine(TAG + "± returnMathResult for " + str);
             double value = 0;
             if (str.Length > 0)
             {
@@ -101,7 +103,8 @@ namespace MCX_Basic
                     if (variables.variableIsPresent(arrAll[i].ToString()))
                         arrAll[i] = variables.returnContainOfVariable(arrAll[i].ToString());
                 str = String.Join("", arrAll);
-                List<String> arr = new List<String>((str.Split(Convert.ToChar(mathSet)).ToList()));
+                //List<String> arr = new List<String>((str.Split(Convert.ToChar(mathSet)).ToList()));
+                List<String> arr = new List<String>((Regex.Split(str, mathSet).ToList()));
                 List<String> arrValue = new List<String>();
                 arrValue = arr;
                 if (str.Substring(0, 1).Equals("-"))
@@ -116,7 +119,7 @@ namespace MCX_Basic
                     NSRange range = new NSRange(index - 1, 1);
                     arrSign.Add(str.Substring(range.location, range.length));
                 }
-                ////Log.d(TAG, "± !returnMathResult for " + str);
+                Debug.WriteLine(TAG + "± !returnMathResult for " + str);
                 for (int i = 0; i < arrValue.Count; i++)
                 {
                     if (arrValue[i].ToString().Length > 0)
@@ -130,7 +133,7 @@ namespace MCX_Basic
                             }
                 }
 
-                ////Log.d(TAG, "± returnMathResult arrValue " + arrValue);
+                Debug.WriteLine(TAG + "± returnMathResult arrValue " + arrValue);
 
                 for (int i = 0; i < arrValue.Count; i++)
                 {
@@ -153,13 +156,13 @@ namespace MCX_Basic
                             {
                                 arrValue[i]= Double.Parse(numStr).ToString();
                             }
-                            catch //////(NumberFormatException e)
+                            catch //(NumberFormatException e)
                             {
-                                ////Log.d(TAG, "± numStr=" + numStr + "Wrong number format in VAL");
+                                Debug.WriteLine(TAG + "± numStr=" + numStr + "Wrong number format in VAL");
                             }
                         }
                         else {
-                            GlobalVars.getInstance().error = "Syntax error at - \n" + arrValue[i].ToString() + "\n";
+                            GlobalVars.getInstance().error = "Syntax error at - \r\n" + arrValue[i].ToString() + "\r\n";
                         }
                     }
                     else if (funcString.Equals("asc("))
@@ -193,7 +196,7 @@ namespace MCX_Basic
                             }
                         }
                         else {
-                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "\n";
+                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "\r\n";
                         }
                     }
                     else if (funcString.Equals("abs("))
@@ -210,14 +213,14 @@ namespace MCX_Basic
                             {
                                 pre = Math.Abs(Double.Parse(numStr));
                             }
-                            catch //////(NumberFormatException e)
+                            catch //(NumberFormatException e)
                             {
-                                ////Log.d(TAG, "± str=" + str + "Wrong number format in ABS");
+                                Debug.WriteLine(TAG + "± str=" + str + "Wrong number format in ABS");
                             }
                             arrValue[i] = pre.ToString();
                         }
                         else {
-                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "\n";
+                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "\r\n";
                         }
                     }
                     else if (funcString.Equals("fix("))
@@ -233,13 +236,13 @@ namespace MCX_Basic
                             {
                                 arrValue[i] = (Math.Round(Double.Parse(numStr))).ToString();
                             }
-                            catch ////(NumberFormatException e)
+                            catch //(NumberFormatException e)
                             {
-                                ////Log.d(TAG, "± numStr=" + numStr + "Wrong number format in VAL");
+                                Debug.WriteLine(TAG + "± numStr=" + numStr + "Wrong number format in VAL");
                             }
                         }
                         else {
-                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "\n";
+                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "\r\n";
                         }
                     }
                     else if (funcString.Equals("rnd("))
@@ -257,13 +260,13 @@ namespace MCX_Basic
                                 int rint = r.Next(Int32.Parse(numStr));
                                 arrValue[i] = rint.ToString();
                             }
-                            catch ////(NumberFormatException e)
+                            catch //(NumberFormatException e)
                             {
-                                ////Log.d(TAG, "± numStr=" + numStr + "Wrong number format in VAL");
+                                Debug.WriteLine(TAG + "± numStr=" + numStr + "Wrong number format in VAL");
                             }
                         }
                         else {
-                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "\n";
+                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "\r\n";
                         }
                     }
                     else if (funcString.Equals("inst"))
@@ -291,7 +294,7 @@ namespace MCX_Basic
                             if (GlobalVars.getInstance().error == null) indLoc = arr1[0].ToString().IndexOf(arr1[1].ToString());
                             if (range.location == NSNotFound)
                             {
-                                ////Log.d(TAG, "± string_var was not found");
+                                Debug.WriteLine(TAG + "± string_var was not found");
                                 arrValue[i] = "0";
                             }
                             else {
@@ -299,7 +302,7 @@ namespace MCX_Basic
                             }
                         }
                         else {
-                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "\n";
+                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "\r\n";
                         }
                     }
                     else if (funcString.Equals("len("))
@@ -319,7 +322,7 @@ namespace MCX_Basic
                             normStr = normStr.Replace("\"", "");
                             if (GlobalVars.getInstance().error.Length != 0)
                             {
-                                ////Log.d(TAG, "± string_var was not found");
+                                Debug.WriteLine(TAG + "± string_var was not found");
                                 arrValue[i] = "0";
                             }
                             else {
@@ -327,7 +330,7 @@ namespace MCX_Basic
                             }
                         }
                         else {
-                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "\n";
+                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "\r\n";
                         }
                     }
                     else if (arrValue[i].ToString().Contains(alphaSet))
@@ -339,8 +342,8 @@ namespace MCX_Basic
                             arrValue[i] = varSet.var;
                         }
                         else {
-                            ////Log.d(TAG, "± !!!Variable not excist");
-                            //GlobalVars.getInstance().error = "Syntax error\n";
+                            Debug.WriteLine(TAG + "± !!!Variable not excist");
+                            //GlobalVars.getInstance().error = "Syntax error\r\n";
                             arrValue[i] = "0";
                         }
                     }
@@ -363,16 +366,16 @@ namespace MCX_Basic
                     //[System.Reflection.Assembly]::LoadFile("d:\\OneDriveNod\\OneDrive\\Coding\\Examples\\MCX basic\\MCX_Basic\\MCX_Basic\\mxparser.dll")
                     //[org.mariuszgromada.math.mxparser.regressiontesting.PerformanceTests]::Start()
 
-
+                    
                     Expression expression = new Expression(str);
                     if (expression.checkSyntax())
                     {
-                        ////Log.d(TAG, "± !!!!!!!!! RESULTING TEST " + expression.getExpressionString() + "=" + expression.calculate());
+                        Debug.WriteLine(TAG + "± !!!!!!!!! RESULTING TEST " + expression.getExpressionString() + "=" + expression.calculate());
                         value = expression.calculate();
                     }
                     else {
-                        ////Log.d(TAG, "± in expression " + expression.getErrorMessage());
-                        GlobalVars.getInstance().error = "Error " + expression.getErrorMessage() + "\n";
+                        Debug.WriteLine(TAG + "± in expression " + expression.getErrorMessage());
+                        GlobalVars.getInstance().error = "Error " + expression.getErrorMessage() + "\r\n";
                     }
                 }
             }

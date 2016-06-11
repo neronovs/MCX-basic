@@ -36,6 +36,7 @@
             this.commandWindow.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.commandWindow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(8)))), ((int)(((byte)(54)))), ((int)(((byte)(160)))));
             this.commandWindow.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.commandWindow.Location = new System.Drawing.Point(7, 7);
             this.commandWindow.Margin = new System.Windows.Forms.Padding(10);
@@ -45,7 +46,6 @@
             this.commandWindow.Size = new System.Drawing.Size(270, 249);
             this.commandWindow.TabIndex = 0;
             this.commandWindow.TabStop = false;
-            this.commandWindow.TextChanged += new System.EventHandler(this.commandWindow_TextChanged);
             this.commandWindow.KeyDown += new System.Windows.Forms.KeyEventHandler(this.commandWindow_KeyDown);
             // 
             // MainForm

@@ -1,0 +1,4 @@
+D:\OneDriveNod\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\bin\x64\Debug\MCX_Basic.exe.config
+D:\OneDriveNod\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\obj\x64\Debug\MCX_Basic.MainForm.resources
+D:\OneDriveNod\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\obj\x64\Debug\MCX_Basic.Properties.Resources.resources
+D:\OneDriveNod\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_Basic\obj\x64\Debug\MCX_Basic.csproj.GenerateResource.Cache

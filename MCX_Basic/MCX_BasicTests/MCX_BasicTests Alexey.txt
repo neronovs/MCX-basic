@@ -1,0 +1,224 @@
+//
+//  MCX_BasicTests.m
+//  MCX BasicTests
+//
+//  Created by Алексей Неронов on 25.05.16.
+//  Copyright © 2016 Алексей Неронов. All rights reserved.
+//
+
+#import <XCTest/XCTest.h>
+#import "DigitalFunc.h"
+#import "StringFunc.h"
+#import "NormalizeString.h"
+#import "GlobalVars.h"
+#import "RunCommand.h"
+
+@interface MCX_BasicTests : XCTestCase {
+    NormalizeString *normalizeString;
+    DigitalFunc* digitalFunc;
+    StringFunc* stringFunc;
+    GlobalVars *globals;
+    RunCommand *runCommand;
+}
+
+@end
+
+@implementation MCX_BasicTests
+
+- (void)testRunCommand {
+    globals = [GlobalVars sharedInstance];
+    globals.error=@"";
+    runCommand=[[RunCommand alloc]init];
+    NSString* str=@"ver";
+    XCTAssertTrue([runCommand set:str]);
+    XCTAssertEqual(4, [globals.listOfStrings count]);
+    XCTAssertTrue([globals.error isEqualToString:@""]);
+    str=@"auto";
+    XCTAssertTrue([runCommand set:str]);
+    XCTAssertFalse(globals.isOkSet);
+    XCTAssertTrue(globals.autoSet);
+    XCTAssertEqual(1, [globals.listOfStrings count]);
+    XCTAssertTrue([globals.error isEqualToString:@""]);
+    str=@"list";
+    XCTAssertTrue([runCommand set:str]);
+    XCTAssertTrue(globals.isOkSet);
+    str=@"a=10";
+    XCTAssertTrue([runCommand set:str]);
+    XCTAssertTrue([globals.variables count]>0);
+    str=@"clear";
+    XCTAssertTrue([runCommand set:str]);
+    XCTAssertEqual(0, [globals.variables count]);
+    XCTAssertTrue([globals.error isEqualToString:@""]);
+    str=@"10 cls";
+    XCTAssertFalse([runCommand set:str]);
+    str=@"20 ver";
+    XCTAssertFalse([runCommand set:str]);
+    str=@"30 print 10";
+    XCTAssertFalse([runCommand set:str]);
+    str=@"delete 10-20";
+    XCTAssertTrue([runCommand set:str]);
+    XCTAssertEqual(1, [globals.listOfProgram count]);
+    str=@"end";
+    XCTAssertTrue([runCommand set:str]);
+    XCTAssertTrue(globals.isOkSet);
+    XCTAssertFalse(globals.run);
+
+}
+
+- (void)testStringFunctions {
+    stringFunc=[[StringFunc alloc]init];
+    globals = [GlobalVars sharedInstance];
+    globals.error=@"";
+    NSString* strTSF=@"spc$(3)";
+    NSString* resTSF=@"\"   \"";
+    XCTAssertTrue([resTSF isEqual:[stringFunc returnStringResult:strTSF]],@"Strings are not equal %@ %@", resTSF, [stringFunc returnStringResult:strTSF]);
+    XCTAssertTrue([stringFunc stringFunction:strTSF]);
+    strTSF=@"bin$(8)";
+    resTSF=@"\"1000\"";
+    XCTAssertTrue([resTSF isEqualToString:[stringFunc returnStringResult:strTSF]]);
+    strTSF=@"chr$(77)";
+    resTSF=@"\"M\"";
+    XCTAssertTrue([resTSF isEqualToString:[stringFunc returnStringResult:strTSF]]);
+    strTSF=@"str$(-3.791)";
+    resTSF=@"\"-3.791\"";
+    XCTAssertTrue([resTSF isEqualToString:[stringFunc returnStringResult:strTSF]]);
+    strTSF=@"string$(8,65)";
+    resTSF=@"\"AAAAAAAA\"";
+    XCTAssertTrue([resTSF isEqualToString:[stringFunc returnStringResult:strTSF]]);
+    strTSF=@"hex$(127)";
+    resTSF=@"\"7F\"";
+    XCTAssertTrue([resTSF isEqualToString:[stringFunc returnStringResult:strTSF]]);
+    strTSF=@"left$(\"MCX Forever!\",3)";
+    resTSF=@"\"MCX\"";
+    XCTAssertTrue([resTSF isEqualToString:[stringFunc returnStringResult:strTSF]]);
+    strTSF=@"right$(\"MCX Forever!\",3)";
+    resTSF=@"\"er!\"";
+    XCTAssertTrue([resTSF isEqualToString:[stringFunc returnStringResult:strTSF]]);
+    strTSF=@"mid$(\"www.msx.org\",5,3)";
+    resTSF=@"\"msx\"";
+    XCTAssertTrue([resTSF isEqualToString:[stringFunc returnStringResult:strTSF]]);
+    strTSF=@"mid$(\"www.msx.org\",5)";
+    resTSF=@"\"msx.org\"";
+    XCTAssertTrue([resTSF isEqualToString:[stringFunc returnStringResult:strTSF]]);
+    strTSF=@"oct$(127)";
+    resTSF=@"\"177\"";
+    XCTAssertTrue([resTSF isEqualToString:[stringFunc returnStringResult:strTSF]]);
+    
+}
+
+- (void)testNormalizeString {
+    normalizeString=[[NormalizeString alloc]init];
+    globals = [GlobalVars sharedInstance];
+    globals.error=@"";
+    NSString* str=@"123 qweWER\"DSFds\"AAA";
+    NSString* res=@"123 qwewer\"DSFds\"aaa";
+    XCTAssertTrue([res isEqualToString:[normalizeString lowcaseWithText:str]]);
+    str=@"123 qweWER\"DSFds\"AAA";
+    res=@"123 qwEWER\"DSFds\"AAA";
+    XCTAssertTrue([res isEqualToString:[normalizeString replaceChar:'e' withChar:'E' inText:str]]);
+    str=@"  123 qweWER\"DSFds\"AAA  ";
+    res=@"123 qweWER\"DSFds\"AAA";
+    XCTAssertTrue([res isEqualToString:[normalizeString removeSpaceInBeginAndEnd:str]]);
+    str=@"   123 qweWER\"DSFds\"AAA   ";
+    res=@"123 qweWER\"DSFds\"AAA   ";
+    XCTAssertTrue([res isEqualToString:[normalizeString removeSpaceInBegin:str]]);
+    str=@"   123 qwe  WER\"  DSF  ds\"AAA   ";
+    res=@"123qweWER\"  DSF  ds\"AAA";
+    XCTAssertTrue([res isEqualToString:[normalizeString removeSpacesWithText:str]]);
+    str=@"   123 qweWER\"DSFds\"AAA   ";
+    res=@"   123 qweWERAAA   ";
+    XCTAssertTrue([res isEqualToString:[normalizeString removeText:str]]);
+    str=@"123 \"qwe\" WER\"DSFds\"AAA \"  \"";
+    NSArray* array1=[[NSArray alloc] initWithObjects:@"qwe",@"DSFds",@"  ", nil];
+    XCTAssertEqualObjects(array1, [normalizeString extractTextToArray:str]);
+    str=@"123 \"qwe\" WER\"DSFds\"AAA \"  \"";
+    array1=[[NSArray alloc] initWithObjects:@"123 ",@"\"qwe\"",@" WER",@"\"DSFds\"",@"AAA ",@"\"  \"",@"", nil];
+    XCTAssertEqualObjects(array1, [normalizeString extractTextAndOtherToArray:str]);
+    str=@"123 \"qwe\" WER\"DSFds\"AAA \"  \"";
+    array1=[[NSArray alloc] initWithObjects:@"qwe",@"DSFds",@"  ",nil];
+    XCTAssertEqualObjects(array1, [normalizeString extractTextAndNumToArray:str]);
+    str=@"123,11,22,33,44,900";
+    array1=[[NSArray alloc] initWithObjects:@"123",@"11",@"22",@"33",@"44",@"900",nil];
+    XCTAssertEqualObjects(array1, [normalizeString extractNumToArray:str]);
+    str=@"123\"qwe\",WER\"DSFds\"AAA+\"  \"";
+    array1=[[NSArray alloc] initWithObjects:@"123\"qwe\"",@"WER\"DSFds\"AAA",@"\"  \"", nil];
+    XCTAssertEqualObjects(array1, [normalizeString stringSeparateToArray:str]);
+    str=@"123-11+22/(33*44)^900";
+    array1=[[NSArray alloc] initWithObjects:@"123",@"-",@"11",@"+",@"22",@"/",@"",@"(",@"33",@"*",@"44",@")",@"",@"^",@"900", nil];
+    XCTAssertEqualObjects(array1, [normalizeString stringSeparateAllToArray:str]);
+    str=@"\"123-11+22/(33*44)^900\"";
+    XCTAssertTrue([normalizeString isPairedBracket:str]);
+    str=@"123-11+22/(33*44^900";
+    XCTAssertFalse([normalizeString isPairedBracket:str]);
+    str=@"\"123-11+22/(33*44)^900\"";
+    XCTAssertTrue([normalizeString isText:str]);
+    str=@"\"123-11+22/\"(33*44)^900";
+    XCTAssertTrue([normalizeString insideText:str atIndex:5]);
+    XCTAssertFalse([normalizeString insideText:str atIndex:15]);
+    str=@"\"123-11+22/(33*44)^900\"\"";
+    XCTAssertFalse([normalizeString isPairedQuotes:str]);
+}
+
+- (void)testDigitalFunc {
+    digitalFunc=[[DigitalFunc alloc]init];
+    globals = [GlobalVars sharedInstance];
+    globals.error=@"";
+    //for mixedstring
+    NSString* str=@"sin(13+2*3)";
+    NSString* res=@"0.1498772096629523";
+    XCTAssertTrue([res isEqualToString:[digitalFunc mathFunctionInMixedString:str]]);
+    //for isMath
+    str=@"sin(13+2*3)";
+    XCTAssertTrue([digitalFunc isMath:str]);
+    //for mathFunction
+    str=@"atn";
+    XCTAssertTrue([digitalFunc mathFunction:str]);
+    //for isOnlyDigitWithMath
+    str=@"-123-345+678/329*0.32";
+    XCTAssertTrue([digitalFunc isOnlyDigitsWithMath:str]);
+    //for isOnlyDigit
+    str=@"-1230.32";
+    XCTAssertTrue([digitalFunc isOnlyDigits:str]);
+    str=@"";
+    XCTAssertFalse([digitalFunc isOnlyDigitsAndNotEmpty:str]);
+    //for toBinary
+    res=@"10011010010";
+    XCTAssertTrue([res isEqualToString:[digitalFunc toBinary:1234]]);
+    //for returnMathResult
+    str=@"123+90.209-32/347*746";
+    res=@"144.4136109510086";
+    XCTAssertTrue([res isEqualToString:[digitalFunc returnMathResult:str].stringValue]);
+    str=@"val(\"-91.44\")";
+    res=@"-91.44";
+    XCTAssertTrue([res isEqualToString:[digitalFunc returnMathResult:str].stringValue]);
+    str=@"asc(\"B4\")";
+    res=@"66";
+    XCTAssertTrue([res isEqualToString:[digitalFunc returnMathResult:str].stringValue]);
+    str=@"abs(-91.44)";
+    res=@"91.44";
+    XCTAssertTrue([res isEqualToString:[digitalFunc returnMathResult:str].stringValue]);
+    str=@"fix(-1.99)";
+    res=@"-1";
+    XCTAssertTrue([res isEqualToString:[digitalFunc returnMathResult:str].stringValue]);
+    str=@"instr((\"I like MCX!\",\"MCX\")";
+    res=@"8";
+    XCTAssertTrue([res isEqualToString:[digitalFunc returnMathResult:str].stringValue]);
+    str=@"len(\"MCX\")";
+    res=@"3";
+    XCTAssertTrue([res isEqualToString:[digitalFunc returnMathResult:str].stringValue]);
+    str=@"log(2)";
+    res=@"0.6931471805599453";
+    XCTAssertTrue([res isEqualToString:[digitalFunc returnMathResult:str].stringValue]);
+    str=@"3^3";
+    res=@"27";
+    XCTAssertTrue([res isEqualToString:[digitalFunc returnMathResult:str].stringValue]);
+    str=@"sqr(9)";
+    res=@"3";
+    XCTAssertTrue([res isEqualToString:[digitalFunc returnMathResult:str].stringValue]);
+    str=@"atn(2)";
+    res=@"1.107148717794091";
+    XCTAssertTrue([res isEqualToString:[digitalFunc returnMathResult:str].stringValue]);
+
+}
+
+@end

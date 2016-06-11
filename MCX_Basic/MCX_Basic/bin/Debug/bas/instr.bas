@@ -1,0 +1,1 @@
+10 print "instr of 'i like MCX BASIC!!!' (MCX) is ", instr("i like MCX BASIC!!!","MCX")

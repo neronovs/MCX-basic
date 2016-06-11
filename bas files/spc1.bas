@@ -1,0 +1,1 @@
+10 print "start"+spc$(9)+"continue"+spc$(3)+"end"+spc$(2)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,10 +10,10 @@ namespace MCX_Basic
 {
     class NormalizeString
     {
-        private static int NSNotFound = -1;
-        private static bool NO = false;
-        private static bool YES = true;
-        //private static String TAG = MainActivity.class.getSimpleName();
+        private readonly int NSNotFound = -1;
+        private readonly bool NO = false;
+        private readonly bool YES = true;
+        private readonly String TAG = MethodBase.GetCurrentMethod().DeclaringType.Name + ": ";
 
         DigitalFunc digitalFunc;
 
@@ -42,7 +43,7 @@ namespace MCX_Basic
                         if (string_val.Substring(i, 1).Equals(sign.ToString()))
                         {
                             result = result + witbSign;
-                            ////Log.d(TAG, "± " + result);
+                            Debug.WriteLine(TAG + "± " + result);
                         }
                         else {
                             result = result + string_val.Substring(i, 1);
@@ -153,16 +154,16 @@ namespace MCX_Basic
                 }
             }
             else {
-                GlobalVars.getInstance().error = "Syntax error\n";
+                GlobalVars.getInstance().error = "Syntax error\r\n";
             }
             if (foundFirst)
             {
-                GlobalVars.getInstance().error = "Syntax error\n";
+                GlobalVars.getInstance().error = "Syntax error\r\n";
             }
             else {
                 for (int i = 0; i < arr.Count(); i++)
                 {
-                    ////Log.d(TAG, "± removeText->" + arr[i].ToString());
+                    Debug.WriteLine(TAG + "± removeText->" + arr[i].ToString());
                     string_var = string_var.Replace(arr[i].ToString(), "");
                 }
             }
@@ -287,15 +288,15 @@ namespace MCX_Basic
                 }
             }
             else {
-                GlobalVars.getInstance().error = "Syntax error\n";
+                GlobalVars.getInstance().error = "Syntax error\r\n";
             }
 
             if (foundFirst || arr.Count() != 2)
             {
-                GlobalVars.getInstance().error = "Syntax error\n";
+                GlobalVars.getInstance().error = "Syntax error\r\n";
             }
             else {
-                ////Log.d(TAG, "± extracted Text->" + arr);
+                Debug.WriteLine(TAG + "± extracted Text->" + arr);
             }
             return arr;
         }
@@ -337,9 +338,9 @@ namespace MCX_Basic
                 }
             }
             else {
-                GlobalVars.getInstance().error = "Syntax error\n";
+                GlobalVars.getInstance().error = "Syntax error\r\n";
             }
-            ////Log.d(TAG, "± extract TextAndOther To Array ->" + arr);
+            Debug.WriteLine(TAG + "± extract TextAndOther To Array ->" + arr);
             return arr;
         }
 
@@ -374,14 +375,14 @@ namespace MCX_Basic
                 }
             }
             else {
-                GlobalVars.getInstance().error = "Syntax error\n";
+                GlobalVars.getInstance().error = "Syntax error\r\n";
             }
             if (foundFirst || arr.Count() < 2)
             {
-                GlobalVars.getInstance().error = "Syntax error\n";
+                GlobalVars.getInstance().error = "Syntax error\r\n";
             }
             else {
-                ////Log.d(TAG, "± extract TextAndNum To Array ->" + arr);
+                Debug.WriteLine(TAG + "± extract TextAndNum To Array ->" + arr);
             }
 
             return arr;
@@ -419,7 +420,7 @@ namespace MCX_Basic
                         NSRange range = new NSRange(arrIndex, i - arrIndex + 1);
                         arr.Add(string_var.Substring(range.location, range.length));
                     }
-                    ////Log.d(TAG, "±  -->'" + string_var.Substring(i, 1));
+                    Debug.WriteLine(TAG + "±  -->'" + string_var.Substring(i, 1));
                 }
                 for (int i = 0; i < arr.Count; i++)
                 {
@@ -437,13 +438,13 @@ namespace MCX_Basic
             }
             if (foundFirst)
             {
-                GlobalVars.getInstance().error = "Syntax error\n";
+                GlobalVars.getInstance().error = "Syntax error\r\n";
             }
             else {
                 //        NSLog(@"Separated TEXT - %@",arr);
             }
             //for (int i = 0; i < arr.Count; i++)
-                ////Log.d(TAG, "± extracted arr->'" + arr[i].ToString() + "'");
+                //Debug.WriteLine(TAG + "± extracted arr->'" + arr[i].ToString() + "'");
 
             return arr;
         }
@@ -553,13 +554,13 @@ namespace MCX_Basic
             }
             if (foundFirst)
             {
-                GlobalVars.getInstance().error = "Syntax error\n";
+                GlobalVars.getInstance().error = "Syntax error\r\n";
             }
             else {
                 //        NSLog(@"Separated ALL TEXT - %@",arr);
             }
 
-            //        for (int i=0; i<arr.Count; i++) //Log.d(TAG, "± extracted arr->'" + arr[i].ToString()+"'");
+            //        for (int i=0; i<arr.Count; i++) Debug.WriteLine(TAG + "± extracted arr->'" + arr[i].ToString()+"'");
             return arr;
         }
 
@@ -604,7 +605,7 @@ namespace MCX_Basic
                     }
                 }
                 //  склеиваем если функция
-                //Log.d(TAG, "± 1...Separated TEXT - %@" + arr);
+                Debug.WriteLine(TAG + "± 1...Separated TEXT - %@" + arr);
 
                 for (int i = 0; i < arr.Count; i++)
                 {
@@ -636,7 +637,7 @@ namespace MCX_Basic
                     }
                     catch //(NumberFormatException e)
                     {
-                        //Log.d(TAG, "± Wrong number format in left$!");
+                        Debug.WriteLine(TAG + "± Wrong number format in left$!");
                     }
                     index = index + arr[i].ToString().Length + 1;
                     NSRange range = new NSRange(index - 1, 1);
@@ -669,7 +670,7 @@ namespace MCX_Basic
                 adding = NO;
                 indAdd = 0;
                 for (int ii = 0; ii < arrValueDelete.Count; ii++)
-                    //Log.d(TAG, "± ARR --- " + arr[ii).ToString());
+                    Debug.WriteLine(TAG + "± ARR --- " + arr[ii].ToString());
                 if (arrValue.Count > 1) for (int i = 0; i < arr.Count - 1; i++)
                     {
                         String notext = removeText(arr[i].ToString());
@@ -678,7 +679,7 @@ namespace MCX_Basic
                         {
                             adding = YES;
                             indAdd = i;
-                            //Log.d(TAG, "± adding " + notext);
+                            Debug.WriteLine(TAG + "± adding " + notext);
                         }
                         if (adding)
                         {
@@ -696,12 +697,12 @@ namespace MCX_Basic
             }
             if (foundFirst)
             {
-                GlobalVars.getInstance().error = "Syntax error\n";
+                GlobalVars.getInstance().error = "Syntax error\r\n";
             }
             else {
                 for (int i = 0; i < arr.Count; i++)
                 {
-                    //Log.d(TAG, "± Separated TEXT->'" + arr[i].ToString() + "'");
+                    Debug.WriteLine(TAG + "± Separated TEXT->'" + arr[i].ToString() + "'");
                 }
             }
             return arr;
