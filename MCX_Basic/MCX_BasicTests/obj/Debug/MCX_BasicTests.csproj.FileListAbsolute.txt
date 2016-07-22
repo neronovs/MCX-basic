@@ -17,3 +17,6 @@ D:\temp\MCX\MCX_Basic\MCX_BasicTests\obj\Debug\MCX_BasicTests.csprojResolveAssem
 D:\temp\MCX\MCX_Basic\MCX_BasicTests\obj\Debug\MCX_BasicTests.dll
 D:\temp\MCX\MCX_Basic\MCX_BasicTests\obj\Debug\MCX_BasicTests.pdb
 D:\OneDriveNod\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_BasicTests\bin\Debug\mxparser.net4.6.dll
+D:\OTC\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_BasicTests\obj\Debug\MCX_BasicTests.csprojResolveAssemblyReference.cache
+D:\OTC\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_BasicTests\obj\Debug\MCX_BasicTests.dll
+D:\OTC\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_BasicTests\obj\Debug\MCX_BasicTests.pdb

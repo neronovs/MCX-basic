@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MCX_Basic
 {
-    internal class ArraySet
+    public class ArraySet
     {
         public String name;
         public List<String> value;

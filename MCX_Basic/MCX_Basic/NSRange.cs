@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MCX_Basic
 {
-    class NSRange
+    public class NSRange
     {
         public int location;
         public int length;

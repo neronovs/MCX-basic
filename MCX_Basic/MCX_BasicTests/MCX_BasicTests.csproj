@@ -69,7 +69,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="DigitalFuncTest.cs" />
+    <Compile Include="Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

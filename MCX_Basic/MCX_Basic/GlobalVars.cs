@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MCX_Basic
 {
-    class GlobalVars
+    public class GlobalVars
     {
         public static String version1 = "MCX Basic version ";
         public static String version2 = "Copyright 2015-16 by Neronov Aleksey";
@@ -47,7 +47,7 @@ namespace MCX_Basic
         public int runIndex;
         public int lineNumber;
 
-        private GlobalVars()
+        public GlobalVars()
         {
             String[] str = {"abs(x) - Returns the absolute value of a variable.",
                 "asc(x$) - Returns the ASCII value of the first character in a string.",

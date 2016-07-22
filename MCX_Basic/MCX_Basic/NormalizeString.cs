@@ -8,14 +8,12 @@ using System.Threading.Tasks;
 
 namespace MCX_Basic
 {
-    class NormalizeString
+    public class NormalizeString
     {
         private readonly int NSNotFound = -1;
         private readonly bool NO = false;
         private readonly bool YES = true;
         private readonly String TAG = MethodBase.GetCurrentMethod().DeclaringType.Name + ": ";
-
-        DigitalFunc digitalFunc;
 
         public String replaceCharWithCharInText(char sign, char witbSign, String string_val)
         {
@@ -26,7 +24,17 @@ namespace MCX_Basic
             {
                 for (int i = 0; i < string_val.Length; i++)
                 {
-                    if (string_val.Substring(i, 1).Equals("\"") && !foundFirst)
+                    if (string_val.ElementAt(i) == '"' && !foundFirst)
+                    {
+                        foundFirst = YES;
+                        indexFirst = i;
+                    }
+                    if (string_val.ElementAt(i) == '"' && foundFirst && indexFirst != i) foundFirst = NO;
+                    if (foundFirst) result = result + string_val.Substring(i, 1);
+                    if (!foundFirst && string_val.ElementAt(i) != sign) result = result + string_val.Substring(i, 1);
+                    if (!foundFirst && string_val.ElementAt(i) == sign) result = result + witbSign;
+
+                    /*if (string_val.Substring(i, 1).Equals("\"") && !foundFirst)
                     {
                         foundFirst = YES;
                         indexFirst = i;
@@ -48,7 +56,7 @@ namespace MCX_Basic
                         else {
                             result = result + string_val.Substring(i, 1);
                         }
-                    }
+                    }*/
                 }
             }
             return result;
@@ -267,7 +275,42 @@ namespace MCX_Basic
 
         public List<String>  extractTextToArray(String string_var)
         {
-            List<String>  arr = new List<String> ();
+            Debug.WriteLine(TAG + "± incomming string->" + string_var);
+            List<String> arr = new List<String>();
+            int indexFirst = 0;
+            bool foundFirst = NO;
+            if (string_var.Length > 0)
+            {
+                for (int i = 0; i < string_var.Length; i++)
+                {
+                    if (string_var.Substring(i, 1).Equals("\"") && !foundFirst)
+                    {
+                        foundFirst = YES;
+                        indexFirst = i + 1;
+                    }
+                    if (string_var.Substring(i, 1).Equals("\"") && foundFirst && indexFirst != i + 1)
+                    {
+                        foundFirst = NO;
+                        NSRange range = new NSRange(indexFirst, i - indexFirst);
+                        arr.Add(string_var.Substring(range.location, range.length));
+                    }
+                }
+            }
+            else {
+                GlobalVars.getInstance().error = "Syntax error\n";
+            }
+
+            if (foundFirst || arr.Count() != 2)
+            {
+                GlobalVars.getInstance().error = "Syntax error\n";
+            }
+            else {
+                Debug.WriteLine(TAG + "± extracted Text->" + arr);
+            }
+            return arr;
+
+            //переделал выше
+            /*List<String>  arr = new List<String> ();
             int indexFirst = 0;
             bool foundFirst = NO;
             if (string_var.Length > 0)
@@ -298,7 +341,7 @@ namespace MCX_Basic
             else {
                 Debug.WriteLine(TAG + "± extracted Text->" + arr);
             }
-            return arr;
+            return arr;*/
         }
 
         public List<String>  extractTextAndOtherToArray(String string_var)
@@ -648,6 +691,7 @@ namespace MCX_Basic
                 List<String> arrValueDelete = new List<String>();
                 if (arrValue.Count > 2) for (int i = 0; i < arr.Count - 1; i++)
                     {
+                        DigitalFunc digitalFunc = new DigitalFunc();
                         String notext = removeText(arr[i].ToString());
                         if (digitalFunc.mathFunction(notext))
                         {

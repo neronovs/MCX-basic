@@ -279,6 +279,18 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             commandWindow.ForeColor = (detectColor(15));
             version();
             printOk();
+
+            /*String str = "123\"qwe\",WER\"DSFds\"AAA+\"  \"";
+            List<String> array1 = new List<String>() { "123\"qwe\"", "WER\"DSFds\"AAA", "\"  \"" };
+            List<string> array2 = new List<String>();
+            //CollectionAssert.AreEqual(array1, normalizeString.extractTextToArray(str));
+            NormalizeString normalizeString = new NormalizeString();
+            array2 = normalizeString.stringSeparateToArray(str);
+            Debug.WriteLine("array2 Count -> " + array2.Count);
+            Debug.WriteLine("outcome info array2[0] -> " + array2[0]);
+            Debug.WriteLine("outcome info array2[1] -> " + array2[1]);
+            Debug.WriteLine("outcome info array2[2] -> " + array2[2]);*/
+            //Debug.WriteLine("outcome info [3] -> " + array2[3]);
             //print runCommand.set("a=2");
             //runCommand.set("print abs(1)");
             //runCommand.set("print a,\"---\",7");
@@ -728,6 +740,11 @@ private TextWatcher inputTextWatcher = new TextWatcher()
         private void commandWindow_TextChanged(object sender, EventArgs e)
         {
             
+        }
+
+        private void commandWindow_TextChanged_1(object sender, EventArgs e)
+        {
+
         }
 
 

@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace MCX_Basic
 {
-    class StringFunc
+    public class StringFunc
     {
         private static DigitalFunc digitalFunc = new DigitalFunc();
         private static NormalizeString normaStr = new NormalizeString();

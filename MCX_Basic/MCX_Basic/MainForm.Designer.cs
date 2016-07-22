@@ -46,6 +46,7 @@
             this.commandWindow.Size = new System.Drawing.Size(270, 249);
             this.commandWindow.TabIndex = 0;
             this.commandWindow.TabStop = false;
+            this.commandWindow.TextChanged += new System.EventHandler(this.commandWindow_TextChanged_1);
             this.commandWindow.KeyDown += new System.Windows.Forms.KeyEventHandler(this.commandWindow_KeyDown);
             // 
             // MainForm

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MCX_Basic
 {
-    class Variables
+    public class Variables
     {
         private readonly int NSNotFound = -1;
         private readonly bool NO = false;
@@ -137,7 +137,7 @@ namespace MCX_Basic
                             }
                         }
                     }
-                    string_var = string_var.Substring(rangeSecond.location + 1, string_var.Length);
+                    string_var = string_var.Substring(rangeSecond.location + 1);
                     name = string_var;
                     rangeFirst = new NSRange(name.IndexOf("("), 1);
                     rangeSecond = new NSRange(name.IndexOf(")"), 1);

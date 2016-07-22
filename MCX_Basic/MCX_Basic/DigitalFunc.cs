@@ -28,6 +28,8 @@ namespace MCX_Basic
         String numberMathSet = "^[^0-9./^+*-]+$";
         //    NSCharacterSet * numberSet = NSCharacterSet characterSetWithCharactersInString:".0123456789+-/*^" invertedSet;
 
+        public void DiDigitalFunc() { }
+
         public bool isOnlyDigits(String var)
         {
             bool result = YES;
@@ -103,8 +105,10 @@ namespace MCX_Basic
                     if (variables.variableIsPresent(arrAll[i].ToString()))
                         arrAll[i] = variables.returnContainOfVariable(arrAll[i].ToString());
                 str = String.Join("", arrAll);
+                //kill spaces
                 //List<String> arr = new List<String>((str.Split(Convert.ToChar(mathSet)).ToList()));
                 List<String> arr = new List<String>((Regex.Split(str, mathSet).ToList()));
+
                 List<String> arrValue = new List<String>();
                 arrValue = arr;
                 if (str.Substring(0, 1).Equals("-"))
@@ -112,6 +116,20 @@ namespace MCX_Basic
                     arrValue.RemoveAt(0);
                     arrValue[0] = "-" + arrValue[0].ToString();
                 }
+
+                if (arrValue.Count() > 1) //проверка на наличие минуса внутри кавычек
+                    for (int i = 0; i < arrValue.Count() - 1; i++)
+                    {
+                        String iStr = arrValue[i];
+                        String iStrNext = str.Substring(arrValue[i].ToString().Length, 1);
+
+                        if ((iStr.Substring(iStr.Length - 1).Equals("\"")) && (iStrNext.Equals("-")))
+                        {
+                            arrValue[i] = arrValue[i] + "-" + arrValue[i + 1];
+                            arrValue.RemoveAt(i + 1);
+                        }
+                    }
+
                 List<String> arrSign = new List<String>();
                 for (int i = 0; i < arrValue.Count - 1; i++)
                 {
@@ -151,15 +169,22 @@ namespace MCX_Basic
                             numStr = numStr.Replace("\"", "");
                             if (variables.variableIsPresent(numStr))
                                 numStr = variables.returnContainOfVariable(numStr);
-                            numStr = String.Join("", numStr.Split(Convert.ToChar(invNumberSet)));
+                            //numStr = String.Join("", numStr.Split(Convert.ToChar(invNumberSet)));
+
+                            
+                            double dbl = 0;
                             try
                             {
-                                arrValue[i]= Double.Parse(numStr).ToString();
+                                numStr = numStr.Replace(".", ",");
+                                dbl = Double.Parse(numStr);
+                                arrValue[i] = dbl.ToString().Replace(",", ".");
+
                             }
                             catch //(NumberFormatException e)
                             {
                                 Debug.WriteLine(TAG + "± numStr=" + numStr + "Wrong number format in VAL");
                             }
+                            
                         }
                         else {
                             GlobalVars.getInstance().error = "Syntax error at - \r\n" + arrValue[i].ToString() + "\r\n";
@@ -211,7 +236,9 @@ namespace MCX_Basic
                             double pre = 0;
                             try
                             {
+                                numStr = numStr.Replace(".", ",");
                                 pre = Math.Abs(Double.Parse(numStr));
+                                arrValue[i] = pre.ToString().Replace(",", ".");
                             }
                             catch //(NumberFormatException e)
                             {
@@ -234,7 +261,10 @@ namespace MCX_Basic
                             String numStr = arrValue[i].ToString().Substring(range.location, range.length);
                             try
                             {
-                                arrValue[i] = (Math.Round(Double.Parse(numStr))).ToString();
+                                numStr = numStr.Replace(".", ",");
+                                string str_val = (Math.Truncate(Double.Parse(numStr))).ToString();
+                                arrValue[i] = str_val.ToString().Replace(",", ".");
+
                             }
                             catch //(NumberFormatException e)
                             {
@@ -291,7 +321,7 @@ namespace MCX_Basic
                             int indLoc = 0;
                             List<String> arr1 = new List<String>();
                             arr1 = normaStr.extractTextToArray(normStr);
-                            if (GlobalVars.getInstance().error == null) indLoc = arr1[0].ToString().IndexOf(arr1[1].ToString());
+                            if (GlobalVars.getInstance().error == "") indLoc = arr1[0].ToString().IndexOf(arr1[1].ToString());
                             if (range.location == NSNotFound)
                             {
                                 Debug.WriteLine(TAG + "± string_var was not found");
@@ -366,12 +396,14 @@ namespace MCX_Basic
                     //[System.Reflection.Assembly]::LoadFile("d:\\OneDriveNod\\OneDrive\\Coding\\Examples\\MCX basic\\MCX_Basic\\MCX_Basic\\mxparser.dll")
                     //[org.mariuszgromada.math.mxparser.regressiontesting.PerformanceTests]::Start()
 
-                    
+                    str = str.Replace(",", ".");
+                    Debug.WriteLine(TAG, "str: " + str);
                     Expression expression = new Expression(str);
                     if (expression.checkSyntax())
                     {
                         Debug.WriteLine(TAG + "± !!!!!!!!! RESULTING TEST " + expression.getExpressionString() + "=" + expression.calculate());
                         value = expression.calculate();
+                        Debug.WriteLine(TAG, "value: " + value);
                     }
                     else {
                         Debug.WriteLine(TAG + "± in expression " + expression.getErrorMessage());
@@ -524,6 +556,8 @@ namespace MCX_Basic
                 result = result + str;
                 str = "";
             }
+
+            result = result.Replace(",", ".");
             return result;
         }
 
