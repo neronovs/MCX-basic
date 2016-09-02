@@ -185,7 +185,7 @@ namespace MCX_Basic
             }
             if (result)
             {
-                GlobalVars.getInstance().error = "Vrong variable name\r\n";
+                GlobalVars.getInstance().error = "Vrong variable name" + Environment.NewLine;
             }
             return result;
         }
@@ -241,7 +241,7 @@ namespace MCX_Basic
                 if (!normaStr.isPairedQuotes(afterEqual))
                 {
                     Debug.WriteLine(TAG + "± Miss \" in string_var variable " + result + afterEqual);
-                    GlobalVars.getInstance().error = "Miss \" in string_var variable\r\n";
+                    GlobalVars.getInstance().error = "Miss \" in string_var variable" + Environment.NewLine;
                 }
             }
             int l = 0;
@@ -249,13 +249,13 @@ namespace MCX_Basic
             if (!result.Contains("$") && afterEqual.Contains("\"") && !afterEqual.Substring(0, l).Equals("=asc")
                     && !afterEqual.Substring(0, l).Equals("=ins") && !afterEqual.Substring(0, l).Equals("=val"))
             {
-                GlobalVars.getInstance().error = "Type mismatch\r\n";
+                GlobalVars.getInstance().error = "Type mismatch" + Environment.NewLine;
             }
-            String set = "(?:[^a-zA-Z]+$)";
+            String set = "(?:[^a-zA-Z]+^$)";
             if (Regex.IsMatch(result, set))
             {
                 result = "";
-                GlobalVars.getInstance().error = "Variable contains illegal characters\r\n";
+                GlobalVars.getInstance().error = "Variable contains illegal characters" + Environment.NewLine;
             }
             return result;
         }
@@ -278,7 +278,7 @@ namespace MCX_Basic
             }
             else {
                 GlobalVars.getInstance().command = "";
-                GlobalVars.getInstance().error = "Syntax error\r\n";
+                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
                 Debug.WriteLine(TAG + "± date let empty, error-" + GlobalVars.getInstance().error);
                 GlobalVars.getInstance().isOkSet = NO;
             }
@@ -303,7 +303,7 @@ namespace MCX_Basic
             }
             else {
                 GlobalVars.getInstance().command = "";
-                GlobalVars.getInstance().error = "Syntax error\r\n";
+                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
                 Debug.WriteLine(TAG + "± time let empty, error-" + GlobalVars.getInstance().error);
                 GlobalVars.getInstance().isOkSet = NO;
             }
@@ -328,7 +328,7 @@ namespace MCX_Basic
                         NSRange rangeFirst = new NSRange(string_var.IndexOf("("), 1);
                         NSRange rangeSecond = new NSRange(string_var.IndexOf(")"), 1);
                         String name = string_var.Substring(0, rangeFirst.location);
-                        String indexS = string_var.Substring(rangeFirst.location + 1, rangeSecond.location);
+                        String indexS = string_var.Substring(rangeFirst.location + 1, rangeSecond.length);
                         int index = 0;
                         try
                         {
@@ -357,7 +357,7 @@ namespace MCX_Basic
                                             if (name.Contains("$") && String.IsNullOrEmpty(result)) result = " ";
                                         }
                                         else {
-                                            GlobalVars.getInstance().error = "Subscript out of range\r\n";
+                                            GlobalVars.getInstance().error = "Subscript out of range" + Environment.NewLine;
                                             result = "error";
                                         }
                                     }

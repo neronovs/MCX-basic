@@ -43,21 +43,22 @@ namespace MCX_Basic
                 //File version
                 string versionFile = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
                 Debug.WriteLine("Ver..." + GlobalVars.version1);
-                Debug.WriteLine(TAG + "± " + GlobalVars.version1 + versionApp + "\r\n");
+                Debug.WriteLine(TAG + "± " + GlobalVars.version1 + versionApp + Environment.NewLine);
 
 
-                GlobalVars.getInstance().listOfStrings.Add(GlobalVars.version1 + versionApp + "\r\n");
-                GlobalVars.getInstance().listOfStrings.Add(GlobalVars.version2 + "\r\n");
-                GlobalVars.getInstance().listOfStrings.Add(GlobalVars.version3 + "\r\n");
+                GlobalVars.getInstance().listOfStrings.Add(GlobalVars.version1 + versionApp + Environment.NewLine);
+                GlobalVars.getInstance().listOfStrings.Add(GlobalVars.version2 + Environment.NewLine);
+                GlobalVars.getInstance().listOfStrings.Add(GlobalVars.version3 + Environment.NewLine);
                 foreach (string element in GlobalVars.getInstance().listOfStrings) Debug.WriteLine(element);
                 result = true;
             }
             else if (base_val.ToLower().Equals("auto"))
             {
                 Debug.WriteLine(TAG + "± autoSet = YES");
+                GlobalVars.getInstance().listOfStrings.Add("Press \"ctrl + c\" to stop the auto-numeration" + Environment.NewLine);
                 GlobalVars.getInstance().AutoSet = (true);
                 GlobalVars.getInstance().IsOkSet = (false);
-                GlobalVars.getInstance().listOfStrings.Add((GlobalVars.getInstance().ProgramCounter.ToString()) + " ");
+                GlobalVars.getInstance().listOfStrings.Add(("\n" + GlobalVars.getInstance().ProgramCounter.ToString()) + " ");
                 result = true;
             }
             else if (base_val.ToLower().Equals("list"))
@@ -67,7 +68,8 @@ namespace MCX_Basic
                 String currentLineNumber;
                 if (string_val.Length > 4)
                 {
-                    string_val = string_val.Substring(4, string_val.Length);
+                    //string_val = string_val.Substring(4, string_val.Length);
+                    string_val = string_val.Substring(4);
                     string_val = string_val.Trim();
                 }
                 if (!String.IsNullOrEmpty(string_val))
@@ -87,39 +89,38 @@ namespace MCX_Basic
                                     currentLineNumber = currentLineNumber.Split(' ')[0];
                                     if (currentLineNumber.ToLower().Equals(listNumber))
                                     {
-                                        GlobalVars.getInstance().listOfStrings.Add((GlobalVars.getInstance().ListOfProgram[i].ToString() + "\r\n").ToString());
+                                        GlobalVars.getInstance().listOfStrings.Add((GlobalVars.getInstance().ListOfProgram[i].ToString() + Environment.NewLine).ToString());
                                     }
                                 }
                                 result = true;
                             }
                             else {
-                                GlobalVars.getInstance().error = "Syntax error\r\n";
+                                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
                             }
                         }
                     }
                     else {
-                        listNumber = string_val;
+                        /*listNumber = string_val;
                         if (digitalFunc.isOnlyDigits(listNumber))
+                        {*/
+                        for (int i = 0; i < GlobalVars.getInstance().ListOfProgram.Count; i++)
                         {
-                            for (int i = 0; i < GlobalVars.getInstance().ListOfProgram.Count; i++)
+                            currentLineNumber = GlobalVars.getInstance().ListOfProgram[i].ToString();
+                            currentLineNumber = currentLineNumber.Split(' ')[0];
+                            //if (currentLineNumber.ToLower().Equals(listNumber))
                             {
-                                currentLineNumber = GlobalVars.getInstance().ListOfProgram[i].ToString();
-                                currentLineNumber = currentLineNumber.Split(' ')[0];
-                                if (currentLineNumber.ToLower().Equals(listNumber))
-                                {
-                                    GlobalVars.getInstance().listOfStrings.Add((GlobalVars.getInstance().ListOfProgram[i].ToString() + "\r\n").ToString());
-                                }
+                                GlobalVars.getInstance().listOfStrings.Add((GlobalVars.getInstance().ListOfProgram[i].ToString() + Environment.NewLine).ToString());
                             }
-                            result = true;
                         }
-                        else {
-                            GlobalVars.getInstance().error = "Syntax error\r\n";
-                        }
+                        result = true;
+                        /* } else {
+                             GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
+                         }*/
                     }
                 if (String.IsNullOrEmpty(string_val))
                     for (int i = 0; i < GlobalVars.getInstance().ListOfProgram.Count; i++)
                     {
-                        GlobalVars.getInstance().listOfStrings.Add((GlobalVars.getInstance().ListOfProgram[i].ToString() + "\r\n").ToString());
+                        GlobalVars.getInstance().listOfStrings.Add((GlobalVars.getInstance().ListOfProgram[i].ToString() + Environment.NewLine).ToString());
                     }
                 result = true;
             }
@@ -128,12 +129,12 @@ namespace MCX_Basic
                 Debug.WriteLine(TAG + "± help");
                 for (int i = 0; i < GlobalVars.getInstance().ListOfCommands.Count; i++)
                 {
-                    GlobalVars.getInstance().listOfStrings.Add((GlobalVars.getInstance().ListOfCommands[i].ToString() + "\r\n").ToString());
+                    GlobalVars.getInstance().listOfStrings.Add((GlobalVars.getInstance().ListOfCommands[i].ToString() + Environment.NewLine).ToString());
                 }
-                GlobalVars.getInstance().listOfStrings.Add(("\r\n").ToString());
+                GlobalVars.getInstance().listOfStrings.Add((Environment.NewLine).ToString());
                 result = true;
             }
-            else if (base_val.ToLower().Equals("Clear"))
+            else if (base_val.ToLower().Equals("clear"))
             {
                 GlobalVars.getInstance().variables.Clear();
                 result = YES;
@@ -184,15 +185,15 @@ namespace MCX_Basic
                                 String stmp = arr[i];
                                 if (stmp.Contains(separator))
                                 {
-                                    GlobalVars.getInstance().error = "Syntax error\r\n";
+                                    GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
                                 }
                                 else if (digitalFunc.isOnlyDigits(stmp))
                                 { // если только цифры
-                                    GlobalVars.getInstance().error = "Syntax error\r\n";
+                                    GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
                                 }
                                 else if (GlobalVars.getInstance().dataReadIndex >= GlobalVars.getInstance().data.Count)
                                 { // Out of DATA
-                                    GlobalVars.getInstance().error = "Out of DATA\r\n";
+                                    GlobalVars.getInstance().error = "Out of DATA" + Environment.NewLine;
                                 }
                                 else {
                                     String dataValue = GlobalVars.getInstance().data[GlobalVars.getInstance().dataReadIndex].ToString();
@@ -224,11 +225,11 @@ namespace MCX_Basic
                             Debug.WriteLine(TAG + "± READ to ... variable " + stmp);
                             if (stmp.Contains(separator))
                             {
-                                GlobalVars.getInstance().error = "Syntax error\r\n";
+                                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
                             }
                             else if (digitalFunc.isOnlyDigits(stmp))
                             { // если только цифры
-                                GlobalVars.getInstance().error = "Syntax error\r\n";
+                                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
                             }
                             else {
                                 String dataValue = GlobalVars.getInstance().data[GlobalVars.getInstance().dataReadIndex].ToString();
@@ -257,11 +258,11 @@ namespace MCX_Basic
                         if (String.IsNullOrEmpty(GlobalVars.getInstance().error)) result = YES;
                     }
                     else {
-                        GlobalVars.getInstance().error = "Out of DATA\r\n";
+                        GlobalVars.getInstance().error = "Out of DATA" + Environment.NewLine;
                     }
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\r\n";
+                    GlobalVars.getInstance().error = "Missing operand" + Environment.NewLine;
                 }
             }
             #endregion 
@@ -306,7 +307,7 @@ namespace MCX_Basic
                                 result = YES;
                             }
                             else {
-                                GlobalVars.getInstance().error = "Syntax error\r\n";
+                                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
                             }
                         }
                     }
@@ -329,12 +330,12 @@ namespace MCX_Basic
                             result = YES;
                         }
                         else {
-                            GlobalVars.getInstance().error = "Syntax error\r\n";
+                            GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
                         }
                     }
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\r\n";
+                    GlobalVars.getInstance().error = "Missing operand" + Environment.NewLine;
                 }
             }
             else if (base_val.ToLower().Equals("restore"))
@@ -361,7 +362,7 @@ namespace MCX_Basic
                         result = YES;
                     }
                     else {
-                        GlobalVars.getInstance().error = "Syntax error\r\n";
+                        GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
                     }
                     Debug.WriteLine(TAG + "restore GlobalVars.getInstance().dataReadIndex=" + GlobalVars.getInstance().dataReadIndex);
                 }
@@ -386,7 +387,7 @@ namespace MCX_Basic
                     //ifValue.Substring(0, rangeThen.location).matches(".*[=<>]+.*"))
                     {
                         Debug.WriteLine(TAG + "± Syntax error in IF operator");
-                        GlobalVars.getInstance().error = "Syntax error in IF operator\r\n";
+                        GlobalVars.getInstance().error = "Syntax error in IF operator" + Environment.NewLine;
                     }
                     else {
                         ifValue = normaStr.removeSpaceInBeginAndEnd(ifValue.Substring(0, rangeThen.location));
@@ -398,7 +399,7 @@ namespace MCX_Basic
                         }
                         else {
                             elseValue = normaStr.removeSpaceInBeginAndEnd(string_val.Substring(rangeElse.location + 4));
-                            thenValue = normaStr.removeSpaceInBeginAndEnd(string_val.Substring(rangeThen.location + 4, rangeElse.location));
+                            thenValue = normaStr.removeSpaceInBeginAndEnd(string_val.Substring(rangeThen.location + 4, rangeElse.location - rangeThen.location - 4));
                         }
 
                         if (ifThen(ifValue))
@@ -411,7 +412,7 @@ namespace MCX_Basic
                     }
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\r\n";
+                    GlobalVars.getInstance().error = "Missing operand" + Environment.NewLine;
                 }
             }
 
@@ -427,10 +428,10 @@ namespace MCX_Basic
                     if (rangeTo.location == NSNotFound)
                     {
                         Debug.WriteLine(TAG + "± for without to");
-                        GlobalVars.getInstance().error = "Syntax error - FOR without TO\r\n";
+                        GlobalVars.getInstance().error = "Syntax error - FOR without TO" + Environment.NewLine;
                     }
                     else {
-                        forValue = forValue.Substring(0, rangeTo.location).Replace(" ", "");
+                        forValue = forValue.Substring(0, rangeTo.location - 1).Replace(" ", "");
                     }
                     rangeTo = new NSRange(string_val.IndexOf("to"), 2);
                     NSRange rangeStep = new NSRange(string_val.IndexOf("step"), 4);
@@ -443,7 +444,7 @@ namespace MCX_Basic
                     }
                     else {
                         stepValue = string_val.Substring(rangeStep.location + 4).Replace(" ", "");
-                        toValue = string_val.Substring(rangeTo.location + 2, rangeStep.location).Replace(" ", "");
+                        toValue = string_val.Substring(rangeTo.location + 2, rangeTo.length + 1).Replace(" ", "");
                     }
                     Debug.WriteLine(TAG + "± !!!! forValue='" + forValue + "' toValue='" + toValue + "' stepValue='" + stepValue + "'");
                     String tmpFor = resultFromString(variables.returnVarValue(forValue));
@@ -478,7 +479,7 @@ namespace MCX_Basic
                     result = YES;
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\r\n";
+                    GlobalVars.getInstance().error = "Missing operand" + Environment.NewLine;
                 }
             }
             else if (base_val.ToLower().Equals("next"))
@@ -511,7 +512,7 @@ namespace MCX_Basic
                     result = YES;
                 }
                 else {
-                    GlobalVars.getInstance().error = "NEXT without FOR\r\n";
+                    GlobalVars.getInstance().error = "NEXT without FOR" + Environment.NewLine;
                 }
             }
             else if (base_val.ToLower().Equals("goto"))
@@ -524,12 +525,12 @@ namespace MCX_Basic
                     if (GlobalVars.getInstance().runIndex < -1)
                     {
                         GlobalVars.getInstance().runIndex = 0;
-                        GlobalVars.getInstance().error = "Undefined line number\r\n";
+                        GlobalVars.getInstance().error = "Undefined line number" + Environment.NewLine;
                         result = NO;
                     }
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\r\n";
+                    GlobalVars.getInstance().error = "Missing operand" + Environment.NewLine;
                 }
             }
             else if (base_val.ToLower().Equals("gosub"))
@@ -543,12 +544,12 @@ namespace MCX_Basic
                     if (GlobalVars.getInstance().runIndex < -1)
                     {
                         GlobalVars.getInstance().runIndex = 0;
-                        GlobalVars.getInstance().error = "Undefined line number\r\n";
+                        GlobalVars.getInstance().error = "Undefined line number" + Environment.NewLine;
                         result = NO;
                     }
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\r\n";
+                    GlobalVars.getInstance().error = "Missing operand" + Environment.NewLine;
                 }
             }
             else if (base_val.ToLower().Equals("return"))
@@ -562,7 +563,7 @@ namespace MCX_Basic
                     result = YES;
                 }
                 else {
-                    GlobalVars.getInstance().error = "RETURN without GOSUB\r\n";
+                    GlobalVars.getInstance().error = "RETURN without GOSUB" + Environment.NewLine;
                 }
             }
             else if (base_val.ToLower().Equals("rem"))
@@ -577,7 +578,7 @@ namespace MCX_Basic
                     result = initDim(clearString);
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\r\n";
+                    GlobalVars.getInstance().error = "Missing operand" + Environment.NewLine;
                 }
             }
             else if (base_val.ToLower().Equals("date"))
@@ -588,7 +589,7 @@ namespace MCX_Basic
                     result = variables.getDateToVariable(clearString);
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\r\n";
+                    GlobalVars.getInstance().error = "Missing operand" + Environment.NewLine;
                 }
             }
             else if (base_val.ToLower().Equals("time"))
@@ -599,7 +600,7 @@ namespace MCX_Basic
                     result = variables.getTimeToVariable(clearString);
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\r\n";
+                    GlobalVars.getInstance().error = "Missing operand" + Environment.NewLine;
                 }
             }
             else if (base_val.ToLower().Equals("print"))
@@ -609,7 +610,7 @@ namespace MCX_Basic
                     result = print(string_val);
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\r\n";
+                    GlobalVars.getInstance().error = "Missing operand" + Environment.NewLine;
                 }
             }
             else if (base_val.ToLower().Equals("varl"))
@@ -617,7 +618,7 @@ namespace MCX_Basic
                 for (int i = 0; i < GlobalVars.getInstance().variables.Count; i++)
                 {
                     VariableSet varSet = GlobalVars.getInstance().variables[i];
-                    GlobalVars.getInstance().listOfStrings.Add(varSet.name + " = " + varSet.var + "\r\n");
+                    GlobalVars.getInstance().listOfStrings.Add(varSet.name + " = " + varSet.var + Environment.NewLine);
                 }
                 result = YES;
             }
@@ -625,23 +626,18 @@ namespace MCX_Basic
             {
                 if (string_val.Length > base_val.Length + 1)
                 {
-                    GlobalVars.getInstance().listOfStrings.Add(GlobalVars.getInstance().lineNumber + "\r\n");
+                    GlobalVars.getInstance().listOfStrings.Add(GlobalVars.getInstance().lineNumber + Environment.NewLine);
                     result = YES;
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\r\n";
+                    GlobalVars.getInstance().error = "Missing operand" + Environment.NewLine;
                 }
             }
             else if (base_val.ToLower().Equals("pos"))
             {
-                if (string_val.Length > base_val.Length + 1)
-                {
-                    GlobalVars.getInstance().listOfStrings.Add(GlobalVars.getInstance().command.Length.ToString());
-                    result = YES;
-                }
-                else {
-                    GlobalVars.getInstance().error = "Missing operand\r\n";
-                }
+                GlobalVars.getInstance().listOfStrings.Add(GlobalVars.getInstance().command.Length.ToString() + Environment.NewLine);
+                result = YES;
+
             }
             else if (base_val.ToLower().Equals("let"))
             {
@@ -651,7 +647,7 @@ namespace MCX_Basic
                     result = let(clearString);
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\r\n";
+                    GlobalVars.getInstance().error = "Missing operand" + Environment.NewLine;
                 }
             }
             else if (base_val.ToLower().Equals("run"))
@@ -667,10 +663,12 @@ namespace MCX_Basic
             else if (base_val.ToLower().Equals("files"))
             {
                 DirectoryInfo directory = new DirectoryInfo(GlobalVars.getInstance().currentFolder);
-                FileInfo[] list = directory.GetFiles(directory.FullName);
+                //FileInfo[] list = directory.GetFiles(directory.FullName, SearchOption.AllDirectories);
+                string[] list = Directory.GetFiles(directory.FullName);
                 if (list == null)
-                    list = new FileInfo[] { };
-                List<FileInfo> fileList = list.ToList();
+                    //list = new FileInfo[] { };
+                    list = new string[] { };
+                List<string> fileList = list.ToList();
                 /*Collections.sort(fileList, new Comparator<File>() {
                 @Override
                 public int compare(File file, File file2)
@@ -685,7 +683,7 @@ namespace MCX_Basic
     });*/
                 for (int i = 0; i < fileList.Count; i++)
                     if (fileList[i].ToString().Contains(".bas"))
-                        GlobalVars.getInstance().listOfStrings.Add(fileList[i].ToString().Substring(fileList[i].ToString().LastIndexOf("/") + 1) + "\r\n");
+                        GlobalVars.getInstance().listOfStrings.Add(fileList[i].ToString().Substring(fileList[i].ToString().LastIndexOf("\\") + 1) + Environment.NewLine);
                 Debug.WriteLine(TAG + "± files-" + GlobalVars.getInstance().listOfStrings);
                 result = YES;
             }
@@ -703,7 +701,7 @@ namespace MCX_Basic
                         List<String> paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                         NSString *documentsDirectory = [paths[0]; // Get documents directory
                         NSError *error;
-                        String arrayText = GlobalVars.getInstance().listOfProgram componentsJoinedByString: "\r\n"];
+                        String arrayText = GlobalVars.getInstance().listOfProgram componentsJoinedByString: Environment.NewLine];
                         fn= documentsDirectory stringByAppendingPathComponent:string_val];
                         bool succeed = [arrayText writeToFile(documentsDirectory stringByAppendingPathComponent:string_val]
                         atomically:YES encoding:NSUTF8StringEncoding error:&error];
@@ -716,7 +714,7 @@ namespace MCX_Basic
                         }
                         result=NO;
                     } else {
-                        GlobalVars.getInstance().error = "Missing operand\r\n";
+                        GlobalVars.getInstance().error = "Missing operand" + Environment.NewLine;
                     } */
             }
             else if (base_val.ToLower().Equals("save"))
@@ -727,7 +725,7 @@ namespace MCX_Basic
                     result = YES;
                 }
                 else {
-                    GlobalVars.getInstance().error = "Missing operand\r\n";
+                    GlobalVars.getInstance().error = "Missing operand" + Environment.NewLine;
                 }
             }
             else if (base_val.ToLower().Equals("csave"))
@@ -748,6 +746,10 @@ namespace MCX_Basic
             else if (base_val.ToLower().Equals("load"))
             {
                 result = NO;
+            }
+            else if (base_val.ToLower().Equals("kill"))
+            {
+                kill(string_val);
             }
             else if (!digitalFunc.isOnlyDigits(base_val) && variables.isArrayPresent(string_val))
             { // let dim array
@@ -785,7 +787,7 @@ namespace MCX_Basic
                 if (!base_val.Equals(""))
                 {
                     Debug.WriteLine(TAG + "± Syntax error");
-                    GlobalVars.getInstance().Error = "Syntax error\r\n";
+                    GlobalVars.getInstance().Error = "Syntax error" + Environment.NewLine;
                 }
             }
             Debug.WriteLine(TAG + "± runCommand set over!");
@@ -795,15 +797,17 @@ namespace MCX_Basic
         public void autoProgramSet(String string_val)
         {
             GlobalVars.getInstance().listOfStrings.Clear();
-            GlobalVars.getInstance().listOfProgram.Add(string_val);
+            GlobalVars.getInstance().listOfProgram.Add(Environment.NewLine + string_val);
             GlobalVars.getInstance().programCounter = GlobalVars.getInstance().programCounter + GlobalVars.getInstance().autoStep;
-            GlobalVars.getInstance().listOfStrings.Add(GlobalVars.getInstance().programCounter + " ");
+            GlobalVars.getInstance().listOfStrings.Add(Environment.NewLine + GlobalVars.getInstance().programCounter + " ");
         }
 
         public void autoProgramStop()
         {
             GlobalVars.getInstance().listOfStrings.Clear();
-            GlobalVars.getInstance().listOfStrings.Add(GlobalVars.getInstance().programCounter + " ");
+            //GlobalVars.getInstance().listOfStrings.Add(GlobalVars.getInstance().programCounter + " ");
+            GlobalVars.getInstance().listOfStrings.Add(Environment.NewLine);
+            GlobalVars.getInstance().listOfProgram.Add(Environment.NewLine);
             GlobalVars.getInstance().autoSet = NO;
             Debug.WriteLine(TAG + "± autoProgramStop");
         }
@@ -818,12 +822,12 @@ namespace MCX_Basic
         {
         if (!((var Substring(1].Equals(separator] || !((var.Substring (var length]-1].Equals(separator]) {
         result=YES;
-        GlobalVars.getInstance().error="Type mismatch\r\n";
+        GlobalVars.getInstance().error="Type mismatch" + Environment.NewLine;
         }
         }else{
         if  (var rangeOfCharacterFromSet:numberSet].location != NSNotFound) {
         result=YES;
-        GlobalVars.getInstance().error="Type mismatch\r\n";
+        GlobalVars.getInstance().error="Type mismatch" + Environment.NewLine;
         }
         }
         return result;
@@ -841,7 +845,7 @@ namespace MCX_Basic
                 NSRange rangeFirst = new NSRange(string_val.IndexOf("("), 1);
                 NSRange rangeSecond = new NSRange(string_val.IndexOf(")"), 1);
                 String name = string_val.Substring(0, rangeFirst.location);
-                String indexString = string_val.Substring(rangeFirst.location + 1, rangeSecond.location);
+                String indexString = string_val.Substring(rangeFirst.location + 1, rangeFirst.length);
                 if (variables.variableIsPresent(indexString))
                     indexString = variables.returnContainOfVariable(indexString);
                 int index = 0;
@@ -853,7 +857,7 @@ namespace MCX_Basic
                 {
                     Debug.WriteLine(TAG + "± Wrong number format in setDim!");
                 }
-                Debug.WriteLine(TAG + "± set dim index='" + string_val.Substring(rangeFirst.location + 1, rangeSecond.location) + "' name='" + name + "'");
+                Debug.WriteLine(TAG + "± set dim index='" + string_val.Substring(rangeFirst.location + 1, rangeFirst.length) + "' name='" + name + "'");
                 rangeFirst = new NSRange(string_val.IndexOf("="), 1);
                 String value = string_val.Substring(rangeFirst.location + 1);
                 //если переменная строковая добавим кавычки но при этом содержимое не содержит кавычки
@@ -879,7 +883,7 @@ namespace MCX_Basic
                         if (String.IsNullOrEmpty(value) || variables.variableIsString(value))
                         {
                             value = "";
-                            GlobalVars.getInstance().error = "Type mismatch\r\n";
+                            GlobalVars.getInstance().error = "Type mismatch" + Environment.NewLine;
                             result = NO;
                         }
                         value = (digitalFunc.returnMathResult(value)).ToString();
@@ -898,12 +902,12 @@ namespace MCX_Basic
                 }
                 else {
                     result = NO;
-                    GlobalVars.getInstance().error = "Syntax error\r\n";
+                    GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
                 }
             }
             else {
                 result = NO;
-                GlobalVars.getInstance().error = "Syntax error\r\n";
+                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
             }
             return result;
         }
@@ -917,11 +921,11 @@ namespace MCX_Basic
         reset];
         NSString *arrayText = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
         if (arrayText) {
-        GlobalVars.getInstance().listOfProgram = [NSMutableArray arrayWithArray(arrayText componentsSeparatedByString: "\r\n"));
+        GlobalVars.getInstance().listOfProgram = [NSMutableArray arrayWithArray(arrayText componentsSeparatedByString: Environment.NewLine));
         GlobalVars.getInstance().programCounter = ((self returnBaseCommand:GlobalVars.getInstance().listOfProgram lastObject))intValue] + GlobalVars.getInstance().autoStep;
         }
         } else {
-        GlobalVars.getInstance().error = "File not found\r\n";
+        GlobalVars.getInstance().error = "File not found" + Environment.NewLine;
         }
         */
         }
@@ -931,7 +935,7 @@ namespace MCX_Basic
             /*
         Debug.WriteLine(TAG + "± saving-''",string_val);
         NSError *error;
-        String arrayText = GlobalVars.getInstance().listOfProgram componentsJoinedByString: "\r\n"];
+        String arrayText = GlobalVars.getInstance().listOfProgram componentsJoinedByString: Environment.NewLine];
         bool succeed = [arrayText writeToFile:string_val atomically:YES encoding:NSUTF8StringEncoding error:&error];
         if (!succeed){
         GlobalVars.getInstance().error = "Bad file name";
@@ -942,7 +946,34 @@ namespace MCX_Basic
 
         public bool kill(String string_val)
         {
-            bool result = YES;
+            bool result = NO;
+
+            NormalizeString normaStr = new NormalizeString();
+            string_val = normaStr.removeSpaceInBegin(string_val);
+            string_val.Replace("\"", "");
+            NSRange rangeVal = new NSRange(string_val.IndexOf(' ') + 1, string_val.Length - string_val.IndexOf(' ') - 1);
+            string_val = string_val.Substring(rangeVal.location, rangeVal.length);
+            string fullPath = GlobalVars.getInstance().currentFolder + "\\" + string_val;
+            bool success = File.Exists(fullPath);
+            if (success)
+            {
+                File.Delete(fullPath);
+                result = YES;
+            }
+            else
+            {
+                GlobalVars.getInstance().error = "File not found" + Environment.NewLine;
+                result = NO;
+            }
+
+            /*string[] txtList = Directory.GetFiles(GlobalVars.getInstance().currentFolder, "*.bas");
+            foreach (string f in txtList)
+            {
+                File.Delete(f);
+            }*/
+
+
+
             /*
         normaStr.= ((NormalizeString alloc]init];
         string_val = [normaStr.removeSpaceInBegin:string_val];
@@ -958,7 +989,7 @@ namespace MCX_Basic
         NSError *error;
         bool success = [fileManager removeItemAtPath:filePath error:&error];
         if (!success) {
-        GlobalVars.getInstance().error = "File not found\r\n";
+        GlobalVars.getInstance().error = "File not found" + Environment.NewLine;
         result=NO;
         }
         */
@@ -1008,10 +1039,10 @@ namespace MCX_Basic
                     GlobalVars.getInstance().listOfProgram.Insert(indexForInsert + append, string_val);
                 }
                 GlobalVars.getInstance().programCounter = GlobalVars.getInstance().programCounter + GlobalVars.getInstance().autoStep;
-                GlobalVars.getInstance().listOfStrings.Add(GlobalVars.getInstance().programCounter + " ");
+                GlobalVars.getInstance().listOfStrings.Add("\n" + GlobalVars.getInstance().programCounter + " ");
             }
             else {
-                GlobalVars.getInstance().error = "Undefined line number\r\n";
+                GlobalVars.getInstance().error = "Undefined line number" + Environment.NewLine;
             }
         }
 
@@ -1050,7 +1081,7 @@ namespace MCX_Basic
             String documentsDirectory = GlobalVars.getInstance().currentFolder; // Get documents directory
             String arrayText = "";
             for (int i = 0; i < GlobalVars.getInstance().listOfProgram.Count; i++)
-                arrayText = arrayText + GlobalVars.getInstance().listOfProgram[i].ToString() + "\r\n";
+                arrayText = arrayText + GlobalVars.getInstance().listOfProgram[i].ToString() + Environment.NewLine;
             try
             {
 
@@ -1099,7 +1130,7 @@ namespace MCX_Basic
                 String untilSpace = currentLine.Split(' ')[0];
                 GlobalVars.getInstance().runnedLine = untilSpace;
                 int indexforAfterSpace = untilSpace.Length;
-                String string_val = currentLine.Substring(indexforAfterSpace + 1);
+                String string_val = currentLine.Substring(indexforAfterSpace + 0);
                 String base_val = returnBaseCommand(string_val);
                 if (base_val.ToLower().Equals("data"))
                 {
@@ -1137,7 +1168,7 @@ namespace MCX_Basic
                         }
                     }
                     else {
-                        GlobalVars.getInstance().error = "Missing operand\r\n";
+                        GlobalVars.getInstance().error = "Missing operand" + Environment.NewLine;
                     }
                 }
             }
@@ -1170,14 +1201,14 @@ namespace MCX_Basic
                     }
                     else {
                         GlobalVars.getInstance().command = "";
-                        GlobalVars.getInstance().error = "Forbidden variable\r\n";
+                        GlobalVars.getInstance().error = "Forbidden variable" + Environment.NewLine;
                         result = NO;
                         Debug.WriteLine(TAG + "± let empty Forbidden variable");
                     }
                 }
             }
             else {
-                GlobalVars.getInstance().error = "Syntax error\r\n";
+                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
                 Debug.WriteLine(TAG + "± let Syntax error");
             }
             // for (int i = 0; i < GlobalVars.getInstance().variables.Count; i++)
@@ -1190,7 +1221,7 @@ namespace MCX_Basic
         public bool print(String string_val)
         {
             Debug.WriteLine(TAG + "± PRINT init ......''" + string_val);
-            String cr = "\r\n";
+            String cr = Environment.NewLine;
             if (string_val.Substring(string_val.Length - 1).Equals(";"))
             {
                 cr = "";
@@ -1204,7 +1235,11 @@ namespace MCX_Basic
             {
                 string_val = string_val.Replace("\"", "");
             }
-            printResult = string_val + cr;
+            if (string_val == "pos")
+            {
+                GlobalVars.getInstance().listOfStrings.Add(GlobalVars.getInstance().command.Length.ToString() + cr);
+                result = YES;
+            } else printResult = string_val + cr;
             GlobalVars.getInstance().listOfStrings.Add(printResult);
             if (String.IsNullOrEmpty(GlobalVars.getInstance().error)) result = YES;
             Debug.WriteLine(TAG + "± PRINT result '" + printResult + "' error-" + GlobalVars.getInstance().error);
@@ -1215,7 +1250,7 @@ namespace MCX_Basic
         {
             bool result = YES;
             Debug.WriteLine(TAG + "± initDim... " + string_val);
-            List<String> arr = new List<String>((string_val.Split(',')).ToList());
+            List<String> arr = new List<String>(string_val.Split(',').ToList());
             for (int i = 0; i < arr.Count; i++)
             {
                 string_val = arr[i].ToString();
@@ -1226,7 +1261,7 @@ namespace MCX_Basic
                 {
                     NSRange rangeSecond = new NSRange(string_val.IndexOf(")"), 1);
                     name = string_val.Substring(0, rangeFirst.location);
-                    size = string_val.Substring(rangeFirst.location + 1, rangeSecond.location);
+                    size = string_val.Substring(rangeFirst.location + 1, rangeSecond.location-(rangeFirst.location + 1));
                     size = resultFromString(size);
                     if (!variables.forbiddenVariable(name) && name.Length > 0 && String.IsNullOrEmpty(GlobalVars.getInstance().error))
                     {
@@ -1244,20 +1279,20 @@ namespace MCX_Basic
                     }
                     else {
                         GlobalVars.getInstance().command = "";
-                        GlobalVars.getInstance().error = "Wrong dim variable name\r\n";
+                        GlobalVars.getInstance().error = "Wrong dim variable name" + Environment.NewLine;
                         result = NO;
                     }
                 }
                 else {
                     GlobalVars.getInstance().command = "";
-                    GlobalVars.getInstance().error = "Wrong dim variable name\r\n";
+                    GlobalVars.getInstance().error = "Wrong dim variable name" + Environment.NewLine;
                     result = NO;
                 }
                 String testValue = name.Replace(" ", "");
                 if (testValue.Equals(""))
                 {
                     GlobalVars.getInstance().command = "";
-                    GlobalVars.getInstance().error = "Wrong dim variable name\r\n";
+                    GlobalVars.getInstance().error = "Wrong dim variable name" + Environment.NewLine;
                     result = NO;
                 }
             }
@@ -1306,7 +1341,7 @@ namespace MCX_Basic
                 if (String.IsNullOrEmpty(var) || variables.variableIsString(var))
                 {
                     value = "0";
-                    GlobalVars.getInstance().error = "Type mismatch\r\n";
+                    GlobalVars.getInstance().error = "Type mismatch" + Environment.NewLine;
                 }
                 value = (digitalFunc.returnMathResult(value)).ToString();
             }
@@ -1379,7 +1414,7 @@ namespace MCX_Basic
                 }
                 else {
                     Debug.WriteLine(TAG + "± Syntax error in IF operator");
-                    GlobalVars.getInstance().error = "Type mismatch in IF operator\r\n";
+                    GlobalVars.getInstance().error = "Type mismatch in IF operator" + Environment.NewLine;
                 }
             }
             else if (ifValue.Contains("<>"))
@@ -1482,7 +1517,7 @@ namespace MCX_Basic
                 }
                 else {
                     Debug.WriteLine(TAG + "± Syntax error in IF operator");
-                    GlobalVars.getInstance().error = "Type mismatch in IF operator\r\n";
+                    GlobalVars.getInstance().error = "Type mismatch in IF operator" + Environment.NewLine;
                 }
             }
             else if (ifValue.Contains("=<"))
@@ -1509,7 +1544,7 @@ namespace MCX_Basic
                 }
                 else {
                     Debug.WriteLine(TAG + "± Syntax error in IF operator");
-                    GlobalVars.getInstance().error = "Type mismatch in IF operator\r\n";
+                    GlobalVars.getInstance().error = "Type mismatch in IF operator" + Environment.NewLine;
                 }
             }
             else if (ifValue.Contains("<="))
@@ -1536,7 +1571,7 @@ namespace MCX_Basic
                 }
                 else {
                     Debug.WriteLine(TAG + "± Syntax error in IF operator");
-                    GlobalVars.getInstance().error = "Type mismatch in IF operator\r\n";
+                    GlobalVars.getInstance().error = "Type mismatch in IF operator" + Environment.NewLine;
                 }
             }
             else if (ifValue.Contains("<"))
@@ -1563,7 +1598,7 @@ namespace MCX_Basic
                 }
                 else {
                     Debug.WriteLine(TAG + "± Syntax error in IF operator");
-                    GlobalVars.getInstance().error = "Type mismatch in IF operator\r\n";
+                    GlobalVars.getInstance().error = "Type mismatch in IF operator" + Environment.NewLine;
                 }
             }
             else if (ifValue.Contains(">"))
@@ -1590,7 +1625,7 @@ namespace MCX_Basic
                 }
                 else {
                     Debug.WriteLine(TAG + "± Syntax error in IF operator");
-                    GlobalVars.getInstance().error = "Type mismatch in IF operator\r\n";
+                    GlobalVars.getInstance().error = "Type mismatch in IF operator" + Environment.NewLine;
                 }
             }
             else if (ifValue.Contains("="))
@@ -1635,7 +1670,7 @@ namespace MCX_Basic
             }
             else {
                 Debug.WriteLine(TAG + "± Syntax error in IF operator for all!");
-                GlobalVars.getInstance().error = "Syntax error in IF operator\r\n";
+                GlobalVars.getInstance().error = "Syntax error in IF operator" + Environment.NewLine;
             }
             return result;
         }
@@ -1703,7 +1738,7 @@ namespace MCX_Basic
                         if (String.IsNullOrEmpty(value) || variables.variableIsString(value))
                         {
                             value = "";
-                            GlobalVars.getInstance().error = "Type mismatch\r\n";
+                            GlobalVars.getInstance().error = "Type mismatch" + Environment.NewLine;
                             result = NO;
                         }
                         value = (digitalFunc.returnMathResult(value)).ToString();
@@ -1723,12 +1758,12 @@ namespace MCX_Basic
         }
         else {
             result = NO;
-            GlobalVars.getInstance().error = "Syntax error\r\n";
+            GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
         }
 }
     else {
         result = NO;
-        GlobalVars.getInstance().error = "Syntax error\r\n";
+        GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
     }
     return result;
 }*/
@@ -1772,7 +1807,7 @@ namespace MCX_Basic
                 strings = YES;
             if (String.IsNullOrEmpty(string_val))
             {
-                GlobalVars.getInstance().error = "Syntax error\r\n";
+                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
                 Debug.WriteLine(TAG + "± input Syntax error");
                 GlobalVars.getInstance().isOkSet = NO;
             }
@@ -2074,8 +2109,12 @@ namespace MCX_Basic
             {
                 if (normaStr.isText(arr[i].ToString())) quotes = YES;
                 if (!arr[i].ToString().Equals(","))
+                {
                     if (!arr[i].ToString().Equals("+"))
                         result = result + arr[i].ToString(); //склеиваем строку из массива
+                } else {
+                    if (!string_val.Contains("\"")) result = result + arr[i].ToString(); //for float numbers
+                }
             }
             if (quotes)
             {
@@ -2099,7 +2138,7 @@ namespace MCX_Basic
                 {
                     number = GlobalVars.getInstance().listOfProgram[i].ToString().Split(' ')[0];
                     replaceString = GlobalVars.getInstance().listOfProgram[i].ToString();
-                    replaceString = c * 10 + " " + replaceString.Substring(number.Length + 1, replaceString.Length);
+                    replaceString = c * 10 + " " + replaceString.Substring(number.Length + 1);
                     GlobalVars.getInstance().listOfProgram[i] = replaceString;
                     c++;
                 }
@@ -2108,7 +2147,7 @@ namespace MCX_Basic
                     replaceString = GlobalVars.getInstance().listOfProgram[i].ToString();
                     Debug.WriteLine(TAG + "± before number=" + i + " replaceString='" + replaceString + "'");
                     NSRange range = new NSRange(replaceString.IndexOf(gotoGosub), gotoGosub.Length);
-                    String[] tempArr = replaceString.Split(Convert.ToChar(gotoGosub));
+                    String[] tempArr = Regex.Split(replaceString, gotoGosub);
                     c = 0;
                     int locat = (int)(range.location + range.length + 1);
                     bool found = NO;
@@ -2148,9 +2187,10 @@ namespace MCX_Basic
                 {
                     replaceString = GlobalVars.getInstance().listOfProgram[i].ToString();
                     NSRange range = new NSRange(replaceString.IndexOf(gotoGosub), gotoGosub.Length);
-                    String[] tempArr = replaceString.Split(Convert.ToChar(gotoGosub));
+                    String[] tempArr = Regex.Split(replaceString, gotoGosub);
                     c = 0;
-                    int locat = (int)(range.location + range.length + 1);
+                    int locat = 0;
+                    try { locat = (int)(range.location + range.length + 1); } catch { }
                     bool found = NO;
                     int index = 0;
                     for (int cc = 1; cc < tempArr.Length; cc++)
@@ -2189,7 +2229,7 @@ namespace MCX_Basic
                 {
                     replaceString = GlobalVars.getInstance().listOfProgram[i].ToString();
                     NSRange range = new NSRange(replaceString.IndexOf(gotoGosub), gotoGosub.Length);
-                    String[] tempArr = replaceString.Split(Convert.ToChar(gotoGosub));
+                    String[] tempArr = Regex.Split(replaceString, gotoGosub);
                     c = 0;
                     int locat = (int)(range.location + range.length + 1);
                     bool found = NO;

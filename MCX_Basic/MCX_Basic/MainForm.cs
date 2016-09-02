@@ -65,69 +65,6 @@ namespace MCX_Basic
                 reset();
             }
         }
-        /*commandWindow = (String)findViewById(R.id.CommandWindow);
-        commandWindow.addTextChangedListener(inputTextWatcher);
-        commandWindow.setOnKeyListener(new View.OnKeyListener()
-
-        {
-        public bool onKey(View v, int keyCode, KeyEvent event) {
-
-    if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-            (keyCode == KeyEvent.KEYCODE_ENTER)) {
-        //Debug.WriteLine("± Key pressed->" + keyCode);
-        return false;//onEnterPress();
-    }
-     return false;
- }
- });
-
- }
-
- private void 
- (object sender, EventArgs e)
- {
-
- }*/
-
-        /*
-    commandWindow.setOnTouchListener(new OnSwipeTouchListener(MainActivity.this) {
-       public void onSwipeTop() {
-            String command="let a=89";
-            Toast.makeText(MainActivity.this, command, Toast.Length_SHORT).show();
-            runCommand.set(command);
-            for (int i = 0; i < GlobalVars.getInstance().getListOfStrings().Count(); i++)
-                addStringToCommandWindow(getInstance().getListOfStrings()[i].ToString());
-            Toast.makeText(MainActivity.this,command, Toast.Length_SHORT).show();
-        }
-        public void onSwipeRight() {
-            Toast.makeText(MainActivity.this, "right", Toast.Length_SHORT).show();
-        }
-        public void onSwipeLeft() {
-            Toast.makeText(MainActivity.this, "stop", Toast.Length_SHORT).show();
-            returnCR();
-            stopRunning();
-            runCommand.autoProgramStop();
-        }
-        public void onSwipeBottom() {
-            runCommand.set("list");
-            for (int i = 0; i < GlobalVars.getInstance().getListOfStrings().Count(); i++)
-                addStringToCommandWindow(getInstance().getListOfStrings()[i].ToString());
-            Toast.makeText(MainActivity.this, "list", Toast.Length_SHORT).show();
-        }
-
-    });
-*//*
-
-            reset();
-            GlobalVars.getInstance().setScanKeyOn(true);
-    }
-}*//*
-
-private TextWatcher inputTextWatcher = new TextWatcher()
-{
-        public void afterTextChanged(Editable s)
-{
-}*/
 
         public void onTextChanged(String s, int start, int before, int count)
         {
@@ -177,14 +114,15 @@ private TextWatcher inputTextWatcher = new TextWatcher()
         {
             //commandWindow.setSelection(commandWindow.Text.Length);
             commandWindow.Select(commandWindow.Text.Length, 0);
-            //        Debug.WriteLine(TAG + "± onEnterPress index="+(GlobalVars.getInstance().GlobalVars.getInstance().lineNumber - 1)+" total lines="+commandWindow.Text.ToString().Split('\r\n").Length);
-            /*if (GlobalVars.getInstance().lineNumber - 1 >= commandWindow.Text.ToString().Split('\n').Length)
-                GlobalVars.getInstance().lineNumber--;*/
-            GlobalVars.getInstance().lineNumber = commandWindow.Text.ToString().Split('\n').Length;
+            //        Debug.WriteLine(TAG + "± onEnterPress index="+(GlobalVars.getInstance().GlobalVars.getInstance().lineNumber - 1)+" total lines="+commandWindow.Text.ToString().Split('" + Environment.NewLine).Length);
+            if (GlobalVars.getInstance().lineNumber - 1 >= commandWindow.Text.ToString().Split('\n').Length)
+                GlobalVars.getInstance().lineNumber--;
+            else GlobalVars.getInstance().lineNumber = commandWindow.Text.ToString().Split('\n').Length;
+
             String textLine = commandWindow.Text.ToString().Split('\n')[GlobalVars.getInstance().lineNumber - 1];
-            GlobalVars.getInstance().Command = (textLine);
+            GlobalVars.getInstance().Command = textLine;
             bool shouldChangeText = YES;
-            GlobalVars.getInstance().KeyScan = (text);
+            GlobalVars.getInstance().KeyScan = text;
             textIndex = commandWindow.Text.ToString().Length;
             String[] lines = commandWindow.Text.ToString().Split('\n');
 
@@ -324,7 +262,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             {
 
                 GlobalVars.getInstance().Error = ("Incorrect color");
-                Debug.WriteLine(TAG + "± Incorrect color\r\n");
+                Debug.WriteLine(TAG + "± Incorrect color" + Environment.NewLine);
             }
             return result;
         }
@@ -383,7 +321,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             NSRange searchRange = NSMakeRange(textIndex, string.length - textIndex);
             NSLog( @ "searchRange = %@", NSStringFromRange(searchRange));
             int counter = textIndex;
-            NSArray * lines =[[string substringWithRange:searchRange]componentsSeparatedByString:@ "\r\n"];
+            NSArray * lines =[[string substringWithRange:searchRange]componentsSeparatedByString:@ "" + Environment.NewLine];
             for (int i = 0; i <[lines count];
             i++){
 
@@ -450,7 +388,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             GlobalVars.getInstance().isOkSet = NO;
             if (GlobalVars.getInstance().run)
             {
-                GlobalVars.getInstance().error = GlobalVars.getInstance().error + " at line " + GlobalVars.getInstance().runnedLine + "\r\n";
+                GlobalVars.getInstance().error = GlobalVars.getInstance().error + " at line " + GlobalVars.getInstance().runnedLine + Environment.NewLine;
             }
             stopRunning();
             addStringToCommandWindow(GlobalVars.getInstance().error);
@@ -491,7 +429,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             if (lines.Length > 2)
                 if (GlobalVars.getInstance().IsOkSet && !GlobalVars.getInstance().Run)
                 {
-                    addStringToCommandWindow("Ok\r\n");
+                    addStringToCommandWindow("Ok" + Environment.NewLine);
                 }
             GlobalVars.getInstance().IsOkSet = (true);
         }
@@ -505,11 +443,19 @@ private TextWatcher inputTextWatcher = new TextWatcher()
 
         public void returnCR()
         {
-            addStringToCommandWindow("Ok\r\n");
+            addStringToCommandWindow(Environment.NewLine);
+        }
+        
+        private void commandWindow_KeyPress(object sender, KeyPressEventArgs e)
+        {
+
+            if (e.KeyChar == 13)
+                e.Handled = true;
         }
 
         private void commandWindow_KeyDown(object sender, KeyEventArgs e)
         {
+            
             if (e.KeyCode == Keys.Enter)
             {
                 /*List<String> listOfTextBox = new List<String>(commandWindow.Lines); //takes all lines in the List massive
@@ -523,7 +469,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
                 currectLine = listOfTextBox[currentLineNumber];*/
 
                 GlobalVars.getInstance().lineNumber = getCurrentCursorLine(commandWindow);
-                onEnterPress("\n");//send symbol of "Enter" - "\n"
+                onEnterPress(Environment.NewLine);//send symbol of "Enter" - "\n"
 
                 /*if (runCommand.set(currectLine))
                 {
@@ -531,6 +477,9 @@ private TextWatcher inputTextWatcher = new TextWatcher()
                         addStringToCommandWindow(GlobalVars.getInstance().listOfStrings[i]);
                 }*/
 
+            } else if (e.Control && e.KeyCode == Keys.C)
+            {
+                runCommand.autoProgramStop();
             }
         }
 
@@ -564,6 +513,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
 
         public void runProgram()
         {
+
             if (nextCommand)
             {
                 String untilSpace = GlobalVars.getInstance().listOfProgram[GlobalVars.getInstance().runIndex].ToString().Split(' ')[0];
@@ -589,7 +539,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
                     }
                 }
                 GlobalVars.getInstance().runIndex++;
-                if (GlobalVars.getInstance().runIndex >= GlobalVars.getInstance().listOfProgram.Count()) stopRunning();
+                    if (GlobalVars.getInstance().runIndex >= GlobalVars.getInstance().listOfProgram.Count()) stopRunning();
                 if (!GlobalVars.getInstance().error.Equals("")) stopRunning();
                 if (!GlobalVars.getInstance().run) stopRunning();
             }
@@ -613,7 +563,7 @@ private TextWatcher inputTextWatcher = new TextWatcher()
                     NSURL* fn=fileToURL:GlobalVars.getInstance().fileName];
                     NSLog(@"shareCommand for '%@'",GlobalVars.getInstance().fileName);
                     NSString *texttoshare = @"MCX Basic file. Sent by share command.";
-                    //    String listToShare = [GlobalVars.getInstance().listOfProgram componentsJoinedByString: @"\r\n"];
+                    //    String listToShare = [GlobalVars.getInstance().listOfProgram componentsJoinedByString: @"" + Environment.NewLine];
                     NSArray *activityItems = @[texttoshare,fn];
                     UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
                     NSLog(@"share step 2");
@@ -652,6 +602,51 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             }
             else if (commandRun.ToLower().Equals("load"))
             {
+                Stream myStream = null;
+                OpenFileDialog openFileDialog1 = new OpenFileDialog();
+
+                //openFileDialog1.InitialDirectory = "c:\\";
+                openFileDialog1.Filter = "bas files (*.bas)|*.bas|All files (*.*)|*.*";
+                openFileDialog1.FilterIndex = 1;
+                openFileDialog1.RestoreDirectory = true;
+
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        if ((myStream = openFileDialog1.OpenFile()) != null)
+                        {
+                            using (myStream)
+                            {
+                                // Insert code to read the stream here.
+                                string fileName = openFileDialog1.FileName;
+                                GlobalVars.getInstance().FileName = fileName;
+                                reset();
+                                
+                                myStream.Position = 0;
+                                using (StreamReader reader = new StreamReader(myStream, Encoding.UTF8))
+                                {
+                                    string arrayText = reader.ReadToEnd();
+                                    Debug.WriteLine(TAG + "± reader.ReadToEnd() " + arrayText);
+                                    GlobalVars.getInstance().listOfProgram = new List<string>(arrayText.Split('\n'));
+                                    GlobalVars.getInstance().programCounter = 
+                                        int.Parse(runCommand.returnBaseCommand(GlobalVars.getInstance().listOfProgram
+                                        [GlobalVars.getInstance().listOfProgram.Count - 1].ToString()) + 
+                                        GlobalVars.getInstance().autoStep);
+                                    
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                    }
+                    
+                }
+
+
+
                 /*OpenFileDialog fileDialog = new OpenFileDialog(this)
                         .setFilter(".*\\.bas")
                         .setOpenDialogListener(new OpenFileDialog.OpenDialogListener() {
@@ -663,13 +658,13 @@ private TextWatcher inputTextWatcher = new TextWatcher()
             reset();
             String arrayText = readFileAsString(fileName);
             Debug.WriteLine(TAG + "± readFileAsString " + arrayText);
-            GlobalVars.getInstance().listOfProgram = new ArrayList<String>(Arrays.asList(arrayText.Split("\r\n")));
+            GlobalVars.getInstance().listOfProgram = new ArrayList<String>(Arrays.asList(arrayText.Split("" + Environment.NewLine)));
                                     GlobalVars.getInstance().programCounter = Integer.parseInt(runCommand.returnBaseCommand(GlobalVars.getInstance().listOfProgram.get(GlobalVars.getInstance().listOfProgram.size() - 1).ToString()) + GlobalVars.getInstance().autoStep);
 
                                 }
                             });
                     fileDialog.show();*/
-            }
+                            }
             else if (commandRun.ToLower().Equals("reset"))
             {
                 reset();
@@ -744,10 +739,9 @@ private TextWatcher inputTextWatcher = new TextWatcher()
 
         private void commandWindow_TextChanged_1(object sender, EventArgs e)
         {
-
+            
         }
-
-
+        
 
         /*private static String readFileAsString(String filePath) 
     {

@@ -34,7 +34,9 @@ namespace MCX_Basic
 
         public List<String> returnCaseInsensFromString(String str, String search)
         {
-            return new List<String>(str.Split(Convert.ToChar(search))).ToList();
+            //return new List<String>(str.Split(Convert.ToChar(search))).ToList();
+            System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex(search);
+            return new List<String>(regex.Split(str));
         }
 
         public String returnAfterStrFuncParse(String string_val)
@@ -95,19 +97,20 @@ namespace MCX_Basic
                 String prefix = "bin$("; // string_val prefix, not needle prefix!
                 String suffix = ")"; // string_val suffix, not needle suffix!
                 NSRange range = new NSRange(prefix.Length, str.Length - prefix.Length - suffix.Length);
-                String tmpStr = str.Substring(range.location, range.location + range.length);
+                String tmpStr = str.Substring(range.location, range.length);
                 tmpStr = runCommand.resultFromString(tmpStr);
                 if (digitalFunc.isOnlyDigits(tmpStr))
                 { // если только цифры
                     if (Int32.Parse(tmpStr) >= 0)
-                        result = (Int32.Parse(tmpStr)).ToString();
+                        result = Convert.ToString(Int32.Parse(tmpStr), 2);
                 }
                 else {  // если переменные
                     int index = variables.makeVariableIndex(tmpStr);
                     VariableSet varSet = GlobalVars.getInstance().variables[index];
                     String stringNumber = varSet.var;
                     if (Int32.Parse(stringNumber) >= 0)
-                        result = (Int32.Parse(stringNumber)).ToString();
+                        //result = (Int32.Parse(stringNumber)).ToString();
+                        result = Convert.ToString(Int32.Parse(stringNumber), 2);
                 }
             }
             else if (funcString.Equals("chr$"))
@@ -115,7 +118,7 @@ namespace MCX_Basic
                 String prefix = "chr$("; // string_val prefix, not needle prefix!
                 String suffix = ")"; // string_val suffix, not needle suffix!
                 NSRange range = new NSRange(prefix.Length, str.Length - prefix.Length - suffix.Length);
-                String tmpStr = str.Substring(range.location, range.location + range.length);
+                String tmpStr = str.Substring(range.location, range.length);
                 tmpStr = runCommand.resultFromString(tmpStr);
                 if (digitalFunc.isOnlyDigits(tmpStr))
                 { // если только цифры
@@ -136,7 +139,7 @@ namespace MCX_Basic
                 String suffix = ")"; // string_val suffix, not needle suffix!
                 NSRange range = new NSRange(prefix.Length, str.Length - prefix.Length - suffix.Length);
                 int spaces = 0;
-                String tmpStr = str.Substring(range.location, range.location + range.length);
+                String tmpStr = str.Substring(range.location, range.length);
                 tmpStr = runCommand.resultFromString(tmpStr);
                 if (digitalFunc.isOnlyDigits(tmpStr))
                 { // если только цифры
@@ -157,7 +160,7 @@ namespace MCX_Basic
                 String prefix = "str$("; // string_val prefix, not needle prefix!
                 String suffix = ")"; // string_val suffix, not needle suffix!
                 NSRange range = new NSRange(prefix.Length, str.Length - prefix.Length - suffix.Length);
-                String tmpStr = str.Substring(range.location, range.location + range.length);
+                String tmpStr = str.Substring(range.location, range.length);
                 tmpStr = runCommand.resultFromString(tmpStr);
                 if (digitalFunc.isMath(tmpStr))
                 {
@@ -176,7 +179,7 @@ namespace MCX_Basic
                 if (str.Contains(suffix) && str.Contains(prefix))
                 {
                     NSRange range = new NSRange(prefix.Length, str.Length - prefix.Length - suffix.Length);
-                    String normStr = str.Substring(range.location, range.location + range.length);
+                    String normStr = str.Substring(range.location, range.length);
                     normStr = normStr.Replace("\\+", ",");
                     String varNm = normStr.Replace(" ", "").Split(',')[0];
                     if (variables.variableIsPresent(varNm))
@@ -201,7 +204,7 @@ namespace MCX_Basic
                     }
                 }
                 else {
-                    GlobalVars.getInstance().error = "Syntax error at - " + str + "\r\n";
+                    GlobalVars.getInstance().error = "Syntax error at - " + str + Environment.NewLine;
                 }
             }
             else if (funcString.Equals("hex$"))
@@ -209,7 +212,7 @@ namespace MCX_Basic
                 String prefix = "hex$("; // string_val prefix, not needle prefix!
                 String suffix = ")"; // string_val suffix, not needle suffix!
                 NSRange range = new NSRange(prefix.Length, str.Length - prefix.Length - suffix.Length);
-                String tmpStr = str.Substring(range.location, range.location + range.length);
+                String tmpStr = str.Substring(range.location, range.length);
                 tmpStr = runCommand.resultFromString(tmpStr);
                 int num = 0;
                 if (digitalFunc.isOnlyDigits(tmpStr))
@@ -237,7 +240,7 @@ namespace MCX_Basic
                 if (str.Contains(suffix) && str.Contains(prefix))
                 {
                     NSRange range = new NSRange(prefix.Length, str.Length - prefix.Length - suffix.Length);
-                    String normStr = str.Substring(range.location, range.location + range.length);
+                    String normStr = str.Substring(range.location, range.length);
                     normStr = normStr.Replace("\\+", ",");
                     String varNm = normStr.Replace(" ", "").Split(',')[0];
                     if (variables.variableIsPresent(varNm))
@@ -267,7 +270,7 @@ namespace MCX_Basic
                     }
                 }
                 else {
-                    GlobalVars.getInstance().error = "Syntax error at - " + str + "\r\n";
+                    GlobalVars.getInstance().error = "Syntax error at - " + str + Environment.NewLine;
                 }
             }
             else if (funcString.Equals("righ"))
@@ -277,7 +280,7 @@ namespace MCX_Basic
                 if (str.Contains(suffix) && str.Contains(prefix))
                 {
                     NSRange range = new NSRange(prefix.Length, str.Length - prefix.Length - suffix.Length);
-                    String normStr = str.Substring(range.location, range.location + range.length);
+                    String normStr = str.Substring(range.location, range.length);
                     normStr = normStr.Replace("\\+", ",");
                     String varNm = normStr.Replace(" ", "").Split(',')[0];
                     if (variables.variableIsPresent(varNm))
@@ -303,11 +306,11 @@ namespace MCX_Basic
                         result = "";
                     }
                     else {
-                        result = arr[0].ToString().Substring(arr[0].ToString().Length - ind, arr[0].ToString().Length);
+                        result = arr[0].ToString().Substring(arr[0].ToString().Length - ind);
                     }
                 }
                 else {
-                    GlobalVars.getInstance().error = "Syntax error at - " + str + "\r\n";
+                    GlobalVars.getInstance().error = "Syntax error at - " + str + Environment.NewLine;
                 }
             }
             else if (funcString.Equals("mid$"))
@@ -317,7 +320,7 @@ namespace MCX_Basic
                 if (str.Contains(suffix) && str.Contains(prefix))
                 {
                     NSRange range = new NSRange(prefix.Length, str.Length - prefix.Length - suffix.Length);
-                    String normStr = str.Substring(range.location, range.location + range.length);
+                    String normStr = str.Substring(range.location, range.length);
                     normStr = normStr.Replace("\\+", ",");
                     String varNm = normStr.Replace(" ", "").Split(',')[0];
                     if (variables.variableIsPresent(varNm))
@@ -361,11 +364,11 @@ namespace MCX_Basic
                         result = "";
                     }
                     else {
-                        result = arr[0].ToString().Substring(range.location, range.location + range.length);
+                        result = arr[0].ToString().Substring(range.location, range.length);
                     }
                 }
                 else {
-                    GlobalVars.getInstance().error = "Syntax error at - " + str + "\r\n";
+                    GlobalVars.getInstance().error = "Syntax error at - " + str + Environment.NewLine;
                 }
             }
             else if (funcString.Equals("oct$"))
@@ -373,7 +376,7 @@ namespace MCX_Basic
                 String prefix = "oct$("; // string_val prefix, not needle prefix!
                 String suffix = ")"; // string_val suffix, not needle suffix!
                 NSRange range = new NSRange(prefix.Length, str.Length - prefix.Length - suffix.Length);
-                String tmpStr = str.Substring(range.location, range.location + range.length);
+                String tmpStr = str.Substring(range.location, range.length);
                 tmpStr = runCommand.resultFromString(tmpStr);
                 int num = 0;
                 if (digitalFunc.isOnlyDigits(tmpStr))
@@ -392,7 +395,7 @@ namespace MCX_Basic
                         Debug.WriteLine(TAG + "± str=" + str + "Wrong number format in hex$!");
                     }
                 }
-                result = (num).ToString();
+                result = Convert.ToString(num, 8);
             }
             Debug.WriteLine(TAG + "± STRINGFUNC " + str + "='" + result + "'");
             return result;
@@ -440,7 +443,7 @@ namespace MCX_Basic
                                 }
                                 else {
                                     tempStr = "";
-                                    GlobalVars.getInstance().error = "Variable not excist\r\n";
+                                    GlobalVars.getInstance().error = "Variable not excist" + Environment.NewLine;
                                     Debug.WriteLine(TAG + "± Variable not excist");
                                 }
                             }

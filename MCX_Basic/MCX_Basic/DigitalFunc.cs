@@ -187,7 +187,7 @@ namespace MCX_Basic
                             
                         }
                         else {
-                            GlobalVars.getInstance().error = "Syntax error at - \r\n" + arrValue[i].ToString() + "\r\n";
+                            GlobalVars.getInstance().error = "Syntax error at - " + Environment.NewLine + arrValue[i].ToString() + "" + Environment.NewLine;
                         }
                     }
                     else if (funcString.Equals("asc("))
@@ -221,7 +221,7 @@ namespace MCX_Basic
                             }
                         }
                         else {
-                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "\r\n";
+                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "" + Environment.NewLine;
                         }
                     }
                     else if (funcString.Equals("abs("))
@@ -247,7 +247,7 @@ namespace MCX_Basic
                             arrValue[i] = pre.ToString();
                         }
                         else {
-                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "\r\n";
+                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "" + Environment.NewLine;
                         }
                     }
                     else if (funcString.Equals("fix("))
@@ -272,7 +272,7 @@ namespace MCX_Basic
                             }
                         }
                         else {
-                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "\r\n";
+                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "" + Environment.NewLine;
                         }
                     }
                     else if (funcString.Equals("rnd("))
@@ -296,7 +296,7 @@ namespace MCX_Basic
                             }
                         }
                         else {
-                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "\r\n";
+                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "" + Environment.NewLine;
                         }
                     }
                     else if (funcString.Equals("inst"))
@@ -332,7 +332,7 @@ namespace MCX_Basic
                             }
                         }
                         else {
-                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "\r\n";
+                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "" + Environment.NewLine;
                         }
                     }
                     else if (funcString.Equals("len("))
@@ -360,7 +360,7 @@ namespace MCX_Basic
                             }
                         }
                         else {
-                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "\r\n";
+                            GlobalVars.getInstance().error = "Syntax error at - " + arrValue[i].ToString() + "" + Environment.NewLine;
                         }
                     }
                     else if (arrValue[i].ToString().Contains(alphaSet))
@@ -373,7 +373,7 @@ namespace MCX_Basic
                         }
                         else {
                             Debug.WriteLine(TAG + "± !!!Variable not excist");
-                            //GlobalVars.getInstance().error = "Syntax error\r\n";
+                            //GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
                             arrValue[i] = "0";
                         }
                     }
@@ -396,9 +396,10 @@ namespace MCX_Basic
                     //[System.Reflection.Assembly]::LoadFile("d:\\OneDriveNod\\OneDrive\\Coding\\Examples\\MCX basic\\MCX_Basic\\MCX_Basic\\mxparser.dll")
                     //[org.mariuszgromada.math.mxparser.regressiontesting.PerformanceTests]::Start()
 
-                    str = str.Replace(",", ".");
                     Debug.WriteLine(TAG, "str: " + str);
+                    str = str.Replace(",", ".");
                     Expression expression = new Expression(str);
+                    
                     if (expression.checkSyntax())
                     {
                         Debug.WriteLine(TAG + "± !!!!!!!!! RESULTING TEST " + expression.getExpressionString() + "=" + expression.calculate());
@@ -407,8 +408,9 @@ namespace MCX_Basic
                     }
                     else {
                         Debug.WriteLine(TAG + "± in expression " + expression.getErrorMessage());
-                        GlobalVars.getInstance().error = "Error " + expression.getErrorMessage() + "\r\n";
+                        GlobalVars.getInstance().error = "Error " + expression.getErrorMessage() + "" + Environment.NewLine;
                     }
+                    //value.Replace(".", ",");
                 }
             }
             return value;
@@ -483,8 +485,8 @@ namespace MCX_Basic
                     }
                 }
             //deleting array from array
-            arrValue = arrValue.Except(arrValueDelete).ToList();
-            arrSign = arrSign.Except(arrValueDelete).ToList();
+            //arrValue = arrValue.Except(arrValueDelete).ToList();
+            //arrSign = arrSign.Except(arrValueDelete).ToList();
             String str = "";
             String old = "";
             if (arrValue.Count > 1)
@@ -557,7 +559,7 @@ namespace MCX_Basic
                 str = "";
             }
 
-            result = result.Replace(",", ".");
+            //result = result.Replace(",", ".");
             return result;
         }
 

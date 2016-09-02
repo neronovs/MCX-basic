@@ -9,8 +9,8 @@ namespace MCX_Basic
     public class GlobalVars
     {
         public static String version1 = "MCX Basic version ";
-        public static String version2 = "Copyright 2015-16 by Neronov Aleksey";
-        public static String version3 = "Type 'help' for list of command\r\n";
+        public static String version2 = "Copyright 2015-16 by Aleksey & Sergey Neronov";
+        public static String version3 = "Type 'help' for list of command" + Environment.NewLine;
 
         public String error;
         public String runnedLine;
@@ -85,7 +85,7 @@ namespace MCX_Basic
                 "let variable=x - Assign data to the variable.",
                 "left$(a$,x) - Returns a string composed of the leftmost x characters of the string a$.",
                 "len(a$) - Returns the length of a string, including all non-printable characters.",
-                "load \"name\" - Load saved BASIC program.",
+                "load - Load saved BASIC program by choosing a file from a dialog window. Later - load \"name\" ",
                 "log(a) - Returns the natural logarithm of a variable.",
                 "mid$(a$,x[,y]) - Returns a Substring of variable length (y) starting at a variable position (x) in an input string a$.",
                 "new - Begin new program. Clear memory and variables.",
