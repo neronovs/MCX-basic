@@ -396,7 +396,7 @@ namespace MCX_Basic
                     //[System.Reflection.Assembly]::LoadFile("d:\\OneDriveNod\\OneDrive\\Coding\\Examples\\MCX basic\\MCX_Basic\\MCX_Basic\\mxparser.dll")
                     //[org.mariuszgromada.math.mxparser.regressiontesting.PerformanceTests]::Start()
 
-                    Debug.WriteLine(TAG, "str: " + str);
+                    Debug.WriteLine(TAG + "str: " + str);
                     str = str.Replace(",", ".");
                     Expression expression = new Expression(str);
                     

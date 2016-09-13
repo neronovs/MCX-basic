@@ -797,7 +797,7 @@ namespace MCX_Basic
         public void autoProgramSet(String string_val)
         {
             GlobalVars.getInstance().listOfStrings.Clear();
-            GlobalVars.getInstance().listOfProgram.Add(Environment.NewLine + string_val);
+            GlobalVars.getInstance().listOfProgram.Add(string_val);
             GlobalVars.getInstance().programCounter = GlobalVars.getInstance().programCounter + GlobalVars.getInstance().autoStep;
             GlobalVars.getInstance().listOfStrings.Add(Environment.NewLine + GlobalVars.getInstance().programCounter + " ");
         }
@@ -807,7 +807,7 @@ namespace MCX_Basic
             GlobalVars.getInstance().listOfStrings.Clear();
             //GlobalVars.getInstance().listOfStrings.Add(GlobalVars.getInstance().programCounter + " ");
             GlobalVars.getInstance().listOfStrings.Add(Environment.NewLine);
-            GlobalVars.getInstance().listOfProgram.Add(Environment.NewLine);
+            //GlobalVars.getInstance().listOfProgram.Add(Environment.NewLine);
             GlobalVars.getInstance().autoSet = NO;
             Debug.WriteLine(TAG + "± autoProgramStop");
         }
