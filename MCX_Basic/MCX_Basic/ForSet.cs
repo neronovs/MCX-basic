@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace MCX_Basic
 {
-    public class ForSet //implements Serializable
+    public class ForSet
     {
-        public String forLine;
-        public String forName;
-        public String forStep;
-        public String forTo;
+        private String forLine;
+        private String forName;
+        private String forStep;
+        private String forTo;
 
         public ForSet()
         {
@@ -17,44 +18,29 @@ namespace MCX_Basic
             forTo = "";
         }
 
-        public String getForLine()
+        public String ForLine
         {
-            return this.forLine;
+            get { return this.forLine; }
+            set { forLine = value; }
         }
 
-        public void setForLine(String value)
+        public String ForName
         {
-            forLine = value;
+            get { return this.forName; }
+            set { forName = value; }
         }
 
-        public String getForName()
+        public String ForStep
         {
-            return this.forName;
+            get { return this.forStep; }
+            set { forStep = value; }
         }
 
-        public void setForName(String value)
+        public String ForTo
         {
-            forName = value;
+            get { return this.forTo; }
+            set { forTo = value; }
         }
-
-        public String getForStep()
-        {
-            return this.forStep;
-        }
-
-        public void setForStep(String value)
-        {
-            forStep = value;
-        }
-
-        public String getForTo()
-        {
-            return this.forTo;
-        }
-
-        public void setForTo(String value)
-        {
-            forTo = value;
-        }
+        
     }
 }

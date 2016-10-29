@@ -157,29 +157,29 @@ namespace MCX_BasicTests
             string str = "sin(13+2*3)";
             res = "0,149877209662952";
             GlobalVars globals = new GlobalVars();
-            globals.error = "";
+            globals.Error = "";
             RunCommand runCommand = new RunCommand();
             str = "ver";
             Assert.IsTrue(runCommand.set(str));
-            Assert.AreEqual(4, globals.listOfStrings.Count);
-            Assert.AreEqual(globals.error, "");
+            Assert.AreEqual(4, globals.ListOfStrings.Count);
+            Assert.AreEqual(globals.Error, "");
             
             str="auto";
             Assert.IsTrue(runCommand.set(str));
-            Assert.IsFalse(globals.isOkSet);
-            Assert.IsTrue(globals.autoSet);
-            Assert.Equals(1, globals.listOfStrings.Count);
-            Assert.IsTrue(globals.error == "");
+            Assert.IsFalse(globals.IsOkSet);
+            Assert.IsTrue(globals.AutoSet);
+            Assert.Equals(1, globals.ListOfStrings.Count);
+            Assert.IsTrue(globals.Error == "");
             str="list";
             Assert.IsTrue(runCommand.set(str));
-            Assert.IsTrue(globals.isOkSet);
+            Assert.IsTrue(globals.IsOkSet);
             str="a=10";
             Assert.IsTrue(runCommand.set(str));
-            Assert.IsTrue(globals.variables.Count > 0);
+            Assert.IsTrue(globals.Variables.Count > 0);
             str="clear";
             Assert.IsTrue(runCommand.set(str));
-            Assert.AreEqual(0, globals.variables.Count);
-            Assert.IsTrue(globals.error == ""); 
+            Assert.AreEqual(0, globals.Variables.Count);
+            Assert.IsTrue(globals.Error == ""); 
             str="10 cls";
             Assert.IsFalse(runCommand.set(str));
             str="20 ver";
@@ -188,11 +188,11 @@ namespace MCX_BasicTests
             Assert.IsFalse(runCommand.set(str));
             str="delete 10-20";
             Assert.IsTrue(runCommand.set(str));
-            Assert.Equals(1, globals.listOfProgram.Count);
+            Assert.Equals(1, globals.ListOfProgram.Count);
             str="end";
             Assert.IsTrue(runCommand.set(str));
-            Assert.IsTrue(globals.isOkSet);
-            Assert.IsFalse(globals.run);
+            Assert.IsTrue(globals.IsOkSet);
+            Assert.IsFalse(globals.Run);
 
         }
 
@@ -201,7 +201,7 @@ namespace MCX_BasicTests
             StringFunc stringFunc = new StringFunc();
             GlobalVars globals = new GlobalVars();
             string strTSF, resTSF;
-            globals.error = "";
+            globals.Error = "";
             strTSF = "spc$(3)";
             resTSF = "\"   \"";
 

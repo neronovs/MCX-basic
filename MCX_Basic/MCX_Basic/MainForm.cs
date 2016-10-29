@@ -19,7 +19,8 @@ namespace MCX_Basic
         private readonly bool NO = false;
         private readonly bool YES = true;
         private readonly String TAG = MethodBase.GetCurrentMethod().DeclaringType.Name + ": ";
-        String currectLine = ""; //text in the current cursor line
+        //String currectLine = ""; //text in the current cursor line
+        System.Windows.Forms.Timer timer;
 
         RunCommand runCommand = new RunCommand();
 
@@ -37,9 +38,36 @@ namespace MCX_Basic
 
         Timer handler = new Timer();
 
+        /*
+        // DLL libraries used to manage hotkeys
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        public static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vlc);
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+        const int MYACTION_HOTKEY_ID = 1;
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == 0x0312 && m.WParam.ToInt32() == MYACTION_HOTKEY_ID)
+            {
+                // My hotkey has been typed
+
+                // Do what you want here
+                GlobalVars.getInstance().KeyScan = m.ToString();
+            }
+            base.WndProc(ref m);
+        }
+        */
+
         public MainForm()
         {
             InitializeComponent();
+            timer = new System.Windows.Forms.Timer();
+            timer.Tick += new EventHandler(ThreadMethod);
+
+            // Modifier keys codes: Alt = 1, Ctrl = 2, Shift = 4, Win = 8
+            // Compute the addition of each combination of the keys you want to be pressed
+            // ALT+CTRL = 1 + 2 = 3 , CTRL+SHIFT = 2 + 4 = 6...
+            //RegisterHotKey(this.Handle, MYACTION_HOTKEY_ID, 6, (int)Keys.F12);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -48,19 +76,19 @@ namespace MCX_Basic
             FormBorderStyle = FormBorderStyle.None; //Hides the border of the fullscreen window
             commandWindow.Focus(); //Sets focus on the textBoxMain element
 
-            // if (getInstance().firstStart)
+            // if (getInstance().FirstStart)
             {
-                Debug.WriteLine("± init in " + GlobalVars.getInstance().currentFolder);
+                Debug.WriteLine("± init in " + GlobalVars.getInstance().CurrentFolder);
 
-                DirectoryInfo f = new DirectoryInfo(GlobalVars.getInstance().currentFolder); //Check if folder not excist - make new one
-                if (!Directory.Exists(GlobalVars.getInstance().currentFolder))
+                DirectoryInfo f = new DirectoryInfo(GlobalVars.getInstance().CurrentFolder); //Check if folder not excist - make new one
+                if (!Directory.Exists(GlobalVars.getInstance().CurrentFolder))
                 {
-                    Debug.WriteLine("± Make dir " + GlobalVars.getInstance().currentFolder);
+                    Debug.WriteLine("± Make dir " + GlobalVars.getInstance().CurrentFolder);
                     f.Create();
                 }
 
-                GlobalVars.getInstance().firstStart = false;
-                GlobalVars.getInstance().scanKeyOn = NO;
+                GlobalVars.getInstance().FirstStart = false;
+                GlobalVars.getInstance().ScanKeyOn = NO;
 
                 reset();
             }
@@ -69,13 +97,13 @@ namespace MCX_Basic
         public void onTextChanged(String s, int start, int before, int count)
         {
             Debug.WriteLine(TAG + "± onTextChanged 1..." + count);
-            if (count > 0)// && GlobalVars.getInstance().scanKeyOn)
+            if (count > 0)// && GlobalVars.getInstance().ScanKeyOn)
             {
                 Debug.WriteLine(TAG + "± onTextChanged 2..." + s.Substring(start, 1));
                 if (s.ToCharArray().ElementAt(start) == 10)
                 {
-                    //GlobalVars.getInstance().lineNumber = getCurrentCursorLine(commandWindow.Text);
-                    GlobalVars.getInstance().lineNumber = getCurrentCursorLine(commandWindow);
+                    //GlobalVars.getInstance().LineNumber = getCurrentCursorLine(commandWindow.Text);
+                    GlobalVars.getInstance().LineNumber = getCurrentCursorLine(commandWindow);
                     try
                     {
                         onEnterPress((s.ToCharArray().ElementAt(start)).ToString());
@@ -92,8 +120,7 @@ namespace MCX_Basic
         public void beepPlay()
         {
             Debug.WriteLine(TAG + "± Beep play begin ...");
-            //MediaPlayer mp = MediaPlayer.create(this, getResources().getIdentifier("beep", "raw", getPackageName()));
-            //mp.start();
+            System.Media.SystemSounds.Beep.Play();
         }
 
         public int getCurrentCursorLine(TextBox editText) //Returns the current Y cursor position
@@ -114,33 +141,33 @@ namespace MCX_Basic
         {
             //commandWindow.setSelection(commandWindow.Text.Length);
             commandWindow.Select(commandWindow.Text.Length, 0);
-            //        Debug.WriteLine(TAG + "± onEnterPress index="+(GlobalVars.getInstance().GlobalVars.getInstance().lineNumber - 1)+" total lines="+commandWindow.Text.ToString().Split('" + Environment.NewLine).Length);
-            if (GlobalVars.getInstance().lineNumber - 1 >= commandWindow.Text.ToString().Split('\n').Length)
-                GlobalVars.getInstance().lineNumber--;
-            else GlobalVars.getInstance().lineNumber = commandWindow.Text.ToString().Split('\n').Length;
+            //        Debug.WriteLine(TAG + "± onEnterPress index="+(GlobalVars.getInstance().GlobalVars.getInstance().LineNumber - 1)+" total lines="+commandWindow.Text.ToString().Split('" + Environment.NewLine).Length);
+            if (GlobalVars.getInstance().LineNumber - 1 >= commandWindow.Text.ToString().Split('\n').Length)
+                GlobalVars.getInstance().LineNumber--;
+            else GlobalVars.getInstance().LineNumber = commandWindow.Text.ToString().Split('\n').Length;
 
-            String textLine = commandWindow.Text.ToString().Split('\n')[GlobalVars.getInstance().lineNumber - 1];
+            String textLine = commandWindow.Text.ToString().Split('\n')[GlobalVars.getInstance().LineNumber - 1];
             GlobalVars.getInstance().Command = textLine;
             bool shouldChangeText = YES;
-            GlobalVars.getInstance().KeyScan = text;
+            //GlobalVars.getInstance().KeyScan = text;
             textIndex = commandWindow.Text.ToString().Length;
             String[] lines = commandWindow.Text.ToString().Split('\n');
 
             if (inputMode)
             {
-                if (!string.IsNullOrEmpty(GlobalVars.getInstance().input))
+                if (!string.IsNullOrEmpty(GlobalVars.getInstance().Input))
                 {
                     int extrAdd = 2;
-                    if (GlobalVars.getInstance().listOfStrings.Count() == 0)
+                    if (GlobalVars.getInstance().ListOfStrings.Count() == 0)
                     {
-                        GlobalVars.getInstance().listOfStrings.Add("t");
+                        GlobalVars.getInstance().ListOfStrings.Add("t");
                         extrAdd = 1;
                     }
-                    Debug.WriteLine(TAG + "± input mode ='" + GlobalVars.getInstance().input + "' listofstring0='" + GlobalVars.getInstance().listOfStrings[0].ToString() + "'");
-                    String[] arr = GlobalVars.getInstance().input.Substring(1).Split(',');
+                    Debug.WriteLine(TAG + "± input mode ='" + GlobalVars.getInstance().Input + "' listofstring0='" + GlobalVars.getInstance().ListOfStrings[0].ToString() + "'");
+                    String[] arr = GlobalVars.getInstance().Input.Substring(1).Split(',');
                     String entered;
-                    int indexInput = GlobalVars.getInstance().listOfStrings[0].ToString().Length + extrAdd;
-                    Debug.WriteLine(TAG + "± input-- '" + lines[lines.Length - 1] + "' indexed-'" + GlobalVars.getInstance().listOfStrings[0].ToString());
+                    int indexInput = GlobalVars.getInstance().ListOfStrings[0].ToString().Length + extrAdd;
+                    Debug.WriteLine(TAG + "± input-- '" + lines[lines.Length - 1] + "' indexed-'" + GlobalVars.getInstance().ListOfStrings[0].ToString());
                     entered = lines[lines.Length - 1].Substring(indexInput);
                     String str = arr[inputCount] + "=" + entered;
                     if (arr[inputCount].Substring(arr[inputCount].Length - 1).Equals("$"))
@@ -171,30 +198,38 @@ namespace MCX_Basic
             else {
                 if (!GlobalVars.getInstance().Command.Equals(""))
                 {
-                    Debug.WriteLine(TAG + "!!!isOkSet: " + GlobalVars.getInstance().isOkSet);
-                    if (GlobalVars.getInstance().isOkSet) returnCR();
-                    if (!GlobalVars.getInstance().autoSet)
+                    Debug.WriteLine(TAG + "!!!isOkSet: " + GlobalVars.getInstance().IsOkSet);
+                    if (GlobalVars.getInstance().IsOkSet) returnCR();
+                    if (!GlobalVars.getInstance().AutoSet)
                     {
-                        Debug.WriteLine(TAG + "± autoSet=" + GlobalVars.getInstance().autoSet);
+                        Debug.WriteLine(TAG + "± autoSet=" + GlobalVars.getInstance().AutoSet);
                         if (runCommand.set(GlobalVars.getInstance().Command))
                         {
                             //[commandWindow resignFirstResponder];
                             for (int i = 0; i < GlobalVars.getInstance().ListOfStrings.Count(); i++)
-                                addStringToCommandWindow(GlobalVars.getInstance().ListOfStrings[i].ToString());
-                            //[commandWindow becomeFirstResponder];
-                            //   if (!GlobalVars.getInstance().autoSet || !GlobalVars.getInstance().run) printOk();
+                               addStringToCommandWindow(GlobalVars.getInstance().ListOfStrings[i].ToString());
+                               //prints "OK" on the screen
+                               if (!GlobalVars.getInstance().AutoSet || !GlobalVars.getInstance().Run) printOk();
                         }
                         else {
-                            otherCommands(GlobalVars.getInstance().command);
+                            otherCommands(GlobalVars.getInstance().Command);
+
+                            //if length of the current line bigger than 0 and it's not run, then insert NEW LINE in the commandWindow 
+                            try {
+                                if (commandWindow.Lines.GetValue(GlobalVars.getInstance().LineNumber).ToString().Length > 0
+                                    && !GlobalVars.getInstance().Run)
+                                    returnCR();
+                            } catch (Exception ex) { Debug.WriteLine(TAG + " Exception: " + ex); }
+
                             printOk();
                         }
                     }
                     else {
-                        Debug.WriteLine(TAG + "± !!!!!autoSet=" + GlobalVars.getInstance().autoSet);
-                        runCommand.autoProgramSet(GlobalVars.getInstance().command);
-                        for (int i = 0; i < GlobalVars.getInstance().listOfStrings.Count(); i++)
+                        Debug.WriteLine(TAG + "± !!!!!autoSet=" + GlobalVars.getInstance().AutoSet);
+                        runCommand.autoProgramSet(GlobalVars.getInstance().Command);
+                        for (int i = 0; i < GlobalVars.getInstance().ListOfStrings.Count(); i++)
                         {
-                            addStringToCommandWindow(GlobalVars.getInstance().listOfStrings[i].ToString());
+                            addStringToCommandWindow(GlobalVars.getInstance().ListOfStrings[i].ToString());
                         }
                     }
                     if (GlobalVars.getInstance().Command.Count() > 3)
@@ -204,6 +239,12 @@ namespace MCX_Basic
                 }
             }
             shouldChangeText = string.IsNullOrEmpty(GlobalVars.getInstance().Command);
+            
+            if (GlobalVars.getInstance().ScanKeyOn)
+            {
+                GlobalVars.getInstance().KeyScan = inkey();
+            }
+
             return shouldChangeText;
         }
 
@@ -232,7 +273,7 @@ namespace MCX_Basic
             //print runCommand.set("a=2");
             //runCommand.set("print abs(1)");
             //runCommand.set("print a,\"---\",7");
-            inputMode = false;
+            inputMode = NO;
             inputCount = 0;
             //keyOffset = 0;
             //commandWindow.setSelection(commandWindow.Text.Length);
@@ -279,7 +320,7 @@ namespace MCX_Basic
             NSMutableArray * arrayOfRangesText =[[NSMutableArray alloc]init];
             NSMutableArray * arrayOfRangesNumber =[[NSMutableArray alloc]init];
 
-            for (int i = 0; i <[GlobalVars.getInstance().listOfAll count];
+            for (int i = 0; i <[GlobalVars.getInstance().ListOfAll count];
             i++){
             //NSRange searchRange = NSMakeRange(0,string.length);
             //NSRange searchRange = getViewableRange:commandWindow];
@@ -287,7 +328,7 @@ namespace MCX_Basic
             NSRange foundRange;
             while (searchRange.location < string.length) {
                 searchRange.length = string.length - searchRange.location;
-                foundRange =[string rangeOfString(GlobalVars.getInstance().listOfAll.get(i]options:
+                foundRange =[string rangeOfString(GlobalVars.getInstance().ListOfAll.get(i]options:
                 0 range:
                 searchRange];
                 if (foundRange.location != NSNotFound) {
@@ -385,26 +426,26 @@ namespace MCX_Basic
 
         public void syntaxError()
         {
-            GlobalVars.getInstance().isOkSet = NO;
-            if (GlobalVars.getInstance().run)
+            GlobalVars.getInstance().IsOkSet = NO;
+            if (GlobalVars.getInstance().Run)
             {
-                GlobalVars.getInstance().error = GlobalVars.getInstance().error + " at line " + GlobalVars.getInstance().runnedLine + Environment.NewLine;
+                GlobalVars.getInstance().Error = GlobalVars.getInstance().Error + " at line " + GlobalVars.getInstance().RunnedLine + Environment.NewLine;
             }
             stopRunning();
-            addStringToCommandWindow(GlobalVars.getInstance().error);
+            addStringToCommandWindow(GlobalVars.getInstance().Error);
         }
 
         public void stopRunning()
         {
-            printOk();
+            //printOk();
             //handler.removeCallbacks(null);
             handler.Stop();
-            GlobalVars.getInstance().runIndex = 0;
-            GlobalVars.getInstance().run = NO;
-            GlobalVars.getInstance().isOkSet = YES;
+            GlobalVars.getInstance().RunIndex = 0;
+            GlobalVars.getInstance().Run = NO;
+            GlobalVars.getInstance().IsOkSet = YES;
             inputMode = NO;
-            //GlobalVars.getInstance().scanKeyOn = NO;
-            Debug.WriteLine(TAG + "Program is OVER!!!!! " + GlobalVars.getInstance().error);
+            GlobalVars.getInstance().ScanKeyOn = NO;
+            Debug.WriteLine(TAG + "Program is OVER!!!!! " + GlobalVars.getInstance().Error);
         }
 
         public void version()
@@ -420,7 +461,7 @@ namespace MCX_Basic
                 String temp = GlobalVars.getInstance().ListOfStrings[i].ToString();
                 addStringToCommandWindow(temp);
             }
-            GlobalVars.getInstance().listOfStrings.Clear();
+            GlobalVars.getInstance().ListOfStrings.Clear();
         }
 
         public void printOk()
@@ -453,9 +494,31 @@ namespace MCX_Basic
                 e.Handled = true;
         }
 
+        public String inkey()
+        {
+            String res = "";
+
+            //do {
+
+                res = GlobalVars.getInstance().KeyScan;
+                //System.Threading.Thread.Sleep(100);
+            //} while (res == "");
+
+
+            return res;
+        }
+
         private void commandWindow_KeyDown(object sender, KeyEventArgs e)
         {
-            
+            if (GlobalVars.getInstance().ScanKeyOn)
+            {
+                var task = Task.Factory.StartNew(inkey);
+                task.Wait();
+                task = Task.Factory.StartNew(inkey);
+                
+                GlobalVars.getInstance().KeyScan = e.KeyData.ToString();
+            }
+
             if (e.KeyCode == Keys.Enter)
             {
                 /*List<String> listOfTextBox = new List<String>(commandWindow.Lines); //takes all lines in the List massive
@@ -468,13 +531,13 @@ namespace MCX_Basic
                 if (lastCharInCurrentLine <= 0) lastCharInCurrentLine = commandWindow.Text.Length; else lastCharInCurrentLine = firstCharIndexInNextLine - 1;
                 currectLine = listOfTextBox[currentLineNumber];*/
 
-                GlobalVars.getInstance().lineNumber = getCurrentCursorLine(commandWindow);
+                GlobalVars.getInstance().LineNumber = getCurrentCursorLine(commandWindow);
                 onEnterPress(Environment.NewLine);//send symbol of "Enter" - "\n"
 
                 /*if (runCommand.set(currectLine))
                 {
-                    for (int i = 0; i < GlobalVars.getInstance().listOfStrings.Count(); i++)
-                        addStringToCommandWindow(GlobalVars.getInstance().listOfStrings[i]);
+                    for (int i = 0; i < GlobalVars.getInstance().ListOfStrings.Count(); i++)
+                        addStringToCommandWindow(GlobalVars.getInstance().ListOfStrings[i]);
                 }*/
 
             } else if (e.Control && e.KeyCode == Keys.C)
@@ -516,54 +579,67 @@ namespace MCX_Basic
 
             if (nextCommand)
             {
-                String untilSpace = GlobalVars.getInstance().listOfProgram[GlobalVars.getInstance().runIndex].ToString().Split(' ')[0];
-                GlobalVars.getInstance().runnedLine = untilSpace;
+                String untilSpace = GlobalVars.getInstance().ListOfProgram
+                    [GlobalVars.getInstance().RunIndex].ToString().Split(' ')[0];
+                GlobalVars.getInstance().RunnedLine = untilSpace;
                 int indexforAfterSpace = untilSpace.Length;
-                String commandRun = GlobalVars.getInstance().listOfProgram[GlobalVars.getInstance().runIndex].ToString().Substring(indexforAfterSpace + 1);
+                
+                String commandRun = GlobalVars.getInstance().ListOfProgram[GlobalVars.getInstance().RunIndex].ToString().Substring(indexforAfterSpace + 1);
                 if (commandRun.Substring(0, 1).Equals(" "))
                 {
                     commandRun = normaStr.removeSpaceInBegin(commandRun);
                 }
-                Debug.WriteLine(TAG + "± " + GlobalVars.getInstance().runIndex + " Command '" + commandRun + "'");
+                Debug.WriteLine(TAG + "± " + GlobalVars.getInstance().RunIndex + " Command '" + commandRun + "'");
                 if (!commandRun.Equals(""))
                 {
                     if (runCommand.set(commandRun))
                     {
-                        for (int n = 0; n < GlobalVars.getInstance().listOfStrings.Count(); n++)
+                        for (int n = 0; n < GlobalVars.getInstance().ListOfStrings.Count(); n++)
                         {
-                            addStringToCommandWindow(GlobalVars.getInstance().listOfStrings[n].ToString());
+                            addStringToCommandWindow(GlobalVars.getInstance().ListOfStrings[n].ToString());
                         }
                     }
                     else {
                         otherCommands(commandRun);
                     }
                 }
-                GlobalVars.getInstance().runIndex++;
-                    if (GlobalVars.getInstance().runIndex >= GlobalVars.getInstance().listOfProgram.Count()) stopRunning();
-                if (!GlobalVars.getInstance().error.Equals("")) stopRunning();
-                if (!GlobalVars.getInstance().run) stopRunning();
+                GlobalVars.getInstance().RunIndex++;
+                if (GlobalVars.getInstance().RunIndex >= GlobalVars.getInstance().ListOfProgram.Count()) stopRunning();
+                if (!GlobalVars.getInstance().Error.Equals("")) stopRunning();
+                if (!GlobalVars.getInstance().Run) stopRunning();
             }
-            if (GlobalVars.getInstance().run)
+            if (GlobalVars.getInstance().Run)
             {
                 //Do something after 100ms
-                try
-                {
-                    runProgram();
-                }
-                catch //(IOException e)
-                {
-                    //e.printStackTrace();
-                }
+                timer.Interval = 100;
+                //timer.Tick += new EventHandler(ThreadMethod);
+                timer.Start();
+            } else {
+                timer.Stop();
+                timer.Dispose();
+            }
+        }
+
+        void ThreadMethod(object sender, EventArgs e)
+        {
+            try
+            {
+                //System.Threading.Thread.Sleep(1000);
+                runProgram();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(TAG + ", Exception of Task_MethodAsync(): " + ex);
             }
         }
 
         public void share()
         {
             /*
-                    NSURL* fn=fileToURL:GlobalVars.getInstance().fileName];
-                    NSLog(@"shareCommand for '%@'",GlobalVars.getInstance().fileName);
+                    NSURL* fn=fileToURL:GlobalVars.getInstance().FileName];
+                    NSLog(@"shareCommand for '%@'",GlobalVars.getInstance().FileName);
                     NSString *texttoshare = @"MCX Basic file. Sent by share command.";
-                    //    String listToShare = [GlobalVars.getInstance().listOfProgram componentsJoinedByString: @"" + Environment.NewLine];
+                    //    String listToShare = [GlobalVars.getInstance().ListOfProgram componentsJoinedByString: @"" + Environment.NewLine];
                     NSArray *activityItems = @[texttoshare,fn];
                     UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
                     NSLog(@"share step 2");
@@ -581,18 +657,135 @@ namespace MCX_Basic
                     */
         }
 
+#region LOAD file polymofphism
+
+        public void load(String string_val)
+        {
+            NormalizeString normaStr = new NormalizeString();
+            string_val = normaStr.removeSpaceInBegin(string_val);
+
+            Stream myStream = null;
+            string_val = string_val.Replace(".bas", "");
+            string_val = string_val + ".bas";
+            String filePath = (GlobalVars.getInstance().CurrentFolder + "\\" + string_val).Replace('/', '\\');
+
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    myStream = File.OpenRead(filePath);
+                    using (myStream)
+                    {
+                        // Insert code to read the stream here.
+                        GlobalVars.getInstance().FileName = filePath;
+                        reset();
+
+                        myStream.Position = 0;
+                        using (StreamReader reader = new StreamReader(myStream, Encoding.UTF8))
+                        {
+                            RunCommand runCommand = new RunCommand();
+                            string arrayText = reader.ReadToEnd();
+                            Debug.WriteLine(TAG + "± reader.ReadToEnd() " + arrayText);
+                            GlobalVars.getInstance().ListOfProgram = new List<string>(arrayText.Split('\n'));
+                            GlobalVars.getInstance().ProgramCounter =
+                                int.Parse(runCommand.returnBaseCommand(GlobalVars.getInstance().ListOfProgram
+                                [GlobalVars.getInstance().ListOfProgram.Count - 1].ToString()) +
+                                GlobalVars.getInstance().AutoStep);
+
+                            //find empty strings and delete them
+                            List<string> tempList = new List<string>();
+                            foreach (string col in GlobalVars.getInstance().ListOfProgram)
+                            {
+                                if (col.Length > 2)
+                                {
+                                    tempList.Add(col);
+                                }
+                            }
+                            GlobalVars.getInstance().ListOfProgram.Clear();
+                            GlobalVars.getInstance().ListOfProgram.AddRange(tempList);
+                        }
+                    }
+                }
+                else
+                {
+                    GlobalVars.getInstance().Error = "Bad file name";
+                    addStringToCommandWindow(GlobalVars.getInstance().Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(TAG + "± An error: " + ex);
+            }
+        }
+
+        public void load()
+        {
+            Stream myStream = null;
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+
+            //openFileDialog1.InitialDirectory = "c:\\";
+            openFileDialog1.Filter = "bas files (*.bas)|*.bas|All files (*.*)|*.*";
+            openFileDialog1.FilterIndex = 1;
+            openFileDialog1.RestoreDirectory = true;
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    if ((myStream = openFileDialog1.OpenFile()) != null)
+                    {
+                        using (myStream)
+                        {
+                            // Insert code to read the stream here.
+                            string fileName = openFileDialog1.FileName;
+                            GlobalVars.getInstance().FileName = fileName;
+                            reset();
+
+                            myStream.Position = 0;
+                            using (StreamReader reader = new StreamReader(myStream, Encoding.UTF8))
+                            {
+                                string arrayText = reader.ReadToEnd();
+                                Debug.WriteLine(TAG + "± reader.ReadToEnd() " + arrayText);
+                                GlobalVars.getInstance().ListOfProgram = new List<string>(arrayText.Split('\n'));
+                                GlobalVars.getInstance().ProgramCounter =
+                                    int.Parse(runCommand.returnBaseCommand(GlobalVars.getInstance().ListOfProgram
+                                    [GlobalVars.getInstance().ListOfProgram.Count - 1].ToString()) +
+                                    GlobalVars.getInstance().AutoStep);
+
+                                //find empty strings and delete them
+                                List<string> tempList = new List<string>();
+                                foreach (string col in GlobalVars.getInstance().ListOfProgram)
+                                {
+                                    if (col.Length > 2)
+                                    {
+                                        tempList.Add(col);
+                                    }
+                                }
+                                GlobalVars.getInstance().ListOfProgram.Clear();
+                                GlobalVars.getInstance().ListOfProgram.AddRange(tempList);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                }
+            }
+        }
+#endregion
 
         public void otherCommands(String commandRun)
         {
             String str = commandRun;
             commandRun = commandRun.Split(' ')[0];
-            for (int i = 0; i < GlobalVars.getInstance().listOfAll.Count(); i++)
+            for (int i = 0; i < GlobalVars.getInstance().ListOfAll.Count(); i++)
             {
-                //Debug.WriteLine(TAG + "± listOfAll" + GlobalVars.getInstance().listOfAll[i]);
-                NSRange range = new NSRange(commandRun.IndexOf(GlobalVars.getInstance().listOfAll[i].ToString()), commandRun.Length);
+                //Debug.WriteLine(TAG + "± listOfAll" + GlobalVars.getInstance().ListOfAll[i]);
+                NSRange range = new NSRange(commandRun.IndexOf(GlobalVars.getInstance().ListOfAll[i].ToString()), commandRun.Length);
                 if (range.location != NSNotFound && range.location == 0)
                 {
-                    commandRun = GlobalVars.getInstance().listOfAll[i].ToString();
+                    commandRun = GlobalVars.getInstance().ListOfAll[i].ToString();
                     Debug.WriteLine(TAG + "± Command found! '%@'" + commandRun);
                 }
             }
@@ -602,69 +795,68 @@ namespace MCX_Basic
             }
             else if (commandRun.ToLower().Equals("load"))
             {
-                Stream myStream = null;
-                OpenFileDialog openFileDialog1 = new OpenFileDialog();
-
-                //openFileDialog1.InitialDirectory = "c:\\";
-                openFileDialog1.Filter = "bas files (*.bas)|*.bas|All files (*.*)|*.*";
-                openFileDialog1.FilterIndex = 1;
-                openFileDialog1.RestoreDirectory = true;
-
-                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                if (str.Length > 5)
                 {
-                    try
+                    load(str.Substring(5));
+                }
+                else
+                {
+                    load();
+                    /*
+                    Stream myStream = null;
+                    OpenFileDialog openFileDialog1 = new OpenFileDialog();
+
+                    //openFileDialog1.InitialDirectory = "c:\\";
+                    openFileDialog1.Filter = "bas files (*.bas)|*.bas|All files (*.*)|*.*";
+                    openFileDialog1.FilterIndex = 1;
+                    openFileDialog1.RestoreDirectory = true;
+
+                    if (openFileDialog1.ShowDialog() == DialogResult.OK)
                     {
-                        if ((myStream = openFileDialog1.OpenFile()) != null)
+                        try
                         {
-                            using (myStream)
+                            if ((myStream = openFileDialog1.OpenFile()) != null)
                             {
-                                // Insert code to read the stream here.
-                                string fileName = openFileDialog1.FileName;
-                                GlobalVars.getInstance().FileName = fileName;
-                                reset();
-                                
-                                myStream.Position = 0;
-                                using (StreamReader reader = new StreamReader(myStream, Encoding.UTF8))
+                                using (myStream)
                                 {
-                                    string arrayText = reader.ReadToEnd();
-                                    Debug.WriteLine(TAG + "± reader.ReadToEnd() " + arrayText);
-                                    GlobalVars.getInstance().listOfProgram = new List<string>(arrayText.Split('\n'));
-                                    GlobalVars.getInstance().programCounter = 
-                                        int.Parse(runCommand.returnBaseCommand(GlobalVars.getInstance().listOfProgram
-                                        [GlobalVars.getInstance().listOfProgram.Count - 1].ToString()) + 
-                                        GlobalVars.getInstance().autoStep);
-                                    
+                                    // Insert code to read the stream here.
+                                    string fileName = openFileDialog1.FileName;
+                                    GlobalVars.getInstance().FileName = fileName;
+                                    reset();
+
+                                    myStream.Position = 0;
+                                    using (StreamReader reader = new StreamReader(myStream, Encoding.UTF8))
+                                    {
+                                        string arrayText = reader.ReadToEnd();
+                                        Debug.WriteLine(TAG + "± reader.ReadToEnd() " + arrayText);
+                                        GlobalVars.getInstance().ListOfProgram = new List<string>(arrayText.Split('\n'));
+                                        GlobalVars.getInstance().ProgramCounter =
+                                            int.Parse(runCommand.returnBaseCommand(GlobalVars.getInstance().ListOfProgram
+                                            [GlobalVars.getInstance().ListOfProgram.Count - 1].ToString()) +
+                                            GlobalVars.getInstance().AutoStep);
+
+                                        //find empty strings and delete them
+                                        List<string> tempList = new List<string>();
+                                        foreach (string col in GlobalVars.getInstance().ListOfProgram)
+                                        {
+                                            if (col.Length > 2)
+                                            {
+                                                tempList.Add(col);
+                                            }
+                                        }
+                                        GlobalVars.getInstance().ListOfProgram.Clear();
+                                        GlobalVars.getInstance().ListOfProgram.AddRange(tempList);
+                                    }
                                 }
                             }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
-                    }
-                    
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                        }
+                    }*/
                 }
-
-
-
-                /*OpenFileDialog fileDialog = new OpenFileDialog(this)
-                        .setFilter(".*\\.bas")
-                        .setOpenDialogListener(new OpenFileDialog.OpenDialogListener() {
-                                @Override
-                                public void OnSelectedFile(String fileName) throws IOException
-        {
-            Toast.makeText(getApplicationContext(), fileName, Toast.LENGTH_LONG).show();
-            GlobalVars.getInstance().setFileName(fileName);
-            reset();
-            String arrayText = readFileAsString(fileName);
-            Debug.WriteLine(TAG + "± readFileAsString " + arrayText);
-            GlobalVars.getInstance().listOfProgram = new ArrayList<String>(Arrays.asList(arrayText.Split("" + Environment.NewLine)));
-                                    GlobalVars.getInstance().programCounter = Integer.parseInt(runCommand.returnBaseCommand(GlobalVars.getInstance().listOfProgram.get(GlobalVars.getInstance().listOfProgram.size() - 1).ToString()) + GlobalVars.getInstance().autoStep);
-
-                                }
-                            });
-                    fileDialog.show();*/
-                            }
+            }
             else if (commandRun.ToLower().Equals("reset"))
             {
                 reset();
@@ -683,47 +875,47 @@ namespace MCX_Basic
             }
             else if (commandRun.ToLower().Equals("run"))
             {
-                if (GlobalVars.getInstance().listOfProgram.Count() > 0)
+                if (GlobalVars.getInstance().ListOfProgram.Count() > 0)
                 {
                     Debug.WriteLine(TAG + "± start running program");
                     nextCommand = YES;
-                    GlobalVars.getInstance().runIndex = 0;
-                    GlobalVars.getInstance().run = YES;
-                    GlobalVars.getInstance().error = "";
+                    GlobalVars.getInstance().RunIndex = 0;
+                    GlobalVars.getInstance().Run = YES;
+                    GlobalVars.getInstance().Error = "";
                     runProgram();
                 }
             }
-            else if (commandRun.ToLower().Equals("share") && !GlobalVars.getInstance().run)
+            else if (commandRun.ToLower().Equals("share") && !GlobalVars.getInstance().Run)
             {
                 share();
             }
-            else if (commandRun.ToLower().Equals("if") && string.IsNullOrEmpty(GlobalVars.getInstance().error))
+            else if (commandRun.ToLower().Equals("if") && string.IsNullOrEmpty(GlobalVars.getInstance().Error))
             {
-                Debug.WriteLine(TAG + "± if in progress on ViewController. " + GlobalVars.getInstance().commandIf);
-                if (!string.IsNullOrEmpty(GlobalVars.getInstance().commandIf))
+                Debug.WriteLine(TAG + "± if in progress on ViewController. " + GlobalVars.getInstance().CommandIf);
+                if (!string.IsNullOrEmpty(GlobalVars.getInstance().CommandIf))
                 {
-                    if (runCommand.set(GlobalVars.getInstance().commandIf))
+                    if (runCommand.set(GlobalVars.getInstance().CommandIf))
                     {
-                        for (int n = 0; n < GlobalVars.getInstance().listOfStrings.Count(); n++)
+                        for (int n = 0; n < GlobalVars.getInstance().ListOfStrings.Count(); n++)
                         {
-                            addStringToCommandWindow(GlobalVars.getInstance().listOfStrings[n].ToString());
+                            addStringToCommandWindow(GlobalVars.getInstance().ListOfStrings[n].ToString());
                         }
                     }
                     else {
-                        otherCommands(GlobalVars.getInstance().commandIf);
+                        otherCommands(GlobalVars.getInstance().CommandIf);
                     }
                 }
             }
-            else if (commandRun.ToLower().Equals("input") && string.IsNullOrEmpty(GlobalVars.getInstance().error))
+            else if (commandRun.ToLower().Equals("input") && string.IsNullOrEmpty(GlobalVars.getInstance().Error))
             {
                 nextCommand = NO;
-                if (GlobalVars.getInstance().listOfStrings.Count() > 0)
+                if (GlobalVars.getInstance().ListOfStrings.Count() > 0)
                 {
-                    addStringToCommandWindow(GlobalVars.getInstance().listOfStrings[0].ToString());
+                    addStringToCommandWindow(GlobalVars.getInstance().ListOfStrings[0].ToString());
                     // returnCR];
                 }
                 addStringToCommandWindow("? ");
-                GlobalVars.getInstance().isOkSet = NO;
+                GlobalVars.getInstance().IsOkSet = NO;
                 inputMode = YES;
             }
             else {

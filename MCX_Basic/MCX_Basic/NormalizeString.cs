@@ -162,11 +162,11 @@ namespace MCX_Basic
                 }
             }
             else {
-                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
+                GlobalVars.getInstance().Error = "Syntax error" + Environment.NewLine;
             }
             if (foundFirst)
             {
-                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
+                GlobalVars.getInstance().Error = "Syntax error" + Environment.NewLine;
             }
             else {
                 for (int i = 0; i < arr.Count(); i++)
@@ -297,12 +297,12 @@ namespace MCX_Basic
                 }
             }
             else {
-                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
+                GlobalVars.getInstance().Error = "Syntax error" + Environment.NewLine;
             }
 
             if (foundFirst || arr.Count() != 2)
             {
-                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
+                GlobalVars.getInstance().Error = "Syntax error" + Environment.NewLine;
             }
             else {
                 Debug.WriteLine(TAG + "± extracted Text->" + arr);
@@ -331,12 +331,12 @@ namespace MCX_Basic
                 }
             }
             else {
-                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
+                GlobalVars.getInstance().Error = "Syntax error" + Environment.NewLine;
             }
 
             if (foundFirst || arr.Count() != 2)
             {
-                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
+                GlobalVars.getInstance().Error = "Syntax error" + Environment.NewLine;
             }
             else {
                 Debug.WriteLine(TAG + "± extracted Text->" + arr);
@@ -381,7 +381,7 @@ namespace MCX_Basic
                 }
             }
             else {
-                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
+                GlobalVars.getInstance().Error = "Syntax error" + Environment.NewLine;
             }
             Debug.WriteLine(TAG + "± extract TextAndOther To Array ->" + arr);
             return arr;
@@ -418,11 +418,11 @@ namespace MCX_Basic
                 }
             }
             else {
-                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
+                GlobalVars.getInstance().Error = "Syntax error" + Environment.NewLine;
             }
             if (foundFirst || arr.Count() < 2)
             {
-                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
+                GlobalVars.getInstance().Error = "Syntax error" + Environment.NewLine;
             }
             else {
                 Debug.WriteLine(TAG + "± extract TextAndNum To Array ->" + arr);
@@ -481,7 +481,7 @@ namespace MCX_Basic
             }
             if (foundFirst)
             {
-                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
+                GlobalVars.getInstance().Error = "Syntax error" + Environment.NewLine;
             }
             else {
                 //        NSLog(@"Separated TEXT - %@",arr);
@@ -597,7 +597,7 @@ namespace MCX_Basic
             }
             if (foundFirst)
             {
-                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
+                GlobalVars.getInstance().Error = "Syntax error" + Environment.NewLine;
             }
             else {
                 //        NSLog(@"Separated ALL TEXT - %@",arr);
@@ -741,7 +741,7 @@ namespace MCX_Basic
             }
             if (foundFirst)
             {
-                GlobalVars.getInstance().error = "Syntax error" + Environment.NewLine;
+                GlobalVars.getInstance().Error = "Syntax error" + Environment.NewLine;
             }
             else {
                 for (int i = 0; i < arr.Count; i++)

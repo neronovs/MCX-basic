@@ -8,44 +8,44 @@ namespace MCX_Basic
 {
     public class GlobalVars
     {
-        public static String version1 = "MCX Basic version ";
-        public static String version2 = "Copyright 2015-16 by Aleksey & Sergey Neronov";
-        public static String version3 = "Type 'help' for list of command" + Environment.NewLine;
+        private String version1 = "MCX Basic version ";
+        private String version2 = "Copyright 2015-16 by Aleksey & Sergey Neronov";
+        private String version3 = "Type 'help' for list of command\r\n";
 
-        public String error;
-        public String runnedLine;
-        public String command;
-        public String commandIf;
-        public String input;
-        public String fileName;
-        public String currentFolder;
-        public String keyScan;
+        private String error;
+        private String runnedLine;
+        private String command;
+        private String commandIf;
+        private String input;
+        private String fileName;
+        private String currentFolder;
+        private String keyScan;
 
-        public List<string> listOfStrings;
-        public List<string> data;
-        public List<string> dataIndex;
-        public List<ArraySet> array;
-        public List<VariableSet> variables;
-        public List<string> listOfProgram;
-        public List<string> gosubArray;
-        public List<ForSet> forArray;
-        public List<string> listOfCommands;
-        public List<string> listStrFunc;
-        public List<string> listMathFunc;
-        public List<string> listOfAll;
+        private List<string> listOfStrings;
+        private List<string> data;
+        private List<string> dataIndex;
+        private List<ArraySet> array;
+        private List<VariableSet> variables;
+        private List<string> listOfProgram;
+        private List<string> gosubArray;
+        private List<ForSet> forArray;
+        private List<string> listOfCommands;
+        private List<string> listStrFunc;
+        private List<string> listMathFunc;
+        private List<string> listOfAll;
 
-        public bool run;
-        public bool autoSet;
-        public bool isOkSet;
-        public bool showError;
-        public bool scanKeyOn;
-        public bool firstStart;
+        private bool run;
+        private bool autoSet;
+        private bool isOkSet;
+        private bool showError;
+        private bool scanKeyOn;
+        private bool firstStart;
 
-        public int dataReadIndex;
-        public int autoStep;
-        public int programCounter;
-        public int runIndex;
-        public int lineNumber;
+        private int dataReadIndex;
+        private int autoStep;
+        private int programCounter;
+        private int runIndex;
+        private int lineNumber;
 
         public GlobalVars()
         {
@@ -101,7 +101,7 @@ namespace MCX_Basic
                 "run - Execute program. To run swipe RIGHT. To stop swipe LEFT.",
                 "rnd(x) - Returns a random value between 0 and x.",
                 "save \"name\" - Saves a BASIC program.",
-                "share \"name\" - Saves a BASIC program and share.",
+                "share \"name\" - Saves a BASIC program and share (open the selected file in a folder).",
                 "sin(x) - Returns the sine of a variable in radians.",
                 "spc$(x) - Inserts a variable amount of spaces.",
                 "sqr(x) - Returns the square root of a variable.",
@@ -192,7 +192,7 @@ namespace MCX_Basic
 
         public List<string> DataIndex
         {
-            get { return this.data; }
+            get { return this.dataIndex; }
             set { dataIndex = value; }
         }
 
@@ -253,13 +253,13 @@ namespace MCX_Basic
         public String FileName
         {
             get { return this.fileName; }
-            set { keyScan = value; }
+            set { fileName = value; }
         }
 
         public String KeyScan
         {
             get { return this.keyScan; }
-            set { fileName = value; }
+            set { keyScan = value; }
         }
 
         public String Command
@@ -350,6 +350,31 @@ namespace MCX_Basic
         {
             get { return this.scanKeyOn; }
             set { scanKeyOn = value; }
+        }
+
+        public string CurrentFolder
+        {
+            get { return this.currentFolder; }
+            set { currentFolder = value; }
+        }
+
+        public bool FirstStart
+        {
+            get { return this.firstStart; }
+            set { firstStart = value; }
+        }
+
+        public string Version1
+        {
+            get { return this.version1; }
+        }
+        public string Version2
+        {
+            get { return this.version2; }
+        }
+        public string Version3
+        {
+            get { return this.version3; }
         }
 
     }
