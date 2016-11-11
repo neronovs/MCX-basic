@@ -22,6 +22,19 @@ namespace MCX_Basic
         private Variables variables = new Variables();
         private StringFunc stringFunc = new StringFunc();
 
+        MainForm mainForm;
+        FormDelegate formDelegate;
+
+
+        public RunCommand(MainForm reference)
+        {
+            mainForm = reference;
+            
+            formDelegate += mainForm.Cls;
+        }
+
+        public RunCommand() { }
+
         public bool set(String string_val)
         {
             Debug.WriteLine(TAG + string_val);
@@ -141,7 +154,15 @@ namespace MCX_Basic
             }
             else if (base_val.ToLower().Equals("cls"))
             {
-                result = NO;
+                try
+                {
+                    formDelegate();
+                }
+                catch { Debug.WriteLine(TAG + "± cls: Did NOT Initialized the DELEGATE"); }
+
+                //mainForm.Cls();
+                
+                result = YES;
             }
 
             else if (base_val.ToLower().Equals("exit"))
@@ -2339,9 +2360,5 @@ namespace MCX_Basic
                 }
             }
         }
-
-
-
-
     }
 }

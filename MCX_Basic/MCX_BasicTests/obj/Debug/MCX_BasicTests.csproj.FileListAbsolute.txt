@@ -20,3 +20,13 @@ D:\OneDriveNod\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_BasicTests\bin\D
 D:\OTC\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_BasicTests\obj\Debug\MCX_BasicTests.csprojResolveAssemblyReference.cache
 D:\OTC\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_BasicTests\obj\Debug\MCX_BasicTests.dll
 D:\OTC\OneDrive\Coding\Examples\MCX basic\MCX_Basic\MCX_BasicTests\obj\Debug\MCX_BasicTests.pdb
+D:\OneDriveNod\OneDrive\Dropbox\Examples\MCX basic\MCX_Basic\MCX_BasicTests\bin\Debug\MCX_BasicTests.dll
+D:\OneDriveNod\OneDrive\Dropbox\Examples\MCX basic\MCX_Basic\MCX_BasicTests\bin\Debug\MCX_BasicTests.pdb
+D:\OneDriveNod\OneDrive\Dropbox\Examples\MCX basic\MCX_Basic\MCX_BasicTests\bin\Debug\MCX_Basic.exe
+D:\OneDriveNod\OneDrive\Dropbox\Examples\MCX basic\MCX_Basic\MCX_BasicTests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+D:\OneDriveNod\OneDrive\Dropbox\Examples\MCX basic\MCX_Basic\MCX_BasicTests\bin\Debug\mxparser.net4.6.dll
+D:\OneDriveNod\OneDrive\Dropbox\Examples\MCX basic\MCX_Basic\MCX_BasicTests\bin\Debug\MCX_Basic.pdb
+D:\OneDriveNod\OneDrive\Dropbox\Examples\MCX basic\MCX_Basic\MCX_BasicTests\bin\Debug\ru\Microsoft.VisualStudio.QualityTools.UnitTestFramework.resources.dll
+D:\OneDriveNod\OneDrive\Dropbox\Examples\MCX basic\MCX_Basic\MCX_BasicTests\obj\Debug\MCX_BasicTests.csprojResolveAssemblyReference.cache
+D:\OneDriveNod\OneDrive\Dropbox\Examples\MCX basic\MCX_Basic\MCX_BasicTests\obj\Debug\MCX_BasicTests.dll
+D:\OneDriveNod\OneDrive\Dropbox\Examples\MCX basic\MCX_Basic\MCX_BasicTests\obj\Debug\MCX_BasicTests.pdb

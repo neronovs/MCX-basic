@@ -13,6 +13,8 @@ using System.Reflection;
 
 namespace MCX_Basic
 {
+    //public delegate void FormDelegate();
+
     public partial class MainForm : Form
     {
         private readonly int NSNotFound = -1;
@@ -22,7 +24,7 @@ namespace MCX_Basic
         //String currectLine = ""; //text in the current cursor line
         System.Windows.Forms.Timer timer;
 
-        RunCommand runCommand = new RunCommand();
+        RunCommand runCommand;
 
         private static NormalizeString normaStr = new NormalizeString();
         //    DigitalFunc digitalFunc = new DigitalFunc();
@@ -37,6 +39,9 @@ namespace MCX_Basic
         int textIndex;
 
         Timer handler = new Timer();
+
+        FormDelegate formDelegate;
+        //public static Form formMainUrl;
 
         /*
         // DLL libraries used to manage hotkeys
@@ -63,6 +68,10 @@ namespace MCX_Basic
             InitializeComponent();
             timer = new System.Windows.Forms.Timer();
             timer.Tick += new EventHandler(ThreadMethod);
+            runCommand = new RunCommand(this);
+
+            formDelegate += Cls;
+            //formMainUrl = this;
 
             // Modifier keys codes: Alt = 1, Ctrl = 2, Shift = 4, Win = 8
             // Compute the addition of each combination of the keys you want to be pressed
@@ -163,11 +172,13 @@ namespace MCX_Basic
                         GlobalVars.getInstance().ListOfStrings.Add("t");
                         extrAdd = 1;
                     }
-                    Debug.WriteLine(TAG + "± input mode ='" + GlobalVars.getInstance().Input + "' listofstring0='" + GlobalVars.getInstance().ListOfStrings[0].ToString() + "'");
+                    Debug.WriteLine(TAG + "± input mode ='" + GlobalVars.getInstance().Input + "' listofstring0='" 
+                        + GlobalVars.getInstance().ListOfStrings[0].ToString() + "'");
                     String[] arr = GlobalVars.getInstance().Input.Substring(1).Split(',');
                     String entered;
                     int indexInput = GlobalVars.getInstance().ListOfStrings[0].ToString().Length + extrAdd;
-                    Debug.WriteLine(TAG + "± input-- '" + lines[lines.Length - 1] + "' indexed-'" + GlobalVars.getInstance().ListOfStrings[0].ToString());
+                    Debug.WriteLine(TAG + "± input-- '" + lines[lines.Length - 1] + "' indexed-'" 
+                        + GlobalVars.getInstance().ListOfStrings[0].ToString());
                     entered = lines[lines.Length - 1].Substring(indexInput);
                     String str = arr[inputCount] + "=" + entered;
                     if (arr[inputCount].Substring(arr[inputCount].Length - 1).Equals("$"))
@@ -472,7 +483,7 @@ namespace MCX_Basic
                 {
                     addStringToCommandWindow("Ok" + Environment.NewLine);
                 }
-            GlobalVars.getInstance().IsOkSet = (true);
+            //GlobalVars.getInstance().IsOkSet = (true);
         }
 
         public void addStringToCommandWindow(String string_val)
@@ -683,7 +694,7 @@ namespace MCX_Basic
                         myStream.Position = 0;
                         using (StreamReader reader = new StreamReader(myStream, Encoding.UTF8))
                         {
-                            RunCommand runCommand = new RunCommand();
+                            //RunCommand runCommand = new RunCommand(this);
                             string arrayText = reader.ReadToEnd();
                             Debug.WriteLine(TAG + "± reader.ReadToEnd() " + arrayText);
                             GlobalVars.getInstance().ListOfProgram = new List<string>(arrayText.Split('\n'));
@@ -791,8 +802,9 @@ namespace MCX_Basic
             }
             if (commandRun.ToLower().Equals("cls"))
             {
-                commandWindow.Text = (null);
-            }
+                //commandWindow.Text = null;
+                //Cls();
+                }
             else if (commandRun.ToLower().Equals("load"))
             {
                 if (str.Length > 5)
@@ -924,16 +936,6 @@ namespace MCX_Basic
             Debug.WriteLine(TAG + "± commandRun=" + commandRun);
         }
 
-        private void commandWindow_TextChanged(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void commandWindow_TextChanged_1(object sender, EventArgs e)
-        {
-            
-        }
-        
 
         /*private static String readFileAsString(String filePath) 
     {
@@ -948,7 +950,16 @@ namespace MCX_Basic
             } finally {
                 dis.close();
             }*/
+
+        internal void Cls()
+        {
+            GlobalVars.getInstance().ListOfStrings.Clear();
+            commandWindow.Text = "";
+        }
+
+        public string CommandWindowText
+        {
+            get { return commandWindow.Text; }
+        }
     }
-
 }
-

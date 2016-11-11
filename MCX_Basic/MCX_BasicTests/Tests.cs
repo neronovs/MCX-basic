@@ -84,6 +84,7 @@ namespace MCX_BasicTests
             Assert.IsFalse(normalizeString.isPairedQuotes(str));
         }
 
+        [TestMethod]
         public void testDigitalFunc()
         {
             DigitalFunc df = new DigitalFunc();
@@ -150,36 +151,33 @@ namespace MCX_BasicTests
             Assert.AreEqual(res, df.returnMathResult(str).ToString());
         }
 
+        [TestMethod]
         public void testRunCommand()
         {
-            RunCommand rc = new RunCommand();
-            //for mixedstring
-            string str = "sin(13+2*3)";
-            res = "0,149877209662952";
-            GlobalVars globals = new GlobalVars();
-            globals.Error = "";
             RunCommand runCommand = new RunCommand();
-            str = "ver";
-            Assert.IsTrue(runCommand.set(str));
-            Assert.AreEqual(4, globals.ListOfStrings.Count);
-            Assert.AreEqual(globals.Error, "");
+            GlobalVars.getInstance().Error = "";
+
+            string str = "ver";
+            //Assert.IsTrue(runCommand.set(str));
+            //Assert.AreEqual(4, GlobalVars.getInstance().ListOfStrings.Count);
+            Assert.AreEqual(GlobalVars.getInstance().Error, "");
             
             str="auto";
             Assert.IsTrue(runCommand.set(str));
-            Assert.IsFalse(globals.IsOkSet);
-            Assert.IsTrue(globals.AutoSet);
-            Assert.Equals(1, globals.ListOfStrings.Count);
-            Assert.IsTrue(globals.Error == "");
+            Assert.IsFalse(GlobalVars.getInstance().IsOkSet);
+            Assert.IsTrue(GlobalVars.getInstance().AutoSet);
+            Assert.AreEqual(2, GlobalVars.getInstance().ListOfStrings.Count);
+            Assert.IsTrue(GlobalVars.getInstance().Error == "");
             str="list";
             Assert.IsTrue(runCommand.set(str));
-            Assert.IsTrue(globals.IsOkSet);
+            Assert.IsTrue(GlobalVars.getInstance().IsOkSet);
             str="a=10";
             Assert.IsTrue(runCommand.set(str));
-            Assert.IsTrue(globals.Variables.Count > 0);
+            Assert.IsTrue(GlobalVars.getInstance().Variables.Count > 0);
             str="clear";
             Assert.IsTrue(runCommand.set(str));
-            Assert.AreEqual(0, globals.Variables.Count);
-            Assert.IsTrue(globals.Error == ""); 
+            Assert.AreEqual(0, GlobalVars.getInstance().Variables.Count);
+            Assert.IsTrue(GlobalVars.getInstance().Error == ""); 
             str="10 cls";
             Assert.IsFalse(runCommand.set(str));
             str="20 ver";
@@ -188,14 +186,15 @@ namespace MCX_BasicTests
             Assert.IsFalse(runCommand.set(str));
             str="delete 10-20";
             Assert.IsTrue(runCommand.set(str));
-            Assert.Equals(1, globals.ListOfProgram.Count);
-            str="end";
+            Assert.AreEqual(1, GlobalVars.getInstance().ListOfProgram.Count);
+            str = "end";
             Assert.IsTrue(runCommand.set(str));
-            Assert.IsTrue(globals.IsOkSet);
-            Assert.IsFalse(globals.Run);
-
+            Assert.IsTrue(GlobalVars.getInstance().IsOkSet);
+            Assert.IsFalse(GlobalVars.getInstance().Run);
+            
         }
 
+        [TestMethod]
         public void testStringFunctions()
         {
             StringFunc stringFunc = new StringFunc();
@@ -215,7 +214,7 @@ namespace MCX_BasicTests
             resTSF="\"M\"";
             Assert.AreEqual(resTSF, stringFunc.returnStringResult(strTSF));
             strTSF="str$(-3.791)";
-            resTSF="\"-3.791\"";
+            resTSF="\"-3,791\"";
             Assert.AreEqual(resTSF, stringFunc.returnStringResult(strTSF));
             strTSF="string$(8,65)";
             resTSF="\"AAAAAAAA\"";

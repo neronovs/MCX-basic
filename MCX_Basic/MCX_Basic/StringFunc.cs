@@ -20,6 +20,8 @@ namespace MCX_Basic
         private readonly bool YES = true;
         private readonly String TAG = MethodBase.GetCurrentMethod().DeclaringType.Name + ": ";
 
+        public StringFunc() { }
+
         public bool stringFunction(String string_val)
         {
             bool result = NO;

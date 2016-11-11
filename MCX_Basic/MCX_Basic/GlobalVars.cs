@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace MCX_Basic
 {
+    //The delegate
+    public delegate void FormDelegate();
+
     public class GlobalVars
     {
         private String version1 = "MCX Basic version ";

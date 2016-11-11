@@ -34,6 +34,7 @@ namespace MCX_Basic
         {
             bool result = YES;
             //if (!var.matches(numberSet)) result = NO;
+            var = var.Replace(',', '.');
             if (Regex.IsMatch(var, numberSet, RegexOptions.IgnoreCase) == false)
                 result = NO;
 
